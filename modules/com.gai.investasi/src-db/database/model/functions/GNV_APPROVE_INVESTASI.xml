@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GNV_APPROVE_INVESTASI">
+    <function name="GNV_APPROVE_INVESTASI" type="NULL">
+      <parameter name="p_pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_statusapprove" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_nomorsurat" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_lampiran" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*
+  ************************************************************************
+  * $Id: GNV_APPROVE_INVESTASI.sql,v 1.6 2015/22/10
+  * Title: Update Status
+  * Description:
+  * Created By. Marshela @ PT. Global Anugerah Indonesia
+  ************************************************************************
+*/
+
+v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+v_AD_User_ID VARCHAR2(32);
+v_AD_Client_ID VARCHAR2(32);
+v_AD_Org_ID VARCHAR2(32);
+v_statusinvestasi VARCHAR(50);
+v_history_perpanjangan VARCHAR(32);
+v_line NUMERIC;
+
+ TYPE RECORD IS REF CURSOR;
+  Cur_Parameter RECORD;
+  HistoryPerpanjangan RECORD;
+BEGIN 
+    DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
+    v_ResultStr:='PInstanceNotFound';
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;
+    -- Get Parameters
+    v_ResultStr:='ReadingParameters';
+    BEGIN
+      
+           
+      FOR Cur_History IN
+      (
+      select AD_CLIENT_ID, AD_ORG_ID ,ISACTIVE,CREATED,CREATEDBY,UPDATEDBY,UPDATED,
+      LINENO, NOBILYET,TANGGALAWAL,TANGGALAKHIR,AMOUNT, 
+      RATE, C_CURRENCY_ID,DOCUMENTNO,PERIHAL,C_BPARTNER_ID,
+      CAR,NPL,LDR,BI,LPS
+      ,DESCRIPTION,KESIMPULAN,GNV_TYPEINVESTASI_ID,TOTALASSET,KESIMPULANRASIO,
+      EM_GMM_MASTER_STATUSBANK_ID AS STATUSKEPEMILIKAN,RASIOKEUANGAN,GNV_INVESTASI_LINE_ID , STATUSINVESTASI, GNV_HISTORY_PERPANJANGAN_ID,
+      NOMORSURAT
+      
+      from GNV_HISTORY_PERPANJANGAN
+      where LINENO =(SELECT MAX(LINENO) FROM GNV_HISTORY_PERPANJANGAN WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id )
+      AND GNV_INVESTASI_LINE_ID =  p_pinstance_id 
+      )
+      
+      loop
+      Ad_Sequence_Next('GNV_HISTORY_PERPANJANGAN', Cur_History.AD_CLIENT_ID, V_HISTORY_PERPANJANGAN);
+      SELECT COALESCE(MAX(Lineno),0)+10 INTO v_line
+        FROM GNV_HISTORY_PERPANJANGAN
+        where GNV_INVESTASI_LINE_ID = p_pinstance_id;
+        IF(p_statusapprove = 'Not Approved') THEN
+      
+          if (Cur_History.STATUSINVESTASI = 'Perpanjangan Mudharabah') then
+
+              UPDATE GNV_INVESTASI_LINE SET STATUSINVESTASI = Cur_History.STATUSINVESTASI, TANGGALAKHIR = Cur_History.TANGGALAKHIR , RATE = Cur_History.RATE ,
+              DOCUMENTNO = Cur_History.DOCUMENTNO, PERIHAL = Cur_History.PERIHAL,
+              CAR =Cur_History.CAR, NPL= Cur_History.NPL, LDR= Cur_History.LDR ,LPS= Cur_History.LPS,BI= Cur_History.BI, KESIMPULANRASIO = Cur_History.KESIMPULANRASIO, 
+              TANGGALAWAL = Cur_History.TANGGALAWAL, STATUSAPPROVED = p_statusapprove, ISAPPROVEPERPANJANGAN ='Y',
+              BTNAPPROVE = 'N', BTNPROSES ='N',
+              NOMORSURAT = Cur_History.NOMORSURAT
+              WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id;
+              
+          else 
+              update
+              GNV_INVESTASI_LINE set STATUSINVESTASI = Cur_History.STATUSINVESTASI,  STATUSAPPROVED = p_statusapprove, NOMORSURAT = Cur_History.NOMORSURAT,
+              BTNAPPROVE = 'N', BTNPROSES ='N'
+              
+              WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id;
+          
+          end if;
+          else
+          
+          select STATUSINVESTASI into v_statusinvestasi from GNV_INVESTASI_LINE where GNV_INVESTASI_LINE_ID = p_pinstance_id;
+        
+          IF (v_statusinvestasi = 'Pencairan Mudharabah') then
+          
+              update
+              GNV_INVESTASI_LINE set ISAPPROVEPENCAIRAN ='Y'
+              WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id;
+          
+          elsIF (v_statusinvestasi = 'Penempatan Deposito On Call') then
+          
+              update
+              GNV_INVESTASI_LINE set ISAPPROVEPENDEPCALL ='Y'
+              WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id;
+              
+          elsIF (v_statusinvestasi = 'Penempatan Mudharabah') then
+          
+              update
+              GNV_INVESTASI_LINE set ISAPPROVEPENMUD ='Y'
+              WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id;
+        
+          elsif (v_statusinvestasi = 'Perpanjangan Mudharabah') then
+
+              UPDATE GNV_INVESTASI_LINE SET ISAPPROVEPERPANJANGAN ='Y'
+              WHERE GNV_INVESTASI_LINE_ID = p_pinstance_id;
+          end if;
+        
+        UPDATE GNV_HISTORY_PERPANJANGAN SET STATUSAPPROVED = p_statusapprove
+        
+        WHERE GNV_HISTORY_PERPANJANGAN_ID = Cur_History.GNV_HISTORY_PERPANJANGAN_ID;
+        UPDATE GNV_INVESTASI_LINE SET STATUSAPPROVED = p_statusapprove, BTNAPPROVE ='Y', LAMPIRAN = p_lampiran,
+        NOMORSURAT = p_nomorsurat
+        WHERE GNV_INVESTASI_LINE_ID = p_PInstance_ID;
+        
+        END IF;
+      end loop;
+      
+      
+              
+    return;    
+END; --Body
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  ROLLBACK;
+  IF(p_PInstance_ID IS NOT NULL) THEN
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_ResultStr) ;
+  ELSE
+    RAISE;
+  END IF;
+  RETURN;
+END GNV_APPROVE_INVESTASI  ]]></body>
+    </function>
+  </database>

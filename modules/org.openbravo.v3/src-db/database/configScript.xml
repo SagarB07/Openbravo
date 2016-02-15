@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+  <vector>
+    <versionInfo version="3.0.24089"/>
+    <columnDataChange tablename="AD_FIELD" columnname="ISDISPLAYED" pkRow="81B33EDA88214F5DA19A5557B12857A2">
+      <oldValue><![CDATA[Y]]></oldValue>
+      <newValue><![CDATA[N]]></newValue>
+    </columnDataChange>
+  </vector>

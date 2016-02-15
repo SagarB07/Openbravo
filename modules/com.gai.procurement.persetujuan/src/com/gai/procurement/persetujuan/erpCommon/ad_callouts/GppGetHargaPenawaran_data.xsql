@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<SqlClass name="GppGetHargaPenawaranData" package="com.gai.procurement.persetujuan.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+        SELECT NETHARGAPENAWARAN as hargapenawaran, GP.DISKON as diskon, GP.HARGAPENAWARAN as penawaran
+        FROM GPP_PERSPEMBLINE GP
+        LEFT JOIN C_BPARTNER CB ON GP.C_BPARTNER_ID= CB.C_BPARTNER_ID
+        LEFT JOIN GPP_PERSPEMBELIAN G ON G.GPP_PERSPEMBELIAN_ID = GP.GPP_PERSPEMBELIAN_ID
+        WHERE 
+        CB.C_BPARTNER_ID = ?
+        and 
+        G.GPP_PERSPEMBELIAN_ID = ?
+        
+        </Sql>
+      <Parameter name="cBpartnerId"/>
+      <Parameter name="gppPerspembelianId"/>
+      </SqlMethod>
+   
+</SqlClass>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_EDITAMOUNTINVOICE">
+    <function name="GAI_EDITAMOUNTINVOICE" type="NULL">
+      <parameter name="p_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_amount" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_total NUMBER;
+
+BEGIN
+
+  BEGIN
+	  update C_INVOICELINE 
+		set priceactual=p_amount,
+		linenetamt=p_amount,
+		pricestd=p_amount,
+		taxbaseamt=p_amount 
+	  where C_INVOICELINE_ID=p_id;
+  END;
+    EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GAI_EDITAMOUNTINVOICE
+]]></body>
+    </function>
+  </database>

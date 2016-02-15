@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<REPORT>
+<template id="class" file="ActionButton9496716376AE42CBADCCCE48572A9586.html"></template>
+
+<PARAMETER id="paramLanguage" name="language" default=""></PARAMETER>
+<PARAMETER id="paramCSS" name="css" attribute="href" replace="Default"></PARAMETER>
+<PARAMETER id="paramCSS_print" name="css" attribute="href" replace="Default"></PARAMETER>
+<PARAMETER id="key" name="key" default="" attribute="value"></PARAMETER>
+<PARAMETER id="form" name="form" default="" attribute="action"></PARAMETER>
+<PARAMETER id="processing" name="processing" default="" attribute="value"></PARAMETER>
+<PARAMETER id="window" name="window" default="" attribute="value"></PARAMETER>
+<PARAMETER id="paramCheck" name="check" default="Y"></PARAMETER>
+<PARAMETER id="paramDirectory" name="directory" default=""></PARAMETER>
+<PARAMETER id="processId" name="processId" default="PROCESS"></PARAMETER>
+<PARAMETER id="trlFormType" name="trlFormType" default="PROCESS"></PARAMETER>
+<PARAMETER id="processName" name="processName" replace="#processName#" default=""></PARAMETER>
+<PARAMETER id="processDescription" name="processDescription" replace="#processDescription#" default=""></PARAMETER>
+<PARAMETER id="processHelp" name="processHelp" replace="#processHelp#" default=""></PARAMETER>
+
+
+<PARAMETER id="buttonOK" name="ok" attribute="onmouseover" replace="xx" default=""></PARAMETER>
+<PARAMETER id="buttonOK" name="ok" attribute="onfocus" replace="xx" default=""></PARAMETER>
+<PARAMETER id="imgButtonOK" name="ok" attribute="alt" replace="xx" default=""></PARAMETER>
+<PARAMETER id="imgButtonOK" name="ok" attribute="title" replace="xx" default=""></PARAMETER>
+<PARAMETER id="tdButtonOK" name="ok"></PARAMETER>
+
+<PARAMETER id="buttonCancel" name="cancel" attribute="onmouseover" replace="xx" default=""></PARAMETER>
+<PARAMETER id="buttonCancel" name="cancel" attribute="onfocus" replace="xx" default=""></PARAMETER>
+<PARAMETER id="imgButtonCancel" name="cancel" attribute="alt" replace="xx" default=""></PARAMETER>
+<PARAMETER id="imgButtonCancel" name="cancel" attribute="title" replace="xx" default=""></PARAMETER>
+<PARAMETER id="tdButtonCancel" name="cancel"></PARAMETER>
+
+
+<PARAMETER id="messageBoxID" name="messageType" attribute="class" replace="yy" default="HIDDEN"></PARAMETER>
+<PARAMETER id="messageBoxIDTitle" name="messageTitle" default=""></PARAMETER>
+<PARAMETER id="messageBoxIDMessage" name="messageMessage" default=""></PARAMETER>
+
+
+
+
+  
+  <PARAMETER id="TanggalLaporan" name="TanggalLaporan" attribute="value"></PARAMETER>
+  <PARAMETER id="TanggalLaporan" name="TanggalLaporan_Format" attribute="displayformat"></PARAMETER>
+  <PARAMETER id="TanggalLaporan" name="TanggalLaporan_Format" attribute="saveformat"></PARAMETER>
+
+
+<PARAMETER id="rate1" name="rate1" attribute="value" default="N" replaceCharacters="htmlPreformated"/>
+<PARAMETER id="rate2" name="rate2" attribute="value" default="N" replaceCharacters="htmlPreformated"/>
+<PARAMETER id="rate3" name="rate3" attribute="value" default="N" replaceCharacters="htmlPreformated"/>
+<PARAMETER id="rate4" name="rate4" attribute="value" default="N" replaceCharacters="htmlPreformated"/>
+<PARAMETER id="rate5" name="rate5" attribute="value" default="N" replaceCharacters="htmlPreformated"/>
+<PARAMETER id="rate6" name="rate6" attribute="value" default="N" replaceCharacters="htmlPreformated"/>
+<PARAMETER id="outputType" name="outputType" attribute="value"/>
+<SUBREPORT id="reportoutputType" name="reportoutputType" report="org/openbravo/erpCommon/reference/List">
+  <ARGUMENT name="parameterListSelected" withId="outputType"/>
+</SUBREPORT>
+
+
+<DISCARD id="discard"></DISCARD>
+
+<LABEL id="lbl::TanggalLaporan" name="lbl::TanggalLaporan" replace="#TanggalLaporan#">TanggalLaporanlbl</LABEL>
+<LABEL id="lbl::rate1" name="lbl::rate1" replace="#rate1#">rate1lbl</LABEL>
+<LABEL id="lbl::rate2" name="lbl::rate2" replace="#rate2#">rate2lbl</LABEL>
+<LABEL id="lbl::rate3" name="lbl::rate3" replace="#rate3#">rate3lbl</LABEL>
+<LABEL id="lbl::rate4" name="lbl::rate4" replace="#rate4#">rate4lbl</LABEL>
+<LABEL id="lbl::rate5" name="lbl::rate5" replace="#rate5#">rate5lbl</LABEL>
+<LABEL id="lbl::rate6" name="lbl::rate6" replace="#rate6#">rate6lbl</LABEL>
+<LABEL id="lbl::outputType" name="lbl::outputType" replace="#outputType#">outputTypelbl</LABEL>
+
+</REPORT>

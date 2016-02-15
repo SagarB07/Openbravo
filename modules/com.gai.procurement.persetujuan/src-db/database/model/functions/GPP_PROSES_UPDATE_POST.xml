@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GPP_PROSES_UPDATE_POST">
+    <function name="GPP_PROSES_UPDATE_POST" type="NULL">
+      <parameter name="p_pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+v_AD_User_ID VARCHAR2(32);
+V_MASTERDEPT_ID VARCHAR2(32);
+v_GPPPERSPEMBELIANID VARCHAR(32);
+v_User VARCHAR2(32);
+V_BUSINESSPARTNER VARCHAR2(32);
+V_UNITPRICE NUMBER;
+V_QUANTITY NUMBER;
+V_LINEAMT NUMBER;
+V_REQUISITION varchar2(32);
+V_PRODUCT varchar2(32);
+v_P_Diperiksa_ID varchar2(32);
+v_P_DirKeu_ID varchar2(32);
+v_P_ManKeu_ID varchar2(32);
+v_diskon NUMBER;
+v_price NUMBER;
+v_nopenawaran varchar2(32);
+v_tglpenawaran DATE;
+
+ TYPE RECORD IS REF CURSOR;
+  Cur_Parameter RECORD;
+  CUR_REQUISITION RECORD;
+BEGIN
+--    IF (p_PInstance_ID IS NOT NULL) THEN
+      --  Update AD_PInstance
+      DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
+      v_ResultStr:='PInstanceNotFound';
+      AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;
+      -- Get Parameters
+      v_ResultStr:='ReadingParameters';
+    BEGIN
+      
+     
+      FOR Cur_Parameter IN
+        (SELECT i.Record_ID, i.AD_User_ID, p.ParameterName, p.P_String,
+          p.P_Number, p.P_Date
+        FROM AD_PINSTANCE i
+        LEFT JOIN AD_PINSTANCE_PARA p
+          ON i.AD_PInstance_ID=p.AD_PInstance_ID
+        WHERE i.AD_PInstance_ID=p_PInstance_ID
+        ORDER BY p.SeqNo
+        )
+      LOOP
+        v_Record_ID:=Cur_Parameter.Record_ID;
+        v_AD_User_ID:=Cur_Parameter.AD_User_ID;
+        /*IF(Cur_Parameter.ParameterName='Diperiksa_ID') THEN
+          v_P_Diperiksa_ID:=Cur_Parameter.P_String;
+        ELSIF(Cur_Parameter.ParameterName='DiperiksaDirKeu_ID') THEN
+          v_P_DirKeu_ID:=Cur_Parameter.P_String;
+        ELSIF(Cur_Parameter.ParameterName='DiperiksaManKeu_ID') THEN
+          v_P_ManKeu_ID:=Cur_Parameter.P_String;
+        END IF;*/
+      END LOOP; -- Get Parameter
+      DBMS_OUTPUT.PUT_LINE('  Record_ID=' || v_Record_ID) ;
+      
+      SELECT GP.C_BPARTNER_ID , GP.UNITPRICE, GP.QUANTITY , GP.M_REQUISITION_ID,GP.M_PRODUCT_ID,
+      GP.DISKON, GP.PRICE , GPL.NOPENAWARAN  , GPL.TANGGALPENAWARAN   
+      INTO  V_BUSINESSPARTNER, V_UNITPRICE, V_QUANTITY, V_REQUISITION,V_PRODUCT,
+      v_diskon, v_price, v_nopenawaran, v_tglpenawaran
+      FROM GPP_PERSPEMBELIAN GP
+      left join GPP_PERSPEMBLINE gpl on GPL.GPP_PERSPEMBELIAN_ID = GP.GPP_PERSPEMBELIAN_ID
+      WHERE gp.GPP_PERSPEMBELIAN_ID = v_Record_ID
+      and GP.C_BPARTNER_ID = GPL.C_BPARTNER_ID
+      ;
+      V_LINEAMT := V_UNITPRICE * V_QUANTITY;
+      
+      BEGIN
+        GPP_REQUISITION_POST(V_REQUISITION, v_AD_User_ID, 'RE', 'CO');
+      EXCEPTION WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20000,'Masuk Exception');
+      END;
+      
+      UPDATE M_REQUISITION SET C_BPARTNER_ID = V_BUSINESSPARTNER, EM_GPR_NOMORPENAWARAN = v_nopenawaran,
+      EM_GPR_TANGGALPENAWARAN = v_tglpenawaran
+      WHERE M_REQUISITION_ID =V_REQUISITION;
+      UPDATE M_REQUISITIONLINE SET C_BPARTNER_ID = V_BUSINESSPARTNER, 
+      LINENETAMT = V_LINEAMT, PRICEACTUAL = V_UNITPRICE, QTY = V_QUANTITY, 
+      DISCOUNT = v_diskon, PRICELIST =  v_price
+      WHERE M_REQUISITION_ID =V_REQUISITION and M_PRODUCT_ID= V_PRODUCT;
+      
+      UPDATE GPP_PERSPEMBELIAN SET DOCSTATUS='CO' WHERE GPP_PERSPEMBELIAN_ID = v_Record_ID;
+      
+      GPP_REQUISITION_POST(V_REQUISITION, v_AD_User_ID, 'CO', 'DR');
+      
+      AD_UPDATE_PINSTANCE(p_PInstance_ID, V_AD_User_ID, 'Y', 1, '@Success@');
+      RETURN;
+END; --BODY
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  ROLLBACK;
+  IF(p_PInstance_ID IS NOT NULL) THEN
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_ResultStr) ;
+  ELSE
+    RAISE;
+  END IF;
+  RETURN;
+END GPP_PROSES_UPDATE_POST ]]></body>
+    </function>
+  </database>

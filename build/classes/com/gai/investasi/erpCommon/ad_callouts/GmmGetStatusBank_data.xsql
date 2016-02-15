@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+GAI - Sodikin
+ ************************************************************************
+-->
+
+<SqlClass name="GmmGetStatusBankData" package="com.gai.investasi.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+        SELECT NAME as status FROM GMM_MASTER_STATUSBANK 
+        WHERE GMM_MASTER_STATUSBANK_ID = ?
+      </Sql>
+      <Parameter name="gmmStatusBankId"/>
+   </SqlMethod>
+   
+</SqlClass>

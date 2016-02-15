@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+GAI - Sodikin
+ ************************************************************************
+-->
+
+<SqlClass name="GinGetAreaData" package="com.gai.investasi.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+        SELECT NAME AS name FROM GAI_KANTOR 
+        WHERE GAI_KANTOR_ID = ?
+      </Sql>
+      <Parameter name="gaiKantorId"/>
+   </SqlMethod>
+   
+</SqlClass>

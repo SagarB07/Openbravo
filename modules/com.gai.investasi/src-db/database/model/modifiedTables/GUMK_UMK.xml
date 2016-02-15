@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE GUMK_UMK">
+    <table name="GUMK_UMK" primaryKey="GUMK_UMK_KEY">
+      <column name="EM_GNV_MASTER_DATADIREKSI_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GNV_MASTER_DATADIREKSI" name="EM_GNV_DATADIREKSI">
+        <reference local="EM_GNV_MASTER_DATADIREKSI_ID" foreign="GNV_MASTER_DATADIREKSI_ID"/>
+      </foreign-key>
+    </table>
+  </database>

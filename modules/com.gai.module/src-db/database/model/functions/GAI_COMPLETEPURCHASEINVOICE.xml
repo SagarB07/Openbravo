@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_COMPLETEPURCHASEINVOICE">
+    <function name="GAI_COMPLETEPURCHASEINVOICE" type="NULL">
+      <parameter name="p_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_id VARCHAR(32):= p_id;
+BEGIN
+
+BEGIN
+    C_INVOICE_POST(null,v_id);
+END;
+
+
+EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal eksekusi post invoice '||v_id) ;
+END GAI_COMPLETEPURCHASEINVOICE
+]]></body>
+    </function>
+  </database>

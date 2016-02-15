@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTBISNISPARTNER">
+    <function name="GAI_INSERTBISNISPARTNER" type="NULL">
+      <parameter name="c_bpartner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kode" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="nama" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="grup_partner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[BEGIN
+
+
+BEGIN
+    INSERT INTO C_BPARTNER values 
+   (c_bpartner,ad_client,ad_org,'Y',now(),'0',now(),'0',kode,nama,NULL,
+   NULL,'N',grup_partner,'N','N','N','Y','N','N',NULL,
+   NULL,NULL,NULL,NULL,'N',NULL,NULL,NULL,NULL,NULL,
+   NULL,0,0,0,NULL,NULL,0,0,'C51A1982D7AE4CCA9207BC546D2FE7F0','3104AE49F19F4B7897AEB08A8E29A3E1',
+   'N',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'I',NULL,
+   NULL,NULL,NULL,'O',NULL,'Y','000000000000000',NULL,NULL,
+   NULL,'N',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+   NULL,NULL,NULL,NULL,NULL,NULL,NULL,'06DF9C1CDA6D4CF8B7ABA635422DEB4F',NULL,NULL,
+   NULL,'N','N','N','Y','Y','Y','Y','Y','Y',
+   'N', 'N', 'N', NULL);
+  END;
+
+    EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GAI_INSERTBISNISPARTNER
+]]></body>
+    </function>
+  </database>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE C_ACCT_RPT">
+    <table name="C_ACCT_RPT" primaryKey="C_ACCT_RPT_KEY">
+      <column name="EM_GAR_RPTNAME" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+    </table>
+  </database>

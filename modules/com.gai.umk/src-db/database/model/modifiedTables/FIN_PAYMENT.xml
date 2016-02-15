@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE FIN_PAYMENT">
+    <table name="FIN_PAYMENT" primaryKey="FIN_PAYMENT_KEY">
+      <column name="EM_GUMK_UMK_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GUMK_UMK" name="EM_GUMK_UMK">
+        <reference local="EM_GUMK_UMK_ID" foreign="GUMK_UMK_ID"/>
+      </foreign-key>
+    </table>
+  </database>

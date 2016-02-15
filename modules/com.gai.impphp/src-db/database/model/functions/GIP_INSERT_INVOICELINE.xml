@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GIP_INSERT_INVOICELINE">
+    <function name="GIP_INSERT_INVOICELINE" type="NULL">
+      <parameter name="v_clientid" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_orgid" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_issotrx" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_docno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_description" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_dateinvoiced" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_bpartner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_product_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_price" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_kps" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_finaccount" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_kafalah" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_priceadm" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_debitur" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_doctypename" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="v_invoiceid" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_Currency_ID VARCHAR2(32);
+v_Location_ID VARCHAR2(32);
+v_DocType VARCHAR2(32);
+v_PaymentTerm VARCHAR2(32);
+v_Product_Adm VARCHAR2(32);
+v_Prod_Category VARCHAR2(32);
+v_PriceList_ID VARCHAR2(32);
+v_Paymentmethod_Id VARCHAR2(32);
+
+v_id VARCHAR(32):= get_uuid();
+v_ResultStr VARCHAR2(2000);
+
+BEGIN --BODY
+
+  --GET PRODUCT ADM
+  /*IF (v_doctypename <> 'AP Invoice Re-Asuransi') THEN
+    BEGIN
+      select m_product_category_id  into v_Prod_Category from m_product where m_product_id = v_Product_Id;
+      select m_product_id  into v_Product_Adm from m_product where m_product_category_id = v_Prod_Category and value like 'ADM%';
+    EXCEPTION WHEN OTHERS THEN
+      v_ResultStr:= '@ERROR=' || SQLERRM;
+      DBMS_OUTPUT.PUT_LINE(v_ResultStr);
+    END;  
+  ELSE
+    v_Product_Adm := NULL;
+  END IF;
+  
+  IF (v_doctypename <> 'AR Invoice Penjaminan') THEN
+    BEGIN
+      INSERT INTO GAI_INVOICE_DETAIL (
+        GAI_INVOICE_DETAIL_ID, AD_CLIENT_ID,AD_ORG_ID,ISACTIVE,CREATED,CREATEDBY, --1
+        UPDATED,UPDATEDBY,C_INVOICE_ID, FIN_FINANCIAL_ACCOUNT_ID, DOCUMENTNO,
+        KAFALAH, ADMINISTRASI, DEBITUR
+      )  
+      values (
+        get_uuid(), v_ClientID,v_OrgID,'Y',now(),'100',now(),
+        '100',v_id,(CASE WHEN v_FinAccount='' THEN null ELSE v_FinAccount END),v_DocNo,
+        (CASE WHEN v_Kafalah=null THEN 0 ELSE v_Kafalah END),(CASE WHEN v_PriceAdm=null THEN 0 ELSE v_PriceAdm END),
+        (CASE WHEN v_Debitur=null THEN 0 ELSE v_Debitur END)
+      );
+    EXCEPTION WHEN OTHERS THEN
+      v_ResultStr:= '@ERROR=' || SQLERRM;
+      DBMS_OUTPUT.PUT_LINE(v_ResultStr);
+    END;
+  END IF;
+  */  
+  --INSERT INVOICE
+  /*BEGIN
+    Insert into 
+        C_INVOICE (
+          C_INVOICE_ID,AD_CLIENT_ID,AD_ORG_ID,ISACTIVE,CREATED,CREATEDBY, --1
+          UPDATED,UPDATEDBY,ISSOTRX,DOCUMENTNO,DOCSTATUS,DOCACTION, --2
+          PROCESSING,PROCESSED,POSTED,C_DOCTYPE_ID,C_DOCTYPETARGET_ID, C_ORDER_ID, --3
+          DESCRIPTION,ISPRINTED,SALESREP_ID,DATEINVOICED,DATEPRINTED, DATEACCT, --4
+          C_BPARTNER_ID,C_BPARTNER_LOCATION_ID,ISDISCOUNTPRINTED,C_CURRENCY_ID, --5
+          C_PAYMENTTERM_ID,CHARGEAMT,TOTALLINES, GRANDTOTAL, --6
+          M_PRICELIST_ID,ISTAXINCLUDED,CREATEFROM, --7
+          GENERATETO,COPYFROM,ISSELFSERVICE, --8
+          ISPAID,TOTALPAID,--9
+          OUTSTANDINGAMT,DAYSTILLDUE,DUEAMT,UPDATEPAYMENTMONITOR,FIN_PAYMENTMETHOD_ID, --10
+          CALCULATE_PROMOTIONS, --11
+          ISCASHVAT,EM_APRM_ADDPAYMENT,EM_APRM_PROCESSINVOICE, EM_GAI_KANTOR_ID) --12
+      values (
+          v_id, v_ClientID,v_OrgID,'Y', TO_DATE(NOW()),'100', --1
+          TO_DATE(NOW()),'100',v_IsSoTrx,v_DocNo,'DR','CO', --2
+          'N','N','N',v_DocType,v_DocType,NULL, --3
+          v_Description,'N',NULL, v_DateInvoiced, NULL, v_DateInvoiced, --4
+          v_BPartner,v_Location_ID,'N',v_Currency_ID, --5
+          v_PaymentTerm,0,0,v_price, --6
+          v_PriceList_ID,'N','N', --7
+          'N','N','N', --8
+          'N',0,--9
+          0,0,0,'N',v_Paymentmethod_Id,--10
+          'N', --11
+          'N','Y','CO', (CASE WHEN v_Kps='' then null else v_Kps END) --12
+      ); --13
+  EXCEPTION WHEN OTHERS THEN
+    v_ResultStr:= '@ERROR=' || SQLERRM;
+    DBMS_OUTPUT.PUT_LINE(v_ResultStr);
+  END;
+  
+  v_InvoiceId := v_id;
+  */
+  --INSERT INVOICELINE UNTUK PRODUK
+  BEGIN
+    Insert into 
+      C_INVOICELINE 
+      (
+        C_INVOICELINE_ID,AD_CLIENT_ID,AD_ORG_ID,ISACTIVE,CREATED,CREATEDBY, --1
+        UPDATED,UPDATEDBY,C_INVOICE_ID,LINE, --2
+        DESCRIPTION,FINANCIAL_INVOICE_LINE,ACCOUNT_ID,M_PRODUCT_ID,QTYINVOICED, --3
+        PRICELIST,PRICEACTUAL,PRICELIMIT,LINENETAMT,CHARGEAMT, --4
+        C_UOM_ID,C_TAX_ID,TAXAMT,ISDESCRIPTION, --5
+        PRICESTD, --6
+        EXCLUDEFORWITHHOLDING,ISEDITLINENETAMT,TAXBASEAMT,LINE_GROSS_AMOUNT,GROSS_UNIT_PRICE, --7
+        C_BPARTNER_ID,PERIODNUMBER,GROSSPRICELIST, --8
+        ISDEFERRED, EXPLODE --9
+      ) --10
+      values (
+        get_uuid(), v_ClientID,v_OrgID,'Y',now(),'100', --1
+        now(),'100',v_InvoiceId,10, --2
+        v_description,'N',NULL,v_Product_Id,1, --3
+        0,v_Price,0,v_Price,0, --4
+        '100','A6CC4665E07C4AC5A97C74A766D3911B',0,'N', --5
+        v_Price, --6
+        'N','N',v_Price,0,0, --7
+        v_BPartner,0,0, --8
+        'N','N' --9
+     ); --10
+  
+  EXCEPTION WHEN OTHERS THEN
+    v_ResultStr:= '@ERROR=' || SQLERRM;
+    DBMS_OUTPUT.PUT_LINE(v_ResultStr);
+  END;
+  
+  --C_INVOICE_POST(NULL, v_id);
+
+EXCEPTION
+WHEN OTHERS THEN 
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+END GIP_INSERT_INVOICELINE
+]]></body>
+    </function>
+  </database>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GNV_INVESTASI_RECALCULATE">
+    <function name="GNV_INVESTASI_RECALCULATE" type="NULL">
+      <parameter name="p_record_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+  * $Id: GNV_INVESTASI_RECALCULATE.sql,v 1.6 2015/07/10
+  * Title: Recalculate Investasi Line
+  * Created By. Astri @ PT. Global Anugerah Indonesia
+  ************************************************************************/
+
+v_ResultStr VARCHAR2(2000):='';
+v_Fact_Acct_Id VARCHAR2(32);
+v_FA_Group VARCHAR2(32);
+v_AD_Table_Id VARCHAR2(32) := '18851435317341621811768614809911';
+v_LineNo NUMERIC := 10;
+v_User VARCHAR2(32);
+v_Message VARCHAR2(2000):='';
+v_Result NUMBER:=1; -- Success
+v_Posted VARCHAR2(5);
+
+ TYPE RECORD IS REF CURSOR;
+  Cur_Record RECORD;
+BEGIN
+  BEGIN
+--      v_Record_ID:=p_pinstance_id;
+    
+      --DELETE FROM GNV_INVESTASI_DETAIL WHERE GNV_INVESTASI_LINE_ID=p_Record_ID;
+      BEGIN
+      
+        GNV_INVESTASI_CALCULATE(p_Record_ID);
+        Update GNV_INVESTASI_LINE SET Recalculate='Y' Where GNV_INVESTASI_LINE_ID= p_Record_ID ;
+      
+      EXCEPTION WHEN OTHERS THEN
+        ROLLBACK;
+        RETURN;
+      END;
+      
+      
+      
+      --Update AD_PInstance
+      --DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished - ' || v_Message) ;
+      
+      --AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
+       
+    RETURN;
+    
+END; --Body
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  RAISE_APPLICATION_ERROR(-20000,v_ResultStr) ;
+  ROLLBACK;
+  RETURN;
+END GNV_INVESTASI_RECALCULATE]]></body>
+    </function>
+  </database>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_GET_TAHUNBELAKANG">
+    <function name="GAI_GET_TAHUNBELAKANG" type="NUMERIC">
+      <parameter name="bulan" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="tahun" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[hasil_return NUMBER;
+BEGIN
+ 
+ 
+    IF bulan <= 0
+    THEN 
+    hasil_return := tahun-1;
+    else 
+    hasil_return := tahun;
+    end if;
+
+  RETURN hasil_return;
+END GAI_GET_TAHUNBELAKANG
+]]></body>
+    </function>
+  </database>

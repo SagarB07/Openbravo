@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+GAI - Sodikin
+ ************************************************************************
+-->
+
+<SqlClass name="GasGetPOData" package="com.gai.asset.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+        SELECT col.M_PRODUCT_ID AS product, co.DATEORDERED AS tanggal, col.LINENETAMT as assetvalue 
+		FROM C_ORDERLINE col 
+		LEFT JOIN C_ORDER CO ON CO.C_ORDER_ID = COL.C_ORDER_ID
+		where COL.C_ORDERLINE_ID = ?
+      </Sql>
+      <Parameter name="cOrderlineId"/>
+   </SqlMethod>
+   
+</SqlClass>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GIP_INSERTBISNISPARTNER">
+    <function name="GIP_INSERTBISNISPARTNER" type="NULL">
+      <parameter name="c_bpartner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kode" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="nama" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="grup_partner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="reference_no" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[apaada NUMBER;
+
+BEGIN
+  BEGIN -- BODY
+    SELECT COALESCE(count (value),0) into apaada from c_bpartner where value=kode ;
+    IF(apaada = 0) THEN
+      INSERT INTO C_BPARTNER (C_BPARTNER_ID, AD_CLIENT_ID,AD_ORG_ID,ISACTIVE,CREATED,CREATEDBY,UPDATED,UPDATEDBY, VALUE, 
+        NAME,ISSUMMARY,C_BP_GROUP_ID,ISONETIME,ISPROSPECT,ISVENDOR,ISCUSTOMER,ISEMPLOYEE,ISSALESREP,ISTAXEXEMPT, 
+        ACQUSITIONCOST,POTENTIALLIFETIMEVALUE,ACTUALLIFETIMEVALUE,SO_CREDITLIMIT,SO_CREDITUSED,C_PAYMENTTERM_ID,M_PRICELIST_ID,
+        ISDISCOUNTPRINTED,INVOICERULE,SOCREDITSTATUS,SHOWPRICEINORDER,INVOICEGROUPING,ISWORKER,FIN_PAYMENTMETHOD_ID,
+        CUSTOMER_BLOCKING,VENDOR_BLOCKING,SO_PAYMENT_BLOCKING,PO_PAYMENT_BLOCKING,SO_INVOICE_BLOCKING,PO_INVOICE_BLOCKING, 
+        SO_ORDER_BLOCKING,PO_ORDER_BLOCKING,SO_GOODS_BLOCKING,PO_GOODS_BLOCKING,ISCASHVAT,UPDATE_CURRENCY,REFERENCENO,PO_PRICELIST_ID)
+      VALUES (c_bpartner,ad_client,ad_org,'Y',now(),'0',now(),'0',kode,
+        nama,'N',grup_partner,'N','N','Y','Y','N','N','N',
+        0,0,0,0,0,'C51A1982D7AE4CCA9207BC546D2FE7F0','3104AE49F19F4B7897AEB08A8E29A3E1',
+        'N','I','O','Y','000000000000000','N','06DF9C1CDA6D4CF8B7ABA635422DEB4F',
+        'N','N','N','Y','Y','Y',
+        'Y','Y','Y','N', 'N', 'N', reference_no, '1D132C75A20F45939C60720371BC6C16');      
+    ELSE
+      UPDATE C_BPARTNER SET REFERENCENO = reference_no, ISVENDOR = 'Y' WHERE value=kode ;
+    END IF;  
+  END; --END BODY
+EXCEPTION
+WHEN OTHERS THEN 
+  DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GIP_INSERTBISNISPARTNER]]></body>
+    </function>
+  </database>

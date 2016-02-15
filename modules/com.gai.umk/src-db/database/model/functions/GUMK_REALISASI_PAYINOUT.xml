@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GUMK_REALISASI_PAYINOUT">
+    <function name="GUMK_REALISASI_PAYINOUT" type="NULL">
+      <parameter name="gumk_umk_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="isin" type="CHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[-- Logistice
+  v_ResultStr VARCHAR2(2000):='';
+  v_Message VARCHAR2(2000):='';
+  -- Parameter
+  TYPE RECORD IS REF CURSOR;
+    Cur_Parameter RECORD;
+    -- Pegawai untuk diterima
+    Cur_Pegawai RECORD;
+    -- Parameter Variables
+    v_AD_User_ID VARCHAR2(32) ;
+    v_ClientID varchar2(32) ;
+    v_status VARCHAR2(32) ;
+    v_documentno VARCHAR2(32) ;
+    v_requestor VARCHAR2(32) ;
+    v_description VARCHAR2(32) ;
+    v_OrgID VARCHAR2(32) ;
+    v_fin_payment_ID VARCHAR2(32) ;
+    v_c_currency_id VARCHAR2(32) ;
+    v_c_doctype_id VARCHAR2(32) ;
+    v_fin_financial_account_id VARCHAR2(32) ;
+    v_fin_paymentmethod_id VARCHAR2(32) ;
+    v_DocType_ID VARCHAR2(32) ;
+    v_c_glitem_id VARCHAR2(32) ;
+    v_fin_payment_schedule_id VARCHAR2(32) ;
+    v_scheduledetail_id VARCHAR2(32) ;
+    v_fin_payment_detail_ID VARCHAR2(32) ;
+    v_amount NUMBER ;
+    v_LineNo NUMERIC(10) ;
+    END_PROCESS BOOLEAN:=false ;
+  
+BEGIN
+
+BEGIN --BODY    
+  SELECT AD_Client_ID,
+      AD_Org_ID,
+      documentno,
+      description,
+      c_currency_id , 
+      c_doctype_id,
+      fin_financial_account_id, 
+      fin_paymentmethod_id,
+      nominal_penjaguann_umk
+    INTO v_ClientID,
+      v_OrgID,
+      v_documentno,
+      v_description,
+      v_c_currency_id,
+      v_c_doctype_id,
+      v_fin_financial_account_id,
+      v_fin_paymentmethod_id,
+      v_amount
+    FROM gumk_umk
+    WHERE gumk_umk_id=gumk_umk_id;
+    
+    v_DocType_ID:=Ad_Get_Doctype(v_ClientID,v_OrgID, 'APP') ;
+    --RAISE_APPLICATION_ERROR(-20000, v_c_doctype_id);
+    Ad_Sequence_Doctype(v_DocType_ID, v_ClientID, 'Y', v_documentno) ;
+    --RAISE_APPLICATION_ERROR(-20000, v_documentno);
+    
+    BEGIN
+      Ad_Sequence_Next('fin_payment', v_ClientID, v_fin_payment_id) ;
+        INSERT INTO fin_payment(
+            fin_payment_id, ad_client_id, ad_org_id, isactive, created, em_gumk_umk_id,
+            createdby, updated, updatedby , paymentdate, description, c_currency_id , c_doctype_id,
+            fin_financial_account_id, fin_paymentmethod_id, documentno , status ,processed, isreceipt, finacc_txn_convert_rate, amount, finacc_txn_amount)    
+        VALUES (v_fin_payment_id, v_ClientID, v_OrgID, 'Y', now(), gumk_umk_id,
+            v_AD_User_ID, now(), v_AD_User_ID, 
+             now(),v_description,v_c_currency_id,v_c_doctype_id,
+            v_fin_financial_account_id,v_fin_paymentmethod_id,v_documentno, 'PWNC', 'N' , 'N',1 , v_amount, v_amount);
+    EXCEPTION
+      WHEN OTHERS THEN
+        --DBMS_OUTPUT.PUT_LINE('No Data Found Exception');
+        v_Message:= '@ERROR=' || SQLERRM;
+        RAISE_APPLICATION_ERROR(-20000, v_Message);
+    END;
+    
+    BEGIN
+      Select c_glitem_id
+      Into v_c_glitem_id
+      from c_glitem
+      where name='Uang Muka Kerja';
+    	--v_amount
+      Ad_Sequence_Next('fin_payment_detail', v_ClientID, v_fin_payment_detail_id) ;
+	
+        INSERT INTO fin_payment_detail (
+            fin_payment_detail_id, ad_client_id, ad_org_id, isactive, created, amount, isprepayment,
+            fin_payment_id ,createdby, updated, updatedby, writeoffamt, c_glitem_id, refund) 
+        VALUES (v_fin_payment_detail_id, v_ClientID, v_OrgID, 'Y', now(),v_amount, 'N'
+            , v_fin_payment_id,v_AD_User_ID, now(), v_AD_User_ID, 0, v_c_glitem_id, 'N');
+    EXCEPTION
+      WHEN OTHERS THEN
+        --      DBMS_OUTPUT.PUT_LINE('No Data Found Exception');
+        v_Message:= '@ERROR=' || SQLERRM;
+        RAISE_APPLICATION_ERROR(-20000, v_Message);
+      END;
+
+    BEGIN
+      Ad_Sequence_Next('fin_payment_schedule', v_ClientID, v_fin_payment_schedule_id) ;
+        INSERT INTO fin_payment_schedule (
+          fin_payment_schedule_id, ad_client_id, ad_org_id, isactive, created, duedate, fin_paymentmethod_id , c_currency_id, amount, 
+          paidamt, outstandingamt, expecteddate, em_aprm_modif_paym_sched, em_aprm_modif_paym_out_sched
+          ,createdby, updated, updatedby )
+		    VALUES (v_fin_payment_schedule_id, v_ClientID, v_OrgID, 'Y', now(),now(),v_fin_paymentmethod_id, v_c_currency_id, 0, 
+		    0, 0, now(), 'N', 'N', v_AD_User_ID, now(), v_AD_User_ID);
+    EXCEPTION
+      WHEN OTHERS THEN
+      --      DBMS_OUTPUT.PUT_LINE('No Data Found Exception');
+      v_Message:= '@ERROR=' || SQLERRM;
+      RAISE_APPLICATION_ERROR(-20000, v_Message);
+    END;
+
+    BEGIN
+      Ad_Sequence_Next('fin_payment_scheduledetail', v_ClientID, v_scheduledetail_id) ;
+      --v_amount
+        INSERT INTO fin_payment_scheduledetail (
+          fin_payment_scheduledetail_id, ad_client_id, ad_org_id, isactive, created, amount, iscanceled,
+          doubtfuldebt_amount, isinvoicepaid, createdby, updated, updatedby ,fin_payment_detail_id)
+		    VALUES (v_scheduledetail_id, v_ClientID, v_OrgID, 'Y', now(),v_amount, 'N',
+          0, 'N',v_AD_User_ID, now(), v_AD_User_ID,v_fin_payment_detail_id);
+    EXCEPTION
+      WHEN OTHERS THEN
+        --      DBMS_OUTPUT.PUT_LINE('No Data Found Exception');
+        v_Message:= '@ERROR=' || SQLERRM;
+        RAISE_APPLICATION_ERROR(-20000, v_Message);
+    END;
+
+    UPDATE fin_payment SET processed = 'Y'
+      WHERE fin_payment_id=v_fin_payment_id;
+    UPDATE gumk_umk SET status = 'complete'
+      WHERE gumk_umk_id=gumk_umk_id;
+END; --BODY
+
+END GUMK_REALISASI_PAYINOUT]]></body>
+    </function>
+  </database>

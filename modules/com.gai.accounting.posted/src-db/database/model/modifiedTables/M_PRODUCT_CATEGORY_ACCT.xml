@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE M_PRODUCT_CATEGORY_ACCT">
+    <table name="M_PRODUCT_CATEGORY_ACCT" primaryKey="M_PRODUCT_CATEGORY_ACCT_KEY">
+      <column name="EM_GAP_PROD_RECEIVABLES" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GAP_PROD_PAYABLE" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GAP_PAYABLE_REAS" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GAP_PAYABLE_KLAIM" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GAP_RECEIVABLE_SUBORG" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GAP_RECEIVABLE_RECOV" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GAP_RECEIVABLE_PJM" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_PAYABLE_KLAIM_ACCT">
+        <reference local="EM_GAP_PAYABLE_KLAIM" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_PAYABLE_REAS_ACCT">
+        <reference local="EM_GAP_PAYABLE_REAS" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_PROD_PAYABLE_ACCT">
+        <reference local="EM_GAP_PROD_PAYABLE" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_PROD_RECEIVABLE_ACCT">
+        <reference local="EM_GAP_PROD_RECEIVABLES" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_RECEIVE_C_PJM_ACCT">
+        <reference local="EM_GAP_RECEIVABLE_PJM" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_RECEIVE_RECOV_ACCT">
+        <reference local="EM_GAP_RECEIVABLE_RECOV" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_VALIDCOMBINATION" name="EM_GAP_RECEIVE_SUBORG_ACCT">
+        <reference local="EM_GAP_RECEIVABLE_SUBORG" foreign="C_VALIDCOMBINATION_ID"/>
+      </foreign-key>
+    </table>
+  </database>

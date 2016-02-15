@@ -1,0 +1,3 @@
+jQuery(document).ready(function(){$(".page-container form").submit(function(){var c=$(this).find(".username").val();var d=$(this).find(".password").val();if(c==""){$(this).find(".error").fadeOut("fast",function(){$(this).css("top","27px");});$(this).find(".error").fadeIn("fast",function(){$(this).parent().find(".username").focus();
+});return false;}if(d==""){$(this).find(".error").fadeOut("fast",function(){$(this).css("top","96px");});$(this).find(".error").fadeIn("fast",function(){$(this).parent().find(".password").focus();});return false;}});$(".page-container form .username, .page-container form .password").keyup(function(){$(this).parent().find(".error").fadeOut("fast");
+});});

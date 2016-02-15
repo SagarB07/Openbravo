@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+GAI 
+ ************************************************************************
+-->
+<SqlClass name="GprGetDepartmentData" package="com.gai.procurement.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+        SELECT EM_GMM_MASTER_DEPARTMENT_ID as departmentid 
+        FROM AD_USER 
+        WHERE AD_USER_ID = ?
+      </Sql>
+      <Parameter name="adUserId"/>
+   </SqlMethod>
+</SqlClass>

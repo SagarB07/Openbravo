@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTPAYMENT">
+    <function name="GAI_INSERTPAYMENT" type="NULL">
+      <parameter name="client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="partner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="referenceno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="noinvoice" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kredit_dipakai" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="invoice_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="payment_used" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_id VARCHAR(32):= get_uuid();
+v_detail_id VARCHAR(32):= get_uuid();
+v_schedule_id VARCHAR(32):= get_uuid();
+v_financial_id VARCHAR(32);
+v_partner_id_used VARCHAR(32);
+v_DocumentNo VARCHAR(32);
+
+v_partner_saldo NUMBER;
+v_cur_id VARCHAR(32);
+v_pricelist_id VARCHAR(32);
+v_term_id VARCHAR(32);
+v_payment_id VARCHAR(32);
+
+BEGIN
+BEGIN
+Select fin_financial_account_id into v_financial_id from c_bpartner where c_bpartner_id = partner;
+END;
+
+BEGIN
+SELECT CR.C_CURRENCY_ID INTO v_cur_id FROM C_BPARTNER BP,M_PRICELIST MP,C_CURRENCY CR WHERE 
+BP.M_PRICELIST_ID = MP.M_PRICELIST_ID
+AND CR.C_CURRENCY_ID = MP.C_CURRENCY_ID 
+AND BP.C_BPARTNER_ID = partner;
+END;
+
+BEGIN
+SELECT BP.M_PRICELIST_ID INTO v_pricelist_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = partner;
+END;
+
+BEGIN
+SELECT BP.C_PAYMENTTERM_ID INTO v_term_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = partner;
+END;
+
+BEGIN
+SELECT BP.FIN_PAYMENTMETHOD_ID INTO v_payment_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = partner;
+END;
+
+
+
+Ad_Sequence_Doctype('D132517AE775435B8EB2832CC61FCAB1', '800DEBB742384A71BBD363493A6E7333', 'Y', v_DocumentNo);
+
+
+  BEGIN
+insert into FIN_PAYMENT values(v_id,client,org,now()
+    ,'100',now(),'100','Y','Y',partner,now(),coalesce(v_cur_id,'303'),0,0,COALESCE(v_payment_id,'06DF9C1CDA6D4CF8B7ABA635422DEB4F'),
+    v_DocumentNo,Coalesce(referenceno,NULL),'RPPC','N','N','N','Invoice No.: '|| noinvoice,
+    COALESCE(v_financial_id,'E54AA1A1BD2246668E89502D42027616'),
+    'D132517AE775435B8EB2832CC61FCAB1',NULL,NULL,NULL,NULL,NULL,0,Kredit_dipakai,'N',1,0,NULL,NULL,'RE','N','N','N','N', NULL, NULL);
+  END;
+
+
+  BEGIN
+  insert into fin_payment_detail values(v_detail_id,client
+  ,org,now(),'100',now(),'100',v_id,
+  Kredit_dipakai,
+  'N','Y',0,NULL,'Y');
+  END;
+
+  BEGIN
+ insert into fin_payment_schedule values(v_schedule_id,client
+  ,org,now(),'100',now(),'100',invoice_id,NULL,now(),
+v_payment_id,v_cur_id,Kredit_dipakai,Kredit_dipakai,0,'Y',NULL,'Y',NULL,NULL,now(),
+'N','N');
+  END;
+
+
+  BEGIN
+insert into fin_payment_scheduledetail values(get_uuid(),client
+  ,org,now(),'100',now(),'100',v_detail_id,NULL,
+v_schedule_id,Kredit_dipakai,'Y',0,'N',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'N');
+  END;
+
+
+  BEGIN
+insert into FIN_Payment_Credit values(get_uuid(),client
+  ,org,now(),'100',now(),'100','Y',v_id,
+payment_used,Kredit_dipakai,v_cur_id);
+  END;
+
+  BEGIN 
+
+  update fin_payment set processed = 'Y' where fin_payment_id = v_id;
+
+  END;
+
+
+   BEGIN 
+update c_invoice set ispaid ='Y' ,totalpaid=kredit_dipakai,outstandingamt=0,daystilldue=0,dueamt=0,
+lastcalculatedondate=now(),finalsettlement=now(),daysoutstanding=now() - TO_DATE('2014-07-07','YYYY-MM-DD'),percentageoverdue=100 where c_invoice_id = invoice_id; 
+  END;
+
+
+
+BEGIN
+Select c_bpartner_id into v_partner_id_used from fin_payment where fin_payment_id = payment_used;
+END;
+
+ BEGIN 
+Update fin_payment set used_credit = used_credit + Kredit_dipakai where fin_payment_id = payment_used;
+  END;
+
+  
+    EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GAI_INSERTPAYMENT
+]]></body>
+    </function>
+  </database>

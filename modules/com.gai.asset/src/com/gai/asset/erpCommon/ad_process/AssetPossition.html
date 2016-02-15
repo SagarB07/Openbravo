@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+ * The contents of this file are subject to the Openbravo  Public  License
+ * Version  1.0  (the  "License"),  being   the  Mozilla   Public  License
+ * Version 1.1  with a permitted attribution clause; you may not  use this
+ * file except in compliance with the License. You  may  obtain  a copy of
+ * the License at http://www.openbravo.com/legal/license.html
+ * Software distributed under the License  is  distributed  on  an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific  language  governing  rights  and  limitations
+ * under the License.
+ * The Original Code is Openbravo ERP.
+ * The Initial Developer of the Original Code is Openbravo SLU
+ * All portions are Copyright (C) 2010-2013 Openbravo SLU
+ * All Rights Reserved.
+ * Contributor(s):  ______________________________________.
+ *************************************************************************
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title id="paramTitle">xxTitle</title>
+<link rel="shortcut icon" href="../../../../../web/images/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="../../../../../web/skins/Default/Openbravo_ERP_250.css" id="paramCSS"></link>
+
+<script language="JavaScript" type="text/javascript" id="paramDirectory">
+  var baseDirectory = "../../../../../web/";
+</script>
+<script language="JavaScript" src="../../../../../web/js/messages.js" type="text/javascript"></script>
+<script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript" id="paramLanguage">
+  var defaultLang = "en_US";
+</script>
+<script language="JavaScript" src="../../../../../web/js/shortcuts.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/utils.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/windowKeyboard.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/appStatus.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/searchs.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/ajax.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/default/MessageBox.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/messages.js" type="text/javascript"></script>
+<script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/org.openbravo.userinterface.selector/js/classic-skin-variable.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/../org.openbravo.client.kernel/OBCLKER_Kernel/StaticResources" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/calculator.js" type="text/javascript"></script>
+<script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/jscalendar/calendar.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/jscalendar/lang/calendar-es.js" type="text/javascript" id="fieldCalendar"></script>
+<script language="JavaScript" src="../../../../../web/js/default/DateTextBox.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/appStatus.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/dojoConfig.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/dojo/dojo.js" type="text/javascript"></script>
+<script type="text/javascript">
+dojo.hostenv.writeIncludes(); //makes debugging in Venkman possible
+</script>
+<script type="text/javascript">
+  window.onunload = reloadOpener; // reloads opener on closing
+</script>
+
+<script language="JavaScript" type="text/javascript">
+function validate() {
+  var frm = document.frmMain;
+  if(frm.inpDateFrom.value == null || frm.inpDateFrom.value=="") {
+      setWindowElementFocus(frm.inpDateFrom);
+      showJSMessage(7);
+      return false;
+  } 
+  
+  if(frm.inpProcess.value == null || frm.inpProcess.value=="") {
+      setWindowElementFocus(frm.inpProcess);
+      showJSMessage(7);
+      return false;
+  }
+
+  if(frm.inpProcess.value == "PD" && (frm.inpGmmMasterDepartmentId.value=="" || frm.inpAdUserId.value=="")) {
+      setWindowElementFocus(frm.inpGmmMasterDepartmentId);
+      setWindowElementFocus(frm.inpAdUserId);
+      showJSMessage(7);
+      return false;
+  }
+
+  else if(frm.inpProcess.value == "LG" && (frm.inpcBPartnerId.value=="" || frm.inpcTaxId.value==""|| frm.inpmPriceListId.value==""||frm.inpLocatorId.value=="")) {
+      setWindowElementFocus(frm.inpcBPartnerId);
+      setWindowElementFocus(frm.inpcTaxId);
+      setWindowElementFocus(frm.inpmPriceListId);
+      setWindowElementFocus(frm.inpLocatorId);
+      setWindowElementFocus(frm.inpNetUnit);
+      showJSMessage(7);
+      return false;
+  }
+
+
+  else if(frm.inpProcess.value == "JL" && (frm.inpcBPartnerId.value=="" || frm.inpcTaxId.value==""||frm.inpmPriceListId.value==""||frm.inpLocatorId.value=="")) 
+  {
+      setWindowElementFocus(frm.inpcBPartnerId);
+      setWindowElementFocus(frm.inpcTaxId);
+      setWindowElementFocus(frm.inpmPriceListId);
+      setWindowElementFocus(frm.inpLocatorId);
+      setWindowElementFocus(frm.inpNetUnit);
+      showJSMessage(7);
+      return false;
+  }
+
+  else  if(frm.inpProcess.value == "H" && (frm.inpLocatorId.value=="")) 
+  {
+      setWindowElementFocus(frm.inpLocatorId);
+      showJSMessage(7);
+      return false;
+  }
+  
+  else if(frm.inpProcess.value == "WO" && (frm.inpLocatorId.value=="")) 
+  {
+      setWindowElementFocus(frm.inpLocatorId);
+      showJSMessage(7);
+      return false;
+  }
+  return true;
+}
+
+
+    function showHide(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if(Process[i].value === 'PD' ){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value);
+
+        document.getElementById(elem).style.display = visible;
+    }
+
+    function showHidePIC(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if(Process[i].value === 'PD' ){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value);
+
+        document.getElementById(elem).style.display = visible;
+    }
+
+    function showHideNetUnit(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if(Process[i].value === 'LG' ||Process[i].value === 'JL'){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value);
+
+        document.getElementById(elem).style.display = visible;
+    }
+
+    function showHideBP(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if(Process[i].value === 'LG' ||Process[i].value === 'JL'){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value)
+
+        document.getElementById(elem).style.display = visible;
+    }
+  function showHideL(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if(Process[i].value === 'LG'||Process[i].value === 'H' ||Process[i].value === 'JL'||Process[i].value === 'WO'){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value)
+
+        document.getElementById(elem).style.display = visible;
+    }
+
+    function getPartner(){
+      console.log("Partner : "+document.frmMain.inpcBPartnerId.value);  
+    }
+
+  function onLoadDo() {
+  this.windowTables = new Array(
+      new windowTableId('client', 'buttonAction')
+    );
+    setWindowTableParentElement();
+    this.tabsTables = new Array(
+      new tabTableId('tdtopTabs')
+    );
+    setTabTableParentElement();
+    enableShortcuts('edition');
+    setBrowserAutoComplete(false);
+    document.frmMain.inpProcess.value = 'PD';
+    
+    //depurar();
+  }
+
+  function closeThisPage() {
+    closePage();
+  }
+
+</script>
+
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="onLoadDo();" >
+<form name="frmMain" method="post" action="AssetPossition.html">
+  <input type="hidden" name="Command" />
+  <input type="hidden" name="IsPopUpCall" value="1" />
+  <input type="hidden" name="inpadOrgId" value="" id="fieldOrg"/>
+  <input type="hidden" name="inpadWindowId" value="" id="fieldWindowId"/>
+  <input type="hidden" name="inpTabId" value="" id="fieldTabId"/>
+  <input type="hidden" name="isFirstLoad" value="true"/>
+  <!-- end Custom field -->
+  <input type="hidden" name="strOrgID" id="paramOrgID" value=""/>
+  <input type="hidden" name="strAssetID" id="paramAssetID" value=""/>
+  <input type="hidden" name="strProductID" id="paramProductID" value=""/> 
+ 
+
+  <div class="Popup_ContentPane_CircleLogo">
+    <div class="Popup_WindowLogo">
+      <img class="Popup_WindowLogo_Icon Popup_WindowLogo_Icon_process" src="../../../../../web/images/blank.gif" border=0/></img>
+    </div>
+  </div>
+  <table cellspacing="0" cellpadding="0" width="100%" id="table_header">
+    <tr>
+      <td>
+        <table cellspacing="0" cellpadding="0" class="Popup_ContentPane_NavBar">
+          <tr class="Popup_NavBar_bg"><td></td>
+            <td class="Popup_NavBar_separator_cell"></td>
+            <td class="Popup_NavBar_bg_logo_left"></td>
+            <td class="Popup_NavBar_bg_logo" width="1" onclick="openNewBrowser('http://www.openbravo.com', 'Openbravo');return false;"><img src="../../../../../web/images/blank.gif" alt="Openbravo" title="Openbravo" border="0" id="openbravoLogo" class="Popup_NavBar_logo" /></td>
+            <td class="Popup_NavBar_bg_logo_right"></td>
+            <td class="Popup_NavBar_Popup_title_cell"><span name="lblR" id="lblRPopupTitle">Process Asset Possition</span><span name="lblP" id="lblPPopupTitle"></span></td>
+            <td class="Popup_NavBar_separator_cell"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <table cellspacing="0" cellpadding="0" class="Popup_ContentPane_SeparatorBar">
+          <tr>
+            <td class="Popup_SeparatorBar_bg"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+  <table cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td>
+        <div class="Popup_ContentPane_Client" style="overflow: auto;" id="client_messagebox">
+
+          <!-- MessageBox -->
+          <table cellpadding="0" cellspacing="0" id="messageBoxID" class="MessageBoxyy">
+            <tbody>
+            <tr class="MessageBox_TopMargin">
+              <td class="MessageBox_LeftMargin"></td>
+              <td></td>
+              <td class="MessageBox_RightMargin"></td>
+            </tr>
+            <tr>
+              <td class="MessageBox_LeftMargin"></td>
+              <td>
+
+                <table cellpadding="0" cellspacing="0" class="MessageBox_Container">
+                  <tbody>
+                  <tr>
+                    <td class="MessageBox_LeftTrans">
+                      <table style="width: 100%; height: 100%" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                          <td class="MessageBox_TopLeft"></td>
+                        </tr>
+                        <tr>
+                          <td class="MessageBox_Left"></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td class="MessageBox_bg">
+
+                      <table class="MessageBox_Top">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <span>
+                            <table cellpadding="0" cellspacing="0" class="MessageBox_Body_ContentCell">
+                              <tbody>
+                              <tr>
+                                <td class="MessageBox_Icon_ContentCell">
+                                  <div class="MessageBox_Icon"></div>
+                                </td>
+                                <td style="vertical-align: top;" id="messageBoxIDContent">
+                                  <span>
+                                    <div class="MessageBox_TextTitle" id="messageBoxIDTitle">
+                                      xxInfo: AccessTableWithNoView
+                                    </div>
+                                    <div class="MessageBox_TextDescription" id="messageBoxIDMessage">
+                                      xxThe current information is empty.
+                                    </div>
+                                    <div class="MessageBox_TextSeparator"></div>
+                                  </span>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                            </span>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+
+                    </td>
+                    <td class="MessageBox_RightTrans">
+                      <table style="width: 100%; height: 100%" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                          <td class="MessageBox_TopRight"></td>
+                        </tr>
+                        <tr>
+                          <td class="MessageBox_Right"></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td rowspan="2" class="MessageBox_BottomLeft">
+                    </td>
+                    <td class="MessageBox_BottomTrans MessageBox_bg">
+                    </td>
+                    <td rowspan="2" class="MessageBox_BottomRight">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="MessageBox_Bottom">
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </td>
+              <td class="MessageBox_RightMargin"></td>
+            </tr>
+            <tr class="MessageBox_BottomMargin">
+              <td class="MessageBox_LeftMargin"></td>
+              <td></td>
+                <td class="MessageBox_RightMargin"></td>
+              </tr>
+            </tbody>
+          </table>
+        <!-- MessageBox END -->
+        </div>
+      </td>
+    </tr>
+  </table>
+
+    <!-- group Filter -->
+  <table cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td>
+            <table class="Main_Client_TableEdition">
+                <tr>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                </tr>
+                <tr>
+                  <td colspan="7">
+                    <table class="FieldGroup" cellspacing="0" cellpadding="0" border="0">
+                    <tbody>
+                      <tr class="FieldGroup_TopMargin"/> </tr>
+                      <tr>
+                        <td class="FieldGroupTitle_Left"><img class="FieldGroupTitle_Left_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                        <td class="FieldGroupTitle">Process</td>
+                        <td class="FieldGroupTitle_Right"><img class="FieldGroupTitle_Right_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                        <td class="FieldGroupContent"/></td>
+                      </tr>
+                      <tr class="FieldGroup_BottomMargin"/> </tr>
+                    </tbody>
+                    </table>
+                  </td>
+                  </tr>
+                  <!-- parameter element area -->
+
+
+                  <tr >
+                    <td class="TitleCell"><span class="LabelText">Process<b>*</b></span></td>
+                    <!--
+                    <td class="Combo_ContentCell"> 
+                    <select name="inpProcess" id="paramProcess" class="Combo Combo_OneCell_width" onchange="showHide('paramAssetPossition');showHideBP('paramBusinessPartner'); showHideBP('paramTax');showHideL('paramLocator')" >
+                        <option value="PD">Dipindahkan</option>
+                        <option value="LG">Dilelang</option>
+                        <option value="JL">Dijual</option>
+                        <option value="WO">Hilang</option>
+                      </select>
+                      <input type="hidden" value="" id="paramSelectedMovement" />
+                    </td>
+                    -->
+                    <td class="Combo_ContentCell">
+                        <select name="inpProcess" id="paramSelectedMovement" class="Combo Combo_OneCell_width" onchange="showHide('paramAssetPossition');showHideBP('paramBusinessPartner'); showHideBP('paramTax');showHideBP('paramPriceList');showHideL('paramLocator'); showHidePIC('paramforpic'), showHideNetUnit('paramNetUnit')">
+                          <option value=""><div id="reportMovementType"></div></option>
+                        </select>
+
+                    </td>
+                    
+                    <td class="ContentCell"></td>
+                    <td class="ContentCell"></td>
+                    <td class="ContentCell"></td>
+                    <td class="ContentCell"></td>
+                  </tr>
+                  
+                  <tr>
+                  <td class="TitleCell"><span class="LabelText">Movement Date<b>*</b></span></td>
+                  <td class="TextBox_btn_ContentCell">
+                    <table border="0" cellspacing="0" cellpadding="0" summary=""  style="padding-top: 0px;">
+                      <tr>
+                        <td class="TextBox_ContentCell">
+                          <input dojoType="openbravo:DateTextbox" displayFormat="xx" saveFormat="yy"  class="TextBox_btn_OneCell_width required" required="true" type="text" name="inpDateFrom" id="paramDateFrom" size="10" maxlength="10" value="" onkeyup="autoCompleteDate(this.textbox, this.displayFormat);return true;"></input><script>djConfig.searchIds.push("paramDateFrom");</script>
+                        </td>
+                        <td class="FieldButton_bg">
+                          <a class="FieldButtonLink" href="#" onfocus="setWindowElementFocus(this); window.status='Calendar'; return true;" onblur="window.status=''; return true;" onkeypress="this.className='FieldButtonLink_active'; return true;" onkeyup="this.className='FieldButtonLink_focus'; return true;" onclick="showCalendar('frmMain.inpDateFrom', document.frmMain.inpDateFrom.value, false);return false;" >
+                          <table class="FieldButton" onmouseout="this.className='FieldButton';window.status='';return true;" onmouseover="this.className='FieldButton_hover';window.status='Show calendar';return true;" onmousedown="this.className='FieldButton_active';return true;" onmouseup="this.className='FieldButton';return true;">
+                            <tr>
+                              <td class="FieldButton_bg">
+                                <img alt="Calendar" class="FieldButton_Icon FieldButton_Icon_Calendar" title="Calendar" src="../../../../../web/images/blank.gif" border="0"></img>
+                              </td>
+                            </tr>
+                          </table>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  </tr>
+                  
+                  <!--<tr name="inpAssetPossition" id="paramAssetPossition">
+                    <td class="TitleCell"><span class="LabelText">Asset Possition<b>*</b></span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr name="inpMasterDepartment" id="paramMasterDepartment">
+                          <td style="padding-top: 0px;">
+                            <script>var sc_GMM_Master_Department_ID = null;</script>
+                            <input type="hidden" name="inpGmmMasterDepartmentId" id="GMM_Master_Department_ID" identifier="" value="" onreset="sc_GMM_Master_Department_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_GMM_Master_Department_ID.selectorField);"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/6DD3AA8C03F64EEBAE2FD427479EBFB0?columnName=GMM_Master_Department_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=6DD3AA8C03F64EEBAE2FD427479EBFB0"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>-->
+
+                  <tr name="inpAssetPossition" id="paramAssetPossition">
+                    <td class="TitleCell"><span class="LabelText">Asset Possition<b>*</b></span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr name="inpMasterDepartment" id="paramMasterDepartment">
+                          <td style="padding-top: 0px;">
+                            <script>var sc_GAI_Kantor_ID = null;</script>
+                            <input type="hidden" name="inpGmmMasterDepartmentId" id="GAI_Kantor_ID" identifier="" value="" onreset="sc_GAI_Kantor_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_GAI_Kantor_ID.selectorField);"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/901D85D8AF4E499181067222B91B8E3C?columnName=GAI_Kantor_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=901D85D8AF4E499181067222B91B8E3C"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
+
+                  <tr name="inpforpic" id="paramforpic">
+                    <td class="TitleCell"><span class="LabelText">PIC<b>*</b></span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr name="inpPIC" id="paramPIC">
+                          <td style="padding-top: 0px;">
+                            <script>var sc_AD_User_ID = null;</script>
+                            <input type="hidden" name="inpAdUserId" id="AD_User_ID" identifier="" value="" onreset="sc_AD_User_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_AD_User_ID.selectorField);"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/CEC34A96D07A4E77ADF0E79E0FFBADB2?columnName=AD_User_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=CEC34A96D07A4E77ADF0E79E0FFBADB2"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
+                  <tr name="inpBusinessPartner" id = "paramBusinessPartner" style="display:none" >
+                    <td class="TitleCell"><span class="LabelText">Business Partner</span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr>
+                          <td style="padding-top: 0px;">
+                            <script>var sc_C_BPartner_ID = null;</script>
+                            <input type="hidden" name="inpcBPartnerId" id="C_BPartner_ID" value="" onreset="sc_C_BPartner_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_C_BPartner_ID.selectorField);getPartner();"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/346C51A0AD2B4896873620FEC1CB99EE?columnName=C_BPartner_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=346C51A0AD2B4896873620FEC1CB99EE"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                  </tr>
+
+
+                  <tr name="inpTax" id = "paramTax" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Tax</span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr>
+                          <td style="padding-top: 0px;">
+                            <script>var sc_C_Tax_ID = null;</script>
+                            <input type="hidden" name="inpcTaxId" id="C_Tax_ID" value="" onreset="sc_C_Tax_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_C_Tax_ID.selectorField);getPartner();"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/913AF5FF14004FBB82CED5CE684A9641?columnName=C_Tax_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=913AF5FF14004FBB82CED5CE684A9641"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                  </tr>
+
+                  <tr name="inpPriceList" id = "paramPriceList" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Price List</span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr>
+                          <td style="padding-top: 0px;">
+                            <script>var sc_M_PriceList_ID = null;</script>
+                            <input type="hidden" name="inpmPriceListId" id="M_PriceList_ID" value="" onreset="sc_M_PriceList_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_M_PriceList_ID.selectorField);"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/4800B6C37BFD4BDBB6DF55BEC3BBCC44?columnName=M_PriceList_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=4800B6C37BFD4BDBB6DF55BEC3BBCC44"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                  </tr>
+
+                  <tr name="inpLocator" id = "paramLocator" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Storage Bin</span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr>
+                          <td style="padding-top: 0px;">
+                            <script>var sc_M_Locator_ID = null;</script>
+                            <input type="hidden" name="inpLocatorId" id="M_Locator_ID" value="" onreset="sc_M_Locator_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_M_Locator_ID.selectorField);"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/2C8ACAA8F1864A01845A0E30E5C4B5E3?columnName=M_Locator_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=2C8ACAA8F1864A01845A0E30E5C4B5E3"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                  </tr>
+
+                  <tr id="paramNetUnit" name="inpNetUnit" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Net Unit Price</span></td>
+                    <td class="Combo_ContentCell">
+                          <input name="inpNetUnitPrice" id="paramNetUnitPrice" class="Combo Combo_OneCell_width" type="number"/>
+                    </td>
+                  </tr>
+
+                  <!--<tr class="FieldGroup_BottomMargin"/> </tr>-->
+                  </tr>
+                  
+                  </tr>
+                  <!-- end parameter element area -->
+                  </table>
+
+            <!-- end test -->
+        </td>
+    </tr>
+    <!--  end group filter-->
+    <!-- group grid -->
+    <tr>
+      <td>
+            <table class="Main_Client_TableEdition">
+                <tr>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                </tr>
+                      </table>
+                    </td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                  </tr>
+                  <!-- end parameter element area -->
+                  </table>
+
+            <!-- end test -->
+        </td>
+    </tr>
+    <!-- end group grid -->
+
+    <!--  group button -->
+    <tr>
+      <td>
+            <table class="Main_Client_TableEdition">
+                <tr>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                </tr>
+                  <!-- parameter element area -->
+                    <tr>
+                      <td class="TitleCell"></td>
+                      <td class="TitleCell"></td>
+                      <td class="Button_CenterAlign_ContentCell">
+                        <div>
+                          <button type="button"
+                            id="buttonAction"
+                            class="ButtonLink"
+                            onclick="submitCommandForm('PROCESS', true, null, null, null, true);return false;"
+                            onfocus="buttonEvent('onfocus', this); window.status='Submit This Record'; return true;"
+                            onblur="buttonEvent('onblur', this);"
+                            onkeyup="buttonEvent('onkeyup', this);"
+                            onkeydown="buttonEvent('onkeydown', this);"
+                            onkeypress="buttonEvent('onkeypress', this);"
+                            onmouseup="buttonEvent('onmouseup', this);"
+                            onmousedown="buttonEvent('onmousedown', this);"
+                            onmouseover="buttonEvent('onmouseover', this); window.status='Submit This Record'; return true;"
+                            onmouseout="buttonEvent('onmouseout', this);">
+                            <table class="Button">
+                              <tr>
+                                <td class="Button_left"><img class="Button_Icon Button_Icon_html" alt="View Results in a New Window" title="View Results in a New Window" src="../../../../../web/images/blank.gif" border="0" /></td>
+                                <td class="Button_text">Submit</td>
+                                <td class="Button_right"></td>
+                              </tr>
+                            </table>
+                          </button>
+                        </div>
+                      </td>
+
+                      <td class="Button_CenterAlign_ContentCell">
+                        <div>
+                          <button type="button"
+                            id="buttonCancel"
+                            class="ButtonLink"
+                            onclick="closeThisPage();return false;"
+                            onfocus="buttonEvent('onfocus', this); window.status='Cancel'; return true;"
+                            onblur="buttonEvent('onblur', this);"
+                            onkeyup="buttonEvent('onkeyup', this);"
+                            onkeydown="buttonEvent('onkeydown', this);"
+                            onkeypress="buttonEvent('onkeypress', this);"
+                            onmouseup="buttonEvent('onmouseup', this);"
+                            onmousedown="buttonEvent('onmousedown', this);"
+                            onmouseover="buttonEvent('onmouseover', this); window.status='Cancel'; return true;"
+                            onmouseout="buttonEvent('onmouseout', this);">
+                            <table class="Button">
+                              <tr>
+                                <td class="Button_left"><img class="Button_Icon Button_Icon_cancel" alt="Cancel" title="Cancel" src="../../../../../web/images/blank.gif" border="0" /></td>
+                                <td class="Button_text Button_width">Cancel</td>
+                                <td class="Button_right"></td>
+                              </tr>
+                            </table>
+                          </button>
+                        </div>
+                      </td>
+
+                      <td class="ContentCell">
+                      </td>
+                      <td class="TitleCell"></td>
+                      <td class="ContentCell"></td>
+                      <td class="ContentCell"></td>
+                    </tr>
+                  </table>
+
+            <!-- end test -->
+        </td>
+    </tr>
+    <!--  end group button -->
+  </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Rpt_Memorandum" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="186"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="REQUISITION_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+MR.AD_ORG_ID as ORGANIZATIONID,
+coalesce(TO_CHAR(MR.M_REQUISITION_ID),'') ,coalesce(TO_CHAR(MR.DOCUMENTNO),'') AS DOCUMENTNO, MR.CREATED AS TANGGAL, coalesce(TO_CHAR(MR.DESCRIPTION),'') AS DESCRIPTION,
+coalesce(TO_CHAR(GMDD.JABATAN),'') AS JABATAN1, coalesce(TO_CHAR(GMDD1.JABATAN),'') AS JABATAN2, coalesce(TO_CHAR(GMDD2.JABATAN),'') AS JABATAN3, coalesce(TO_CHAR(GMD.DEPARTMENT),'') AS DARI,
+coalesce(TO_CHAR(MR.EM_GPR_PERIHAL),'') as perihal, coalesce(TO_CHAR(AU.NAME),'') AS REQUESTER,
+coalesce (TO_CHAR(AU.TITLE),'') AS POSISIREQ, coalesce(TO_CHAR(AU1.NAME),'') AS NAMADARI,
+coalesce (TO_CHAR(AU1.TITLE),'') AS POSISIDARI
+FROM M_REQUISITION MR
+LEFT JOIN GNV_MASTER_DATADIREKSI GMDD ON GMDD.GNV_MASTER_DATADIREKSI_ID = MR.EM_GNV_MASTER_DATADIREKSI_ID
+LEFT JOIN GNV_MASTER_DATADIREKSI GMDD1 ON GMDD1.GNV_MASTER_DATADIREKSI_ID = MR.EM_GNV_MASTER_DATADIREKSI2_ID
+LEFT JOIN GNV_MASTER_DATADIREKSI GMDD2 ON GMDD2.GNV_MASTER_DATADIREKSI_ID = MR.EM_GNV_MASTER_DATADIREKSI3_ID
+LEFT JOIN GMM_MASTER_DEPARTMENT GMD ON GMD.GMM_MASTER_DEPARTMENT_ID = MR.EM_GMM_MASTER_DEPARTMENT_ID
+LEFT JOIN AD_USER AU ON AU.AD_USER_ID = MR.AD_USER_ID
+LEFT JOIN AD_USER AU1 ON AU1.AD_USER_ID = GMD.AD_USER_ID
+WHERE MR.M_REQUISITION_ID IN ($P{REQUISITION_ID})]]>
+	</queryString>
+	<field name="ORGANIZATIONID" class="java.lang.String"/>
+	<field name="COALESCE(TO_CHAR(MR.M_REQUISITION_ID),&apos;&apos;)" class="java.lang.String"/>
+	<field name="DOCUMENTNO" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.sql.Timestamp"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="JABATAN1" class="java.lang.String"/>
+	<field name="JABATAN2" class="java.lang.String"/>
+	<field name="JABATAN3" class="java.lang.String"/>
+	<field name="DARI" class="java.lang.String"/>
+	<field name="PERIHAL" class="java.lang.String"/>
+	<field name="REQUESTER" class="java.lang.String"/>
+	<field name="POSISIREQ" class="java.lang.String"/>
+	<field name="NAMADARI" class="java.lang.String"/>
+	<field name="POSISIDARI" class="java.lang.String"/>
+	<variable name="vjabatan1" class="java.lang.String">
+		<variableExpression><![CDATA[$F{JABATAN1}==null?""
+    :$F{JABATAN1}]]></variableExpression>
+	</variable>
+	<variable name="vjabatan2" class="java.lang.String">
+		<variableExpression><![CDATA[$F{JABATAN2}==null?""
+    :$F{JABATAN2}]]></variableExpression>
+	</variable>
+	<variable name="vjabatan3" class="java.lang.String">
+		<variableExpression><![CDATA[$F{JABATAN3}==null?""
+    :$F{JABATAN3}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="86" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="27" width="555" height="16"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="11" isBold="true" isUnderline="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[MEMORANDUM]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="43" width="555" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Nomor : "+$F{DOCUMENTNO}==null?"":$F{DOCUMENTNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="71" width="101" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Kepada"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="71" width="10" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="111" y="71" width="444" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{JABATAN1}==null && $F{JABATAN2}==null&& $F{JABATAN3}==null ?""
+    :$F{JABATAN2}==null&& $F{JABATAN3}==null? $F{JABATAN1}
+    :$F{JABATAN1}==null&& $F{JABATAN3}==null? $F{JABATAN2}
+    :$F{JABATAN1}==null&& $F{JABATAN2}==null? $F{JABATAN3}
+    :$F{JABATAN3}==null?$F{JABATAN1}+"\n"+$F{JABATAN2}
+    :$F{JABATAN2}==null?$F{JABATAN1}+"\n"+$F{JABATAN3}
+    :$F{JABATAN1}==null?$F{JABATAN2}+"\n"+$F{JABATAN3}
+    :$F{JABATAN2}+"\n"+$F{JABATAN2}+"\n"+$F{JABATAN3}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Left" vAlign="Top" isUsingCache="true">
+				<reportElement key="image-1" x="0" y="-2" width="96" height="29"/>
+				<imageExpression class="java.awt.Image"><![CDATA[org.openbravo.erpCommon.utility.Utility.showImageLogo("yourcompanylegal", $F{ORGANIZATIONID})]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="319" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="101" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Tanggal"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="15" width="101" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Dari"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="101" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Perihal"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="15" width="10" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="0" width="10" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="30" width="10" height="15"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="111" y="0" width="444" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TANGGAL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="50" width="555" height="1"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="51" width="555" height="61"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Demikian kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih."
+    + $F{DESCRIPTION}+"\n\n Mohon atas persetujuan Bapak atas " +$F{PERIHAL} +"\n\nDemikian kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="124" width="555" height="13"/>
+				<textElement markup="none">
+					<font fontName="Times New Roman" size="10" isBold="false" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Wassalamu'alaikum Wr.Wb"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="138" width="555" height="13"/>
+				<textElement markup="none">
+					<font fontName="Times New Roman" size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Hormat Kami,"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="111" y="15" width="444" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DARI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="111" y="30" width="444" height="15" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PERIHAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="333" y="280" width="129" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true" isUnderline="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAMADARI}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="333" y="293" width="129" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{POSISIDARI}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="92" y="293" width="129" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{POSISIREQ}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="280" width="129" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true" isUnderline="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{REQUESTER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+ * The contents of this file are subject to the Openbravo  Public  License
+ * Version  1.0  (the  "License"),  being   the  Mozilla   Public  License
+ * Version 1.1  with a permitted attribution clause; you may not  use this
+ * file except in compliance with the License. You  may  obtain  a copy of
+ * the License at http://www.openbravo.com/legal/license.html
+ * Software distributed under the License  is  distributed  on  an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific  language  governing  rights  and  limitations
+ * under the License.
+ * The Original Code is Openbravo ERP.
+ * The Initial Developer of the Original Code is Openbravo SLU
+ * All portions are Copyright (C) 2010-2013 Openbravo SLU
+ * All Rights Reserved.
+ * Contributor(s):  ______________________________________.
+ *************************************************************************
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title id="paramTitle">xxTitle</title>
+<link rel="shortcut icon" href="../../../../../web/images/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="../../../../../web/skins/Default/Openbravo_ERP_250.css" id="paramCSS"></link>
+
+<script language="JavaScript" type="text/javascript" id="paramDirectory">
+  var baseDirectory = "../../../../../web/";
+</script>
+<script language="JavaScript" src="../../../../../web/js/messages.js" type="text/javascript"></script>
+<script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript" id="paramLanguage">
+  var defaultLang = "en_US";
+</script>
+<script language="JavaScript" src="../../../../../web/js/shortcuts.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/utils.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/windowKeyboard.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/appStatus.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/searchs.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/ajax.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/default/MessageBox.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/messages.js" type="text/javascript"></script>
+<script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/org.openbravo.userinterface.selector/js/classic-skin-variable.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/../org.openbravo.client.kernel/OBCLKER_Kernel/StaticResources" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/calculator.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/jscalendar/calendar.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/jscalendar/lang/calendar-es.js" type="text/javascript" id="fieldCalendar"></script>
+<script language="JavaScript" src="../../../../../web/js/default/DateTextBox.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/default/DateTextBox.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/appStatus.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/dojoConfig.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../../../../web/js/dojo/dojo.js" type="text/javascript"></script>
+<script type="text/javascript">
+dojo.hostenv.writeIncludes(); //makes debugging in Venkman possible
+</script>
+
+
+<script type="text/javascript">
+  window.onunload = reloadOpener; // reloads opener on closing
+</script>
+
+<script language="JavaScript" type="text/javascript">
+function validate() {
+	return true;
+}
+
+  function onLoadDo() {
+  this.windowTables = new Array(
+      new windowTableId('client', 'buttonAction')
+    );
+    setWindowTableParentElement();
+    this.tabsTables = new Array(
+      new tabTableId('tdtopTabs')
+    );
+    setTabTableParentElement();
+    enableShortcuts('edition');
+    setBrowserAutoComplete(false);
+    //depurar();
+  }
+
+  function showHide(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if(Process[i].value === 'Perpanjangan Mudharabah' ){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value);
+
+        document.getElementById(elem).style.display = visible;
+    }
+function showHide2(elem) {        
+        var Process = document.getElementsByName("inpProcess");
+        visible = "none";
+        for(var i=0;i<Process.length;i++) { 
+            if((Process[i].value === 'Penempatan Deposito On Call') || (Process[i].value === 'Penempatan Mudharabah')||(Process[i].value === 'Pencairan Mudharabah')|| (Process[i].value === 'Perpanjangan Mudharabah' )){
+             visible = "";
+                break;
+            }
+        }
+        console.log("Tipe proses : "+document.frmMain.inpProcess.value);
+
+        document.getElementById(elem).style.display = visible;
+    }
+  function closeThisPage() {
+    closePage();
+  }
+
+</script>
+
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="onLoadDo();" >
+<form name="frmMain" method="post" action="ProcessInv.html">
+  <input type="hidden" name="Command" />
+  <input type="hidden" name="IsPopUpCall" value="1" />
+  <input type="hidden" name="inpadOrgId" value="" id="fieldOrg"/>
+  <input type="hidden" name="inpadWindowId" value="" id="fieldWindowId"/>
+  <input type="hidden" name="inpTabId" value="" id="fieldTabId"/>
+  <input type="hidden" name="isFirstLoad" value="true"/>
+  <!-- end Custom field -->
+ <!--<input type="hidden" name="strInvestasiLineID" id="paramInvestasiLineId" value=""/>  -->
+ <input type="hidden" name="strInvestasiLineID" id="paramInvestasiLineId" value=""/>  
+ 
+
+  <div class="Popup_ContentPane_CircleLogo">
+    <div class="Popup_WindowLogo">
+      <img class="Popup_WindowLogo_Icon Popup_WindowLogo_Icon_process" src="../../../../../web/images/blank.gif" border=0/></img>
+    </div>
+  </div>
+  <table cellspacing="0" cellpadding="0" width="100%" id="table_header">
+    <tr>
+      <td>
+        <table cellspacing="0" cellpadding="0" class="Popup_ContentPane_NavBar">
+          <tr class="Popup_NavBar_bg"><td></td>
+            <td class="Popup_NavBar_separator_cell"></td>
+            <td class="Popup_NavBar_bg_logo_left"></td>
+            <td class="Popup_NavBar_bg_logo" width="1" onclick="openNewBrowser('http://www.openbravo.com', 'Openbravo');return false;"><img src="../../../../../web/images/blank.gif" alt="Openbravo" title="Openbravo" border="0" id="openbravoLogo" class="Popup_NavBar_logo" /></td>
+            <td class="Popup_NavBar_bg_logo_right"></td>
+            <td class="Popup_NavBar_Popup_title_cell"><span name="lblR" id="lblRPopupTitle">Process</span><span name="lblP" id="lblPPopupTitle"></span></td>
+            <td class="Popup_NavBar_separator_cell"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+<!--    <tr>
+      <td>
+        <table cellspacing="0" cellpadding="0" class="Popup_ContentPane_SeparatorBar">
+          <tr>
+            <td class="Popup_SeparatorBar_bg"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+-->
+  </table>
+  <table cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td>
+        <div class="Popup_ContentPane_Client" style="overflow: auto;" id="client_messagebox">
+
+          <!-- MessageBox -->
+          <table cellpadding="0" cellspacing="0" id="messageBoxID" class="MessageBoxyy">
+            <tbody>
+            <tr class="MessageBox_TopMargin">
+              <td class="MessageBox_LeftMargin"></td>
+              <td></td>
+              <td class="MessageBox_RightMargin"></td>
+            </tr>
+            <tr>
+              <td class="MessageBox_LeftMargin"></td>
+              <td>
+
+                <table cellpadding="0" cellspacing="0" class="MessageBox_Container">
+                  <tbody>
+                  <tr>
+                    <td class="MessageBox_LeftTrans">
+                      <table style="width: 100%; height: 100%" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                          <td class="MessageBox_TopLeft"></td>
+                        </tr>
+                        <tr>
+                          <td class="MessageBox_Left"></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td class="MessageBox_bg">
+
+                      <table class="MessageBox_Top">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <span>
+                            <table cellpadding="0" cellspacing="0" class="MessageBox_Body_ContentCell">
+                              <tbody>
+                              <tr>
+                                <td class="MessageBox_Icon_ContentCell">
+                                  <div class="MessageBox_Icon"></div>
+                                </td>
+                                <td style="vertical-align: top;" id="messageBoxIDContent">
+                                  <span>
+                                    <div class="MessageBox_TextTitle" id="messageBoxIDTitle">
+                                      xxInfo: AccessTableWithNoView
+                                    </div>
+                                    <div class="MessageBox_TextDescription" id="messageBoxIDMessage">
+                                      xxThe current information is empty.
+                                    </div>
+                                    <div class="MessageBox_TextSeparator"></div>
+                                  </span>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                            </span>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+
+                    </td>
+                    <td class="MessageBox_RightTrans">
+                      <table style="width: 100%; height: 100%" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <tr>
+                          <td class="MessageBox_TopRight"></td>
+                        </tr>
+                        <tr>
+                          <td class="MessageBox_Right"></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td rowspan="2" class="MessageBox_BottomLeft">
+                    </td>
+                    <td class="MessageBox_BottomTrans MessageBox_bg">
+                    </td>
+                    <td rowspan="2" class="MessageBox_BottomRight">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="MessageBox_Bottom">
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </td>
+              <td class="MessageBox_RightMargin"></td>
+            </tr>
+            <tr class="MessageBox_BottomMargin">
+              <td class="MessageBox_LeftMargin"></td>
+              <td></td>
+                <td class="MessageBox_RightMargin"></td>
+              </tr>
+            </tbody>
+          </table>
+        <!-- MessageBox END -->
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <table cellspacing="0" cellpadding="0" width="100%">
+    <!-- group Filter -->
+    <tr>
+      <td>
+            <table class="Main_Client_TableEdition">
+                <tr>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                </tr>
+                
+                 </table>
+
+            <!-- end test -->
+        </td>
+    </tr>
+    <!--  end group filter-->
+    <!-- group grid -->
+    <tr>
+      <td>
+            <table class="Main_Client_TableEdition">
+                <tr>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                </tr>
+                    </table>
+                    </td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                    <td class="TitleCell"></td>
+                  </tr>
+                  <!-- end parameter element area -->
+                  </table>
+
+            <!-- end test -->
+        </td>
+    </tr>
+    <!-- end group grid -->
+
+    <!--  group button -->
+    <tr>
+      <td>
+            <table class="Main_Client_TableEdition">
+                <tr>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                  <td class="TableEdition_OneCell_width"></td>
+                </tr>
+                <tr>
+                  <td colspan="7">
+                    <table class="FieldGroup" cellspacing="0" cellpadding="0" border="0">
+                    <tbody>
+                      <tr class="FieldGroup_TopMargin"/> </tr>
+                      <tr>
+                        <td class="FieldGroupTitle_Left"><img class="FieldGroupTitle_Left_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                        <td class="FieldGroupTitle">Process</td>
+                        <td class="FieldGroupTitle_Right"><img class="FieldGroupTitle_Right_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                        <td class="FieldGroupContent"/></td>
+                      </tr>
+                      <tr class="FieldGroup_BottomMargin"/> </tr>
+                    </tbody>
+                    </table>
+                  </td>
+                  </tr>
+
+                  <tr >
+                    <td class="TitleCell"><span class="LabelText">Status Investasi<b>*</b></span></td>
+                    <td class="Combo_ContentCell">
+                        <select name="inpProcess" id="paramStatusInvestasi" class="Combo Combo_OneCell_width" 
+                        onchange="showHide('paramDateFroms'); showHide('paramRates');showHide('paramRasioKeuangans'); 
+                        showHide('paramKesimpulans'); showHide('paramNomorDokumens'); showHide2('paramNomorDokumens');
+                        showHide('paramTahun');" >
+                          <option value=""><div id="reportStatusInvestasi"></div></option>
+                        </select>
+
+                    </td>
+                    
+                    <td class="ContentCell"></td>
+                    <td class="ContentCell"></td>
+                    <td class="ContentCell"></td>
+                    <td class="ContentCell"></td>
+                  </tr>
+
+                    <tr id="paramDateFroms" style="display:none" >
+                  <td class="TitleCell"><span class="LabelText">Tanggal Perpanjangan</span></td>
+                  <td class="TextBox_btn_ContentCell">
+                    <table border="0" cellspacing="0" cellpadding="0" summary=""  style="padding-top: 0px;">
+                      <tr>
+                        <td class="TextBox_ContentCell">
+                          <input dojoType="openbravo:DateTextbox" displayFormat="xx" saveFormat="yy"  class="TextBox_btn_OneCell_width required" required="true" type="text" name="inpDateFrom" id="paramDateFrom" size="10" maxlength="10" value="" onkeyup="autoCompleteDate(this.textbox, this.displayFormat);return true;"></input><script>djConfig.searchIds.push("paramDateFrom");</script>
+                        </td>
+                        <td class="FieldButton_bg">
+                          <a class="FieldButtonLink" href="#" onfocus="setWindowElementFocus(this); window.status='Calendar'; return true;" onblur="window.status=''; return true;" onkeypress="this.className='FieldButtonLink_active'; return true;" onkeyup="this.className='FieldButtonLink_focus'; return true;" onclick="showCalendar('frmMain.inpDateFrom', document.frmMain.inpDateFrom.value, false);return false;" >
+                          <table class="FieldButton" onmouseout="this.className='FieldButton';window.status='';return true;" onmouseover="this.className='FieldButton_hover';window.status='Show calendar';return true;" onmousedown="this.className='FieldButton_active';return true;" onmouseup="this.className='FieldButton';return true;">
+                            <tr>
+                              <td class="FieldButton_bg">
+                                <img alt="Calendar" class="FieldButton_Icon FieldButton_Icon_Calendar" title="Calendar" src="../../../../../web/images/blank.gif" border="0"></img>
+                              </td>
+                            </tr>
+                          </table>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  </tr>
+                  <tr id="paramRates" style="display:none" >
+                    <td class="TitleCell"><span class="LabelText">Rate<b>*</b></span></td>
+                    <td class="Combo_ContentCell">
+                          <input name="inpRate" id="paramRate" class="Combo Combo_OneCell_width" type="number"/>
+                    </td>
+                    <td class="TitleCell"><span class="LabelText">%</span></td>
+                  </tr>
+
+                  <tr id="paramRasioKeuangans" style="display:none">
+                  <td colspan="7">
+                    <table class="FieldGroup" cellspacing="0" cellpadding="0" border="0">
+                    <tbody>
+                      <tr class="FieldGroup_TopMargin"/> </tr>
+                      <tr>
+                        <td class="FieldGroupTitle_Left"><img class="FieldGroupTitle_Left_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                        <td class="FieldGroupTitle">Rasio Keuangan</td>
+                        <td class="FieldGroupTitle_Right"><img class="FieldGroupTitle_Right_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                        <td class="FieldGroupContent"/></td>
+                      </tr>
+                      <tr class="FieldGroup_BottomMargin"/> </tr>
+                    </tbody>
+                    </table>
+                  </td>
+                  </tr>
+
+                  <tr id="paramNomorDokumens" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Nomor Dokumen Baru</span></td>
+                    
+                    <td class="Combo_ContentCell">
+                          <input name="inpNomorDokumen" id="paramNomorDokumen" class="Combo Combo_OneCell_width"/>
+                    </td>
+                  </tr>
+
+                  <!--<tr id="paramPerihals" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Perihal</span></td>
+                    
+                    <td class="Combo_ContentCell">
+                          <textarea name="inpPerihal" id="paramPerihal" class="Combo Combo_OneCell_width" style="resize:none;margin:0px;WIDTH:258px;HEIGHT:150px;"></textarea>
+                    </td>
+                  </tr>
+
+                
+
+                  <tr id="paramCars" style="display:none" >
+                    <td class="TitleCell"><span class="LabelText">CAR</span></td>
+                    <td class="Combo_ContentCell">
+                          <input name="inpCar" id="paramCar" class="Combo Combo_OneCell_width" type="number"/>
+                    </td>
+                    <td class="TitleCell"><span class="LabelText">%</span></td>
+                  </tr>
+
+                  <tr id="paramNpls" style="display:none" >
+                    <td class="TitleCell"><span class="LabelText">NPL</span></td>
+                    <td class="Combo_ContentCell">
+                          <input name="inpNpl" id="paramNpl" class="Combo Combo_OneCell_width" type="number"/>
+                    </td>
+                    <td class="TitleCell"><span class="LabelText">%</span></td>
+                  </tr>
+
+
+                  <tr id="paramLdrs" style="display:none" >
+                    <td class="TitleCell"><span class="LabelText">LDR</span></td>
+                    <td class="Combo_ContentCell">
+                          <input name="inpLdr" id="paramLdr" class="Combo Combo_OneCell_width" type="number"/>
+                    </td>
+                    <td class="TitleCell"><span class="LabelText">%</span></td>
+                  </tr>
+
+                  -->
+                  <tr name="inpTahun" id="paramTahun" style="display:none">
+                    <td class="TitleCell"><span class="LabelText">Rasio Keuangan Tahun<b>*</b></span></td>
+                    <td class="TextBox_ContentCell" colspan="2">
+                      <table style="border:0px;border-collapse:collapse;">
+                        <tr name="inpSelectorTahun" id="paramSelectorTahun">
+                          <td style="padding-top: 0px;">
+                            <script>var sc_C_Year_ID = null;</script>
+                            <input type="hidden" name="inpCYearID" id="C_Year_ID" identifier="" value="" onreset="sc_C_Year_ID.resetSelector();" onchange="openbravo.Utilities.updateSmartClientComponentValue(this, sc_C_Year_ID.selectorField);"></input>
+                            <script id="selectorLink" src="../org.openbravo.client.kernel/OBUISEL_Selector/C7BB92DB30C347D59708E3864E89DDD2?columnName=C_Year_ID&disabled=false&CssSize=TwoCells&DisplayLength=45.0&required=true&filterClass=org.openbravo.userinterface.selector.SelectorDataSourceFilter&_selectorDefinitionId=C7BB92DB30C347D59708E3864E89DDD2"></script>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+  
+                  <tr id="paramKesimpulans" style="display:none" >
+                    <td class="TitleCell"><span class="LabelText">Kesimpulan</span></td>
+                    <td class="Combo_ContentCell">
+                     <textarea name="inpKesimpulan" id="paramKesimpulan" class="Combo Combo_OneCell_width" style="resize:none;margin:0px;WIDTH:258px;HEIGHT:150px;"></textarea>
+                    </td>
+                  </tr>
+			  
+                  <!-- parameter element area -->
+                    <tr>
+                      <td class="TitleCell"></td>
+                      <td class="TitleCell"></td>
+                      <td class="Button_CenterAlign_ContentCell">
+                        <div>
+                          <button type="button"
+                            id="buttonAction"
+                            class="ButtonLink"
+                            onclick="submitCommandForm('PROCESS', true, null, null, null, true);return false;"
+                            onfocus="buttonEvent('onfocus', this); window.status='Submit This Record'; return true;"
+                            onblur="buttonEvent('onblur', this);"
+                            onkeyup="buttonEvent('onkeyup', this);"
+                            onkeydown="buttonEvent('onkeydown', this);"
+                            onkeypress="buttonEvent('onkeypress', this);"
+                            onmouseup="buttonEvent('onmouseup', this);"
+                            onmousedown="buttonEvent('onmousedown', this);"
+                            onmouseover="buttonEvent('onmouseover', this); window.status='Submit This Record'; return true;"
+                            onmouseout="buttonEvent('onmouseout', this);">
+                            <table class="Button">
+                              <tr>
+                                <td class="Button_left"><img class="Button_Icon Button_Icon_html" alt="View Results in a New Window" title="View Results in a New Window" src="../../../../../web/images/blank.gif" border="0" /></td>
+                                <td class="Button_text">Submit</td>
+                                <td class="Button_right"></td>
+                              </tr>
+                            </table>
+                          </button>
+                        </div>
+                      </td>
+
+                      <td class="Button_CenterAlign_ContentCell">
+                        <div>
+                          <button type="button"
+                            id="buttonCancel"
+                            class="ButtonLink"
+                            onclick="closeThisPage();return false;"
+                            onfocus="buttonEvent('onfocus', this); window.status='Cancel'; return true;"
+                            onblur="buttonEvent('onblur', this);"
+                            onkeyup="buttonEvent('onkeyup', this);"
+                            onkeydown="buttonEvent('onkeydown', this);"
+                            onkeypress="buttonEvent('onkeypress', this);"
+                            onmouseup="buttonEvent('onmouseup', this);"
+                            onmousedown="buttonEvent('onmousedown', this);"
+                            onmouseover="buttonEvent('onmouseover', this); window.status='Cancel'; return true;"
+                            onmouseout="buttonEvent('onmouseout', this);">
+                            <table class="Button">
+                              <tr>
+                                <td class="Button_left"><img class="Button_Icon Button_Icon_cancel" alt="Cancel" title="Cancel" src="../../../../../web/images/blank.gif" border="0" /></td>
+                                <td class="Button_text Button_width">Cancel</td>
+                                <td class="Button_right"></td>
+                              </tr>
+                            </table>
+                          </button>
+                        </div>
+                      </td>
+
+                      <td class="ContentCell">
+                      </td>
+                      <td class="TitleCell"></td>
+                      <td class="ContentCell"></td>
+                      <td class="ContentCell"></td>
+                    </tr>
+                  </table>
+
+            <!-- end test -->
+        </td>
+    </tr>
+    <!--  end group button -->
+  </table>
+</form>
+</body>
+</html>

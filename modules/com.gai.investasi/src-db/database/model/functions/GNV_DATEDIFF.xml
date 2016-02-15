@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GNV_DATEDIFF">
+    <function name="GNV_DATEDIFF" type="NUMERIC">
+      <parameter name="p_dt1" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_dt2" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[BEGIN
+  RETURN p_dt1 - p_dt2;
+END]]></body>
+    </function>
+  </database>

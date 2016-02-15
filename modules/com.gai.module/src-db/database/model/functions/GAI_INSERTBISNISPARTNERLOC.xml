@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTBISNISPARTNERLOC">
+    <function name="GAI_INSERTBISNISPARTNERLOC" type="NULL">
+      <parameter name="c_bpartner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="alamat" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kota" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="postal" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="telepon" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="fax" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_location_id VARCHAR(32):= get_uuid();
+
+BEGIN
+
+
+
+  
+  BEGIN
+INSERT INTO C_LOCATION values (v_location_id,ad_client,
+ad_org,'Y',now(),'0',now(),'0',coalesce(alamat,''),NULL,coalesce(kota,''),coalesce(postal,''),NULL,'209',
+NULL,NULL,NULL);
+  END;
+
+BEGIN
+INSERT INTO C_BPARTNER_LOCATION values 
+(get_uuid(),ad_client,ad_org,
+'Y',now(),'0',now(),'0',coalesce(alamat,''),'Y','Y','Y','Y',coalesce(telepon,''),NULL,coalesce(fax,''),NULL,c_bpartner,
+v_location_id,'N',NULL);
+  END;
+
+    EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GAI_INSERTBISNISPARTNERLOC
+]]></body>
+    </function>
+  </database>

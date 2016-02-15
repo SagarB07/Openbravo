@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTPURCHASEINVOICE">
+    <function name="GAI_INSERTPURCHASEINVOICE" type="NULL">
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="issotrx" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="documentno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="c_doctype_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="description" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="mitra_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="price" type="VARCHAR">
+        <default/>
+      </parameter>
+      <parameter name="c_paymentterm" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="m_pricelist_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="fin_paymentmethod_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="produk_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="c_tax_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_id VARCHAR(32):= get_uuid();
+v_location_id VARCHAR(32);
+v_total NUMERIC;
+BEGIN
+BEGIN
+Select c_bpartner_location_id into v_location_id from c_bpartner_location where c_bpartner_id = mitra_id;
+END;
+  BEGIN
+    INSERT INTO C_INVOICE values(v_id,ad_client,ad_org,'Y',
+    TO_DATE(NOW()),'100',TO_DATE(NOW()),'100',issotrx,documentno,'DR','CO','N','N','N','0',c_doctype_id,NULL,description,'N',NULL,TO_DATE(NOW()),
+    NULL,TO_DATE(NOW()),mitra_id,v_location_id,NULL,'N',NULL,'303',NULL,
+    c_paymentterm,NULL,0,0,price,m_pricelist_id,'N',NULL,NULL,NULL,'N','N',NULL,'N',
+    'N',NULL,NULL,NULL,NULL,NULL,NULL,'N',0,0,0,0,NULL,'N',fin_paymentmethod_id,NULL,NULL,NULL,NULL,NULL,'N',NULL,'N',NULL,'Y','CO');
+  END;
+EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal eksekusi post invoice '||v_id) ;
+END gai_insertpurchaseinvoice
+]]></body>
+    </function>
+  </database>

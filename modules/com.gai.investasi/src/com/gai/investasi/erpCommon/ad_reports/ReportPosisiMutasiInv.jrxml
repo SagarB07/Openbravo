@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportPosisi&amp;MutasiInvestasi" pageWidth="1202" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1162" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DariTanggal" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SampaiTanggal" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AD_Org_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT GIL.ad_org_id,GTI.NAME AS TIPEINVESTASI, CB.NAME AS BANK, GIL.STATUSINVESTASI AS STATUSINVESTASI,
+GMS.NAME AS STATUSKEPEMILIKANBANK, GIL.AMOUNT as POSISI,GID.AMOUNT AS SEBELUMPAJAK, (GID.AMOUNT * 0.2) AS PAJAK, (GID.AMOUNT -((GID.AMOUNT * 0.2) ))AS BUNGABERSIH, TO_CHAR($P{SampaiTanggal},'DD-MM-YYYY')AS TANGGALPOSISI,
+TO_CHAR($P{DariTanggal},'DD MON YYYY')AS DARITANGGAL,
+TO_CHAR($P{SampaiTanggal},'DD MON YYYY')AS TANGGALSAMPAI,
+  (
+  SELECT SUM(D.AMOUNT)
+  FROM GNV_INVESTASI_DETAIL D
+  WHERE D.GNV_INVESTASI_LINE_ID = GIL.GNV_INVESTASI_LINE_ID
+  AND D.ACCOUNTINGDATE <= $P{SampaiTanggal}
+  ) AS TOTALSAMPAI,
+  (
+  SELECT SUM(D.AMOUNT)
+  FROM GNV_INVESTASI_DETAIL D
+  WHERE D.GNV_INVESTASI_LINE_ID = GIL.GNV_INVESTASI_LINE_ID
+  AND D.ACCOUNTINGDATE <= $P{SampaiTanggal}
+  ) * 0.2 AS PAJAKSAMPAI,
+  (
+  SELECT SUM(D.AMOUNT)
+  FROM GNV_INVESTASI_DETAIL D
+  WHERE D.GNV_INVESTASI_LINE_ID = GIL.GNV_INVESTASI_LINE_ID
+  AND D.ACCOUNTINGDATE <= $P{SampaiTanggal}
+  ) - ((
+  SELECT SUM(D.AMOUNT)
+  FROM GNV_INVESTASI_DETAIL D
+  WHERE D.GNV_INVESTASI_LINE_ID = GIL.GNV_INVESTASI_LINE_ID
+  AND D.ACCOUNTINGDATE <= $P{SampaiTanggal}
+  )*0.2) AS SETELAHPAJAKSAMPAI
+FROM GNV_INVESTASI_LINE GIL
+LEFT JOIN GNV_TYPEINVESTASI GTI ON GTI.GNV_TYPEINVESTASI_ID = GIL.GNV_TYPEINVESTASI_ID
+LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = GIL.C_BPARTNER_ID
+LEFT JOIN GNV_INVESTASI_DETAIL GID ON GID.GNV_INVESTASI_LINE_ID = GIL.GNV_INVESTASI_LINE_ID
+LEFT JOIN GMM_MASTER_STATUSBANK GMS ON GMS.GMM_MASTER_STATUSBANK_ID = GIL.EM_GMM_MASTER_STATUSBANK_ID
+WHERE GIL.AD_ORG_ID = $P{AD_Org_ID}
+AND GID.ACCOUNTINGDATE between $P{DariTanggal} and $P{SampaiTanggal}
+order by GTI.NAME, GIL.STATUSINVESTASI, GMS.NAME, CB.NAME]]>
+	</queryString>
+	<field name="AD_ORG_ID" class="java.lang.String"/>
+	<field name="TIPEINVESTASI" class="java.lang.String"/>
+	<field name="BANK" class="java.lang.String"/>
+	<field name="STATUSINVESTASI" class="java.lang.String"/>
+	<field name="STATUSKEPEMILIKANBANK" class="java.lang.String"/>
+	<field name="POSISI" class="java.math.BigDecimal"/>
+	<field name="SEBELUMPAJAK" class="java.math.BigDecimal"/>
+	<field name="PAJAK" class="java.math.BigDecimal"/>
+	<field name="BUNGABERSIH" class="java.math.BigDecimal"/>
+	<field name="TANGGALPOSISI" class="java.lang.String"/>
+	<field name="DARITANGGAL" class="java.lang.String"/>
+	<field name="TANGGALSAMPAI" class="java.lang.String"/>
+	<field name="TOTALSAMPAI" class="java.math.BigDecimal"/>
+	<field name="PAJAKSAMPAI" class="java.math.BigDecimal"/>
+	<field name="SETELAHPAJAKSAMPAI" class="java.math.BigDecimal"/>
+	<variable name="nomorgroup" class="java.lang.Integer" resetType="Group" resetGroup="TipeInvestasi" incrementType="Group" incrementGroup="TipeInvestasi" calculation="Count">
+		<variableExpression><![CDATA[$V{nomorgroup}+1]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<variable name="nomorbank" class="java.lang.Integer" resetType="None" incrementType="Group" incrementGroup="StatusBank">
+		<variableExpression><![CDATA[$V{nomorbank}]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<group name="TipeInvestasi">
+		<groupExpression><![CDATA[$F{TIPEINVESTASI}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="21" y="0" width="274" height="18" isRemoveLineWhenBlank="true" printWhenGroupChanges="TipeInvestasi"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPEINVESTASI}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="StatusInvestasi">
+		<groupExpression><![CDATA[$F{STATUSINVESTASI}]]></groupExpression>
+		<groupHeader>
+			<band height="18">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="38" y="0" width="257" height="18" isRemoveLineWhenBlank="true" printWhenGroupChanges="StatusInvestasi"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{STATUSINVESTASI}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="21" y="0" width="17" height="18" isRemoveLineWhenBlank="true" printWhenGroupChanges="StatusInvestasi"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["-"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="StatusBank">
+		<groupExpression><![CDATA[$F{STATUSKEPEMILIKANBANK}]]></groupExpression>
+		<groupHeader>
+			<band height="19">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="52" y="1" width="243" height="18" isRemoveLineWhenBlank="true" printWhenGroupChanges="StatusBank"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{STATUSKEPEMILIKANBANK}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="35" y="1" width="17" height="18" isRemoveLineWhenBlank="true" printWhenGroupChanges="StatusBank"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["-"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="57" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="19" width="1162" height="20"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["3.1.1. POSISI INVESTASI DAN MUTASI HASIL INVETSASI \nPOSISI TANGGAL "+$F{DARITANGGAL}+" S/D "+$F{TANGGALSAMPAI}+" \n( ACCRUAL )"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="41" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="509" y="0" width="325" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["MUTASI PENERIMAAN BUNGA"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="293" height="41"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["URAIAN"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="293" y="0" width="215" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["INVESTASI"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="835" y="0" width="327" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["PENERIMAAN BUNGA S/D " + $F{TANGGALSAMPAI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="293" y="20" width="105" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["MUTASI"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="398" y="20" width="110" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Posisi s/d " +$F{TANGGALPOSISI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="614" y="20" width="110" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pajak"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="509" y="20" width="105" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Sebelum Pajak"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="724" y="20" width="110" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Bunga Bersih"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="1050" y="20" width="112" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Bunga Bersih"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="835" y="20" width="105" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Sebelum Pajak"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="940" y="20" width="110" height="21"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pajak"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="1" width="1162" height="1"/>
+				<graphicElement>
+					<pen lineWidth="3.0" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="69" y="0" width="224" height="22"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{BANK}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="398" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{POSISI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="506" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SEBELUMPAJAK}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="614" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PAJAK}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="724" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{BUNGABERSIH}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="832" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTALSAMPAI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="940" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PAJAKSAMPAI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="1050" y="0" width="112" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{BUNGABERSIH}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="293" y="0" width="108" height="22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[BigDecimal.ZERO]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

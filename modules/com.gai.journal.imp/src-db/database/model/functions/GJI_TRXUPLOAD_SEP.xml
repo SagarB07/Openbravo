@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GJI_TRXUPLOAD_SEP">
+    <function name="GJI_TRXUPLOAD_SEP" type="NULL">
+      <parameter name="p_pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_FAID VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  FA_Group VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  Record_ID VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  v_Message VARCHAR2(2000):=''; --OBTG:VARCHAR2--
+  v_Result NUMBER:=0; -- 0=failure
+  v_ResultStr VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  v_Record_ID VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  v_AD_User_ID VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  v_AD_Table_ID VARCHAR2(32):='471BAD55511B44A293969BB885E8ED4F'; --OBTG:VARCHAR2--
+  v_FA_Group VARCHAR2(32):='';
+  v_FA_Group_Exists VARCHAR2(32):='';
+  
+TYPE RECORD IS REF CURSOR;
+  gai_temp RECORD;
+  Cur_Parameter RECORD;
+  Temp_DocNo RECORD;
+
+begin
+
+BEGIN --BODY
+
+  v_ResultStr:='ReadingParameters';
+    FOR Cur_Parameter IN
+      (SELECT i.Record_ID,
+        i.AD_User_ID,
+        p.ParameterName,
+        p.P_String,
+        p.P_Number,
+        p.P_Date
+      FROM AD_PINSTANCE i
+      LEFT JOIN AD_PINSTANCE_PARA p
+        ON i.AD_PInstance_ID=p.AD_PInstance_ID
+      WHERE i.AD_PInstance_ID=p_PInstance_ID
+      ORDER BY p.SeqNo
+      )
+    LOOP
+      v_Record_ID:=Cur_Parameter.Record_ID;
+      v_AD_User_ID:=Cur_Parameter.AD_User_ID;
+    END LOOP; -- Get Parameter
+
+  FOR gai_temp in 
+  (
+   select gt.documentno as documentno, cv.c_elementvalue_id as Account_ID, gtd.dateacct as DateTrx, 
+			 gtd.dateacct as DateAcct,
+			 to_number(gtd.debetamt) as Deb,to_number(gtd.creditamt) as CR, 
+			 gtd.description as Keterangan,
+			 cv.value as value_account, 
+			 cv.name as name_account,
+			 cp.c_period_id as period, ao.ad_org_id as organisasi, gt.ad_client_id as clientid, gt.gji_transaction_id as trx_id,
+       cv.em_gcs_iscashflow as iscashflow, gtd.C_ACCTSCHEMA_ID as general_ledger, gtd.gji_transaction_detail_id as Detail_ID,
+       gt.documentno as docno, gtd.description as descline
+    from c_elementvalue cv, gji_transaction gt, gji_transaction_detail gtd, c_period cp, c_year cy, ad_org ao, c_element ce
+    where
+    --cv.c_elementvalue_id = gtd.c_elementvalue_id
+    cv.value = gtd.acctvalue-- and cv.name = gtd.acctname)
+    and cp.c_year_id = cy.c_year_id
+    and cp.c_period_id = gtd.c_period_id
+    and cy.c_year_id = gt.c_year_id
+    and ce.c_element_id = cv.c_element_id
+    and gt.c_element_id = ce.c_element_id
+    and ao.ad_org_id = gt.ad_org_id
+    and gtd.Processed='N'
+    and trunc(gtd.dateacct) between '01-OCT-15' AND '31-OCT-15'
+    and gt.gji_transaction_id = gtd.gji_transaction_id
+    --and gt.documentno = 'SEP00134'
+    --and gt.documentno='7887997009-201505BNK'
+    --and gtd.c_elementvalue_id is not null
+    Order By gt.DOCUMENTNO ASC
+    --and cv.c_element_id='9D9F93F5225E45B29919BF7BCF27B8EB'
+  )
+    LOOP
+    --BEGIN
+    /*FOR Temp_DocNo IN
+      (
+        Select Fact_Acct.FACT_ACCT_GROUP_ID AS GroupId--, GJI_Transaction_Detail.GJI_Transaction_Detail_ID as Detail_ID 
+        From GJI_Transaction --left join GJI_Transaction_Detail on GJI_Transaction.GJI_Transaction_ID=GJI_Transaction_Detail.GJI_Transaction_ID, 
+        left join Fact_Acct on GJI_Transaction.GJI_Transaction_ID = Fact_Acct.Record_ID
+        Where --GJI_Transaction.GJI_Transaction_ID = Fact_Acct.Record_ID
+        --And 
+        --GJI_Transaction.DocumentNo = gai_temp.documentno
+        GJI_Transaction.Description = gai_temp.descline
+        --and Fact_Acct.dateacct = gai_temp.DateAcct
+        Group By Fact_Acct.FACT_ACCT_GROUP_ID
+        --And GJI_Transaction.Processed='Y'
+      )
+      LOOP*/
+        --v_FA_Group := GET_UUID();
+        Ad_Sequence_Next('FACT_ACCT', gai_temp.clientid, v_FAID);
+        /*if (Temp_DocNo.GroupId is null) then*/
+          v_FA_Group := GET_UUID();
+        /*else
+          v_FA_Group := Temp_DocNo.GroupId;
+        end if;*/
+        --BEGIN
+        Insert into FACT_ACCT 
+          (FACT_ACCT_ID,AD_CLIENT_ID,AD_ORG_ID,ISACTIVE, --1
+          CREATED,CREATEDBY,UPDATED,UPDATEDBY, --2
+          C_ACCTSCHEMA_ID,ACCOUNT_ID,DATETRX,DATEACCT, --3
+          C_PERIOD_ID,AD_TABLE_ID,RECORD_ID,LINE_ID, --4
+          GL_CATEGORY_ID,POSTINGTYPE, --5
+          C_CURRENCY_ID,AMTSOURCEDR,AMTSOURCECR,AMTACCTDR, --6
+          AMTACCTCR, --7
+          C_BPARTNER_ID, --8
+          DESCRIPTION, --9
+          FACT_ACCT_GROUP_ID,SEQNO,FACTACCTTYPE,DOCBASETYPE, --10
+          ACCTVALUE,ACCTDESCRIPTION, --11
+          C_DOCTYPE_ID,ISMODIFY, EM_GCS_ISCASHFLOW,--12
+          EM_GAI_DOCUMENTNO--, EM_GAI_KANTOR_ID
+          )  -- 28DE4E71A78C4FD7A426B58A3C70924A
+        values 
+          (v_FAID,gai_temp.clientid,gai_temp.organisasi,'Y', --1
+          now(),'100',now(),'100', --2
+          gai_temp.General_Ledger,gai_temp.Account_ID,gai_temp.DateTrx, gai_temp.DateAcct, --3
+          gai_temp.period,v_AD_Table_ID,gai_temp.Trx_ID,null, --4
+          null,'A', --5
+          '303',gai_temp.Deb,gai_temp.Cr,gai_temp.Deb, --6
+          gai_temp.Cr, --7
+          null, --8
+          gai_temp.Keterangan, --9
+          v_FA_Group,10,'N',null, --10
+          gai_temp.value_account,gai_temp.name_account, --11
+          null,'N', gai_temp.iscashflow,--12
+          gai_temp.docno
+          );
+    
+         --Update GJI_Transaction SET Processed='Y' Where GJI_Transaction_ID = gai_temp.Trx_ID;
+         Update GJI_Transaction_Detail SET Processed='Y' Where GJI_Transaction_Detail_ID = gai_temp.Detail_ID;
+        --Delete From temp_factacct Where RowId = gai_temp.rowid;
+         v_Result := 1;
+         
+         
+  
+   --END LOOP;
+   
+   /*exception when others then
+        v_Message:= '@ERROR=' || SQLERRM;
+        DBMS_OUTPUT.PUT_LINE(v_Result);
+        RAISE_APPLICATION_ERROR(-20000, v_Message) ;
+        ROLLBACK;
+        AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_Message) ;
+   RETURN;
+   end;*/
+   /*if (v_Result=0) then
+        Ad_Sequence_Next('FACT_ACCT', gai_temp.clientid, v_FAID);
+        v_FA_Group := GET_UUID();
+        --v_FA_Group := Temp_DocNo.GroupId;
+        
+        --BEGIN
+        Insert into FACT_ACCT 
+          (FACT_ACCT_ID,AD_CLIENT_ID,AD_ORG_ID,ISACTIVE, --1
+          CREATED,CREATEDBY,UPDATED,UPDATEDBY, --2
+          C_ACCTSCHEMA_ID,ACCOUNT_ID,DATETRX,DATEACCT, --3
+          C_PERIOD_ID,AD_TABLE_ID,RECORD_ID,LINE_ID, --4
+          GL_CATEGORY_ID,POSTINGTYPE, --5
+          C_CURRENCY_ID,AMTSOURCEDR,AMTSOURCECR,AMTACCTDR, --6
+          AMTACCTCR, --7
+          C_BPARTNER_ID, --8
+          DESCRIPTION, --9
+          FACT_ACCT_GROUP_ID,SEQNO,FACTACCTTYPE,DOCBASETYPE, --10
+          ACCTVALUE,ACCTDESCRIPTION, --11
+          C_DOCTYPE_ID,ISMODIFY, EM_GCS_ISCASHFLOW--12
+          --EM_GAI_DOCUMENTNO, EM_GAI_KANTOR_ID
+          )  -- 28DE4E71A78C4FD7A426B58A3C70924A
+        values 
+          (v_FAID,gai_temp.clientid,gai_temp.organisasi,'Y', --1
+          now(),'100',now(),'100', --2
+          gai_temp.General_Ledger,gai_temp.Account_ID,gai_temp.DateTrx, gai_temp.DateAcct, --3
+          gai_temp.period,v_AD_Table_ID,gai_temp.Trx_ID,null, --4
+          null,'A', --5
+          '303',gai_temp.Deb,gai_temp.Cr,gai_temp.Deb, --6
+          gai_temp.Cr, --7
+          null, --8
+          gai_temp.Keterangan, --9
+          v_FA_Group,10,'N',null, --10
+          gai_temp.value_account,gai_temp.name_account, --11
+          null,'N', gai_temp.iscashflow--12
+          --null
+          );
+    
+         --Update GJI_Transaction SET Processed='Y' Where GJI_Transaction_ID = gai_temp.Trx_ID;
+         Update GJI_Transaction_Detail SET Processed='Y' Where GJI_Transaction_Detail_ID = gai_temp.Detail_ID;
+         --Delete From temp_factacct Where RowId = gai_temp.rowid;
+         v_Result := 1;
+         
+         commit;
+    end if;*/ 
+    
+    Update GJI_Transaction SET Processed='Y' Where GJI_Transaction_ID = gai_temp.Trx_ID;
+
+  END LOOP;
+    
+    IF (v_Result = 0) THEN
+      rollback;
+      AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_Message) ;
+      RAISE_APPLICATION_ERROR(-20000, '@GJI_NoData@') ;
+    ELSE 
+      commit;
+      AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 1, v_Message) ;
+    END IF;
+END; --BODY
+end
+]]></body>
+    </function>
+  </database>

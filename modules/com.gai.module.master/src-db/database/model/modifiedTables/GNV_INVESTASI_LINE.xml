@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE GNV_INVESTASI_LINE">
+    <table name="GNV_INVESTASI_LINE" primaryKey="GNV_INVESTASI_LINE_PK">
+      <column name="EM_GMM_MASTER_STATUSBANK_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GMM_MASTER_STATUSBANK" name="EM_GMM_GMM_STATUSBANK">
+        <reference local="EM_GMM_MASTER_STATUSBANK_ID" foreign="GMM_MASTER_STATUSBANK_ID"/>
+      </foreign-key>
+    </table>
+  </database>

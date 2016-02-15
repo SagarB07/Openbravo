@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTPRODUK">
+    <function name="GAI_INSERTPRODUK" type="NULL">
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kode" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="nama" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="uraian" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kategori" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="tax" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="price_version" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_id VARCHAR(32):= get_uuid();
+    
+
+BEGIN
+
+  BEGIN
+INSERT INTO M_PRODUCT (m_product_id,ad_client_id,ad_org_id,isactive,created, createdby,updated,updatedby,
+value,name,description,c_uom_id,issummary,isstocked, ispurchased,issold,isbom,isinvoiceprintdetails,
+ispicklistprintdetails,isverified,m_product_category_id, classification,volume,weight,c_taxcategory_id,
+discontinued,processing,producttype, ispriceprinted,enforce_attribute,calculated,production,qtytype,
+isquantityvariable,isdeferredrevenue, isdeferredexpense,bookusingpoprice) 
+values (v_id,ad_client,ad_org,
+'Y',now(),'100',now(),'100',kode,nama,uraian,'100','N','Y','Y','Y','N','N','N','N',
+kategori,'N',0,0,tax,'N','N','I','Y','N','N','N','N','N','N','N','N');
+
+  
+INSERT INTO M_PRODUCTPRICE (m_productprice_id,m_pricelist_version_id,m_product_id,ad_client_id,ad_org_id,isactive,
+created,createdby,updated,updatedby,pricelist,pricestd,pricelimit,cost) values (get_uuid(),
+price_version,v_id,ad_client,
+ad_org,'Y',now(),'100',now(),'100',0,0,0,0);
+
+  END;
+
+    EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GAI_INSERTPRODUK
+]]></body>
+    </function>
+  </database>

@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GNV_INVESTASI_POST">
+    <function name="GNV_INVESTASI_POST" type="NULL">
+      <parameter name="p_pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+  * $Id: Gnv_Investasi_Post.sql,v 1.6 2015/07/10
+  * Title: Insert Into Fact_Acct
+  * Created By. Astri @ PT. Global Anugerah Indonesia
+  ************************************************************************/
+
+v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+v_Fact_Acct_Id VARCHAR2(32);
+v_FA_Group VARCHAR2(32);
+v_AD_Table_Id VARCHAR2(32) := '18851435317341621811768614809911';
+v_LineNo NUMERIC := 10;
+v_User VARCHAR2(32);
+v_Message VARCHAR2(2000):='';
+v_Result NUMBER:=1; -- Success
+v_Posted VARCHAR2(5);
+
+ TYPE RECORD IS REF CURSOR;
+  Cur_Record RECORD;
+
+  BEGIN
+    
+    IF (p_PInstance_ID IS NOT NULL) THEN
+      --  Update AD_PInstance
+      DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
+      v_ResultStr:='PInstanceNotFound';
+      AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;
+      -- Get Parameters
+      v_ResultStr:='ReadingParameters';
+      FOR Cur_Parameter IN
+        (SELECT i.Record_ID, i.AD_User_ID, p.ParameterName, p.P_String,
+          p.P_Number, p.P_Date
+        FROM AD_PINSTANCE i
+        LEFT JOIN AD_PINSTANCE_PARA p
+          ON i.AD_PInstance_ID=p.AD_PInstance_ID
+        WHERE i.AD_PInstance_ID=p_PInstance_ID
+        ORDER BY p.SeqNo
+        )
+      LOOP
+        v_Record_ID:=Cur_Parameter.Record_ID;
+        v_User:=Cur_Parameter.AD_User_ID;
+      END LOOP; -- Get Parameter
+   END IF;
+    --DBMS_OUTPUT.PUT_LINE('  Record_ID=' || v_Record_ID) ;
+    
+    --RAISE_APPLICATION_ERROR(-20000,'  Record_ID=' || v_Record_ID);
+    
+    BEGIN
+    
+      Select Posted
+      INTO v_Posted
+      From GNV_Investasi_Detail
+      Where GNV_Investasi_Detail_ID = v_Record_ID;
+      
+      --RAISE_APPLICATION_ERROR(-20000,'  Posted=' || v_Posted);
+      
+      IF (v_Posted='N') THEN 
+      
+        FOR Cur_Record IN (
+          Select Record_Id, Account_ID, Kode_Account, Nama_Account, AcctSchema_Id, Currency_Id, TO_DATE(DateAcct, 'dd-MM-yy') as DateAcct,
+          Client_Id, Organization_Id, CreditAmt, DebetAmt,
+          Description, Period_Id, isPosted
+          From
+            (  Select gid.GNV_Investasi_Detail_ID as Record_Id, ce_dev.C_ElementValue_ID AS Account_ID,
+              ce_dev.value as Kode_Account, ce_dev.name as Nama_Account,
+              gia.C_Acctschema_ID as AcctSchema_Id, gid.C_Currency_ID as Currency_Id, gid.AccountingDate as DateAcct, 
+              gid.AD_Client_ID as Client_Id, gid.AD_Org_ID as Organization_Id, gid.Amount as CreditAmt, 0 as DebetAmt,
+              gil.Description as Description, --to_char(to_date(gid.AccountingDate, 'dd-MON-yy'), 'MON-yy') AS PeriodDate,
+              cp.C_Period_ID as Period_Id, gid.Posted as isPosted
+              From GNV_Investasi_Detail gid, Gnv_Investasi_Line gil, Gnv_Investasi_Header gih, Gnv_Investasi_Acct gia,
+              C_ValidCombination cv_dev, C_ElementValue ce_dev, C_Period cp
+              Where gid.Gnv_Investasi_Line_ID = gil.Gnv_Investasi_Line_ID
+              and gil.Gnv_Investasi_Header_ID = gih.Gnv_Investasi_Header_ID
+              and gia.Gnv_Investasi_Header_ID = gih.Gnv_Investasi_Header_ID
+              and cv_dev.C_ValidCombination_ID = gia.A_Depreciation_Acct
+              and cv_dev.Account_ID = ce_dev.C_ElementValue_ID
+              and cv_dev.C_Acctschema_ID = gia.C_AcctSchema_ID
+              --and UPPER(cp.Name) = 'JAN-15'
+              and UPPER(cp.Name) = to_char(to_date(gid.AccountingDate, 'dd-MM-yy'), 'MON-yy')
+              
+              UNION
+              
+              Select gid.GNV_Investasi_Detail_ID as Record_Id, ce_acc.C_ElementValue_ID AS Account_ID,
+              ce_acc.value as Kode_Account, ce_acc.name as Nama_Account,
+              gia.C_Acctschema_ID as AcctSchema_Id, gid.C_Currency_ID as Currency_Id, gid.AccountingDate as DateAcct,
+              gid.AD_Client_ID as Client_Id, gid.AD_Org_ID as Organization_Id, 0 as CreditAmt, gid.Amount as DebetAmt,
+              gil.Description, --to_char(to_date(gid.AccountingDate, 'dd-MON-yy'), 'MON-yy') AS PeriodDate,
+              cp.C_Period_ID as Period_Id, gid.Posted as isPosted
+              From GNV_Investasi_Detail gid, Gnv_Investasi_Line gil, Gnv_Investasi_Header gih, Gnv_Investasi_Acct gia,
+              C_ValidCombination cv_acc, C_ElementValue ce_acc, C_Period cp
+              Where gid.Gnv_Investasi_Line_ID = gil.Gnv_Investasi_Line_ID
+              and gil.Gnv_Investasi_Header_ID = gih.Gnv_Investasi_Header_ID
+              and gia.Gnv_Investasi_Header_ID = gih.Gnv_Investasi_Header_ID
+              and cv_acc.C_ValidCombination_ID = gia.A_AccumDepreciation_Acct
+              and cv_acc.Account_ID = ce_acc.C_ElementValue_ID
+              and cv_acc.C_Acctschema_ID = gia.C_AcctSchema_ID
+              --and UPPER(cp.Name) = 'JAN-15'
+              and UPPER(cp.Name) = to_char(to_date(gid.AccountingDate, 'dd-MM-yy'), 'MON-yy')
+            )
+            Where Record_Id = v_Record_ID--'BE46D38C7B714CC4B163F883C2B2FE9E'--v_Record_ID
+        ) LOOP
+          --RAISE_APPLICATION_ERROR(-20000,'  Masuk Loop  ');
+        --insert into Fact_Acct
+          Ad_Sequence_Next('FACT_ACCT', Cur_Record.Client_Id, v_Fact_Acct_Id);
+          v_FA_Group := GET_UUID();
+            --BEGIN
+            Insert into FACT_ACCT 
+              (FACT_ACCT_ID,AD_CLIENT_ID,AD_ORG_ID,ISACTIVE, --1
+              CREATED,CREATEDBY,UPDATED,UPDATEDBY, --2
+              C_ACCTSCHEMA_ID,ACCOUNT_ID,DATETRX,DATEACCT, --3
+              C_PERIOD_ID,AD_TABLE_ID,RECORD_ID,LINE_ID, --4
+              GL_CATEGORY_ID,POSTINGTYPE, --5
+              C_CURRENCY_ID,AMTSOURCEDR,AMTSOURCECR,AMTACCTDR, --6
+              AMTACCTCR, --7
+              C_BPARTNER_ID, --8
+              DESCRIPTION, --9
+              FACT_ACCT_GROUP_ID,SEQNO,FACTACCTTYPE,DOCBASETYPE, --10
+              ACCTVALUE,ACCTDESCRIPTION, --11
+              C_DOCTYPE_ID,ISMODIFY) --12
+            values 
+              (v_Fact_Acct_Id,Cur_Record.Client_Id,Cur_Record.Organization_Id,'Y', --1
+              to_date(now()),v_User,to_date(now()),v_User, --2
+              Cur_Record.AcctSchema_Id,Cur_Record.Account_ID, TO_DATE(Cur_Record.DateAcct, 'dd-MM-yy'), TO_DATE(Cur_Record.DateAcct, 'dd-MM-yy'), --3
+              Cur_Record.Period_Id, v_AD_Table_Id, Cur_Record.Record_ID,null, --4
+              null,'A', --5
+              '303',To_Number(Cur_Record.DebetAmt),To_Number(Cur_Record.CreditAmt),To_Number(Cur_Record.DebetAmt), --6
+              To_Number(Cur_Record.CreditAmt), --7
+              null, --8
+              Cur_Record.Description, --9
+              v_FA_Group,v_LineNo,'N',null, --10
+              Cur_Record.Kode_Account,Cur_Record.Nama_Account, --11
+              null,'N'); --12
+          
+              v_LineNo := v_LineNo + 10;
+              
+              commit;
+              
+              IF (p_PInstance_ID IS NOT NULL) THEN
+              --  Update AD_PInstance
+                DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished - ' || v_Message) ;
+                v_Message := '@Gnv_Success_Posted@';
+                AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
+              END IF;
+        END LOOP;
+        Update GNV_Investasi_Detail set Posted='Y' Where Gnv_Investasi_Detail_ID=v_Record_ID;
+      ELSIF (v_Posted='Y') THEN
+        
+        FOR Cur_Record IN (
+          Select c_period_Id as Period_Id, OpenClose From GNV_Investasi_Detail gid, C_Period cp
+          Where UPPER(cp.Name) = to_char(to_date(gid.AccountingDate, 'dd-MM-yy'), 'MON-yy')
+        ) LOOP
+        
+          IF (Cur_Record.OpenClose = 'O') THEN
+            RAISE_APPLICATION_ERROR(-20000,'@Gnv_Period_Close@');
+          ELSE
+            DELETE FROM FACT_ACCT WHERE RECORD_ID=v_Record_ID;
+            Update GNV_Investasi_Detail set Posted='N' Where Gnv_Investasi_Detail_ID=v_Record_ID;
+            
+            IF (p_PInstance_ID IS NOT NULL) THEN
+            --  Update AD_PInstance
+              DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished - ' || v_Message) ;
+              v_Message := '@Gnv_Success_Unposted@';
+              AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
+            END IF;
+            
+          END IF;
+        END LOOP;
+        
+      END IF;
+      
+      RETURN;
+    
+END; --Body
+/*EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  RAISE_APPLICATION_ERROR(-20000,v_ResultStr) ;
+  ROLLBACK;
+  RETURN;*/
+END GNV_INVESTASI_POST]]></body>
+    </function>
+  </database>

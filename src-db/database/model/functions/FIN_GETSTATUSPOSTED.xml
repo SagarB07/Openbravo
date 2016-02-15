@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION FIN_GETSTATUSPOSTED">
+    <function name="FIN_GETSTATUSPOSTED" type="VARCHAR">
+      <parameter name="p_field_id" type="VARCHAR">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_hasil VARCHAR(500);
+
+BEGIN
+
+  Select posted into v_hasil from FIN_PAYMENT
+	where FIN_PAYMENT_ID = p_field_id;
+  
+  If (v_hasil is NULL) then
+  v_hasil:='';
+  END IF;
+  
+  RETURN v_hasil;
+END FIN_GETSTATUSPOSTED]]></body>
+    </function>
+  </database>

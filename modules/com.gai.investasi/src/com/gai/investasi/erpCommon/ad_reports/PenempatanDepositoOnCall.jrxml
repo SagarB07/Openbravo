@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PenempatanDepositoOnCall" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="19"/>
+	<parameter name="GNV_Investasi_Line_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT GIL.GNV_INVESTASI_LINE_ID as GNV_INVESTASI_LINE_ID ,GIL.AD_ORG_ID AS ORGANISASI,GIL.DOCUMENTNO AS NOMOR, GIL.PERIHAL AS PERIHAL, CB.NAME AS CABANGBANK, GIL.AMOUNT AS NOMINAL,
+		trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL) ) as bulan,
+		 GAI_SAY_AMOUNT(trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)),'IDR') as bulan_say,
+		GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)) ) as Hari,
+		GAI_SAY_AMOUNT(GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL))),'IDR') as Hari_say,
+		TANGGALAWAL||' s/d '|| TANGGALAKHIR as tanggal,GIL.RATE as sukubunga, CB.NAME as bank, GIL.STATUSKEPEMILIKAN AS STATUSKEPEMILIKAN,
+		GIL.CAR  as car, GIL.NPL  AS NPL, GIL.LDR  AS LDR , GIL.KESIMPULANRASIO, GIL.KEPADA, GIL.DARI, NOW() as NOW, CU.ISO_CODE AS CURRENCY,
+		GIL.AD_ORG_ID AS ORGANIZATIONID,
+    FFA.NAME AS "Penampung Dana", FFA.GENERICACCOUNTNO AS REKENING,
+    GMD.JABATAN AS DIREKSI1, GMD.NAME AS NAMADIREKSI1,GMD2.JABATAN AS DIREKSI2,GMD2.NAME AS NAMADIREKSI2,
+    GMD3.JABATAN AS PENANDATANGAN, GMD3.NAME AS NAMAPENANDATANGAN,
+    GTI.NAME AS TYPEINVESTASI, CL.ADDRESS1 as ALAMAT, CBL.FAX as FAX, CL.CITY AS KOTA,
+    CBP.NAME AS BANKHEADER,GIL.TANGGALAWAL as TANGGALAWAL, GAI_SAY_AMOUNT((AMOUNT),'IDR') AS TERBILANG,
+    GIL.TANGGALAKHIR AS TANGGALAKHIR, GIL.RATE AS RATE, GIL.NOMORSURAT AS NOMORSURAT, GIL.LAMPIRAN AS LAMPIRAN
+
+		FROM  GNV_INVESTASI_LINE GIL
+		LEFT JOIN GNV_INVESTASI_HEADER GIH ON GIL.GNV_INVESTASI_HEADER_ID = GIH.GNV_INVESTASI_HEADER_ID
+		LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = GIL.C_BPARTNER_ID
+		LEFT JOIN C_BPARTNER CBP ON CBP.C_BPARTNER_ID = GIH.C_BPARTNER_ID
+
+    LEFT JOIN C_BPARTNER_LOCATION CBL ON CBL.C_BPARTNER_ID= CB.C_BPARTNER_ID
+
+    LEFT JOIN C_LOCATION CL ON CL.C_LOCATION_ID = CBL.C_LOCATION_ID
+    left join C_CURRENCY cu ON CU.C_CURRENCY_ID = GIL.C_CURRENCY_ID
+		LEFT JOIN FIN_FINANCIAL_ACCOUNT FFA ON FFA.FIN_FINANCIAL_ACCOUNT_ID = GIL.FIN_FINANCIAL_ACCOUNT_ID
+		LEFT JOIN GNV_MASTER_DATADIREKSI GMD ON GMD.GNV_MASTER_DATADIREKSI_ID = GIL.GNV_MASTER_DATADIREKSI_ID
+		LEFT JOIN GNV_MASTER_DATADIREKSI GMD2 ON GMD2.GNV_MASTER_DATADIREKSI_ID = GIL.GNV_MASTER_DATADIREKSI2_ID
+		LEFT JOIN GNV_MASTER_DATADIREKSI GMD3 ON GMD3.GNV_MASTER_DATADIREKSI_ID = GIL.GNV_PENANDATANGAN_ID
+    LEFT JOIN GNV_TYPEINVESTASI GTI ON GTI.GNV_TYPEINVESTASI_ID =GIL.GNV_TYPEINVESTASI_ID
+
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ($P!{GNV_Investasi_Line_ID})
+		and
+    		GIL.STATUSINVESTASI = 'Penempatan Deposito On Call']]>
+	</queryString>
+	<field name="GNV_INVESTASI_LINE_ID" class="java.lang.String"/>
+	<field name="ORGANISASI" class="java.lang.String"/>
+	<field name="NOMOR" class="java.lang.String"/>
+	<field name="PERIHAL" class="java.lang.String"/>
+	<field name="CABANGBANK" class="java.lang.String"/>
+	<field name="NOMINAL" class="java.math.BigDecimal"/>
+	<field name="BULAN" class="java.math.BigDecimal"/>
+	<field name="BULAN_SAY" class="java.lang.String"/>
+	<field name="HARI" class="java.math.BigDecimal"/>
+	<field name="HARI_SAY" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="SUKUBUNGA" class="java.math.BigDecimal"/>
+	<field name="BANK" class="java.lang.String"/>
+	<field name="STATUSKEPEMILIKAN" class="java.lang.String"/>
+	<field name="CAR" class="java.math.BigDecimal"/>
+	<field name="NPL" class="java.math.BigDecimal"/>
+	<field name="LDR" class="java.math.BigDecimal"/>
+	<field name="KESIMPULANRASIO" class="java.lang.String"/>
+	<field name="KEPADA" class="java.lang.String"/>
+	<field name="DARI" class="java.lang.String"/>
+	<field name="NOW" class="java.sql.Timestamp"/>
+	<field name="CURRENCY" class="java.lang.String"/>
+	<field name="ORGANIZATIONID" class="java.lang.String"/>
+	<field name="Penampung Dana" class="java.lang.String"/>
+	<field name="REKENING" class="java.lang.String"/>
+	<field name="DIREKSI1" class="java.lang.String"/>
+	<field name="NAMADIREKSI1" class="java.lang.String"/>
+	<field name="DIREKSI2" class="java.lang.String"/>
+	<field name="NAMADIREKSI2" class="java.lang.String"/>
+	<field name="PENANDATANGAN" class="java.lang.String"/>
+	<field name="NAMAPENANDATANGAN" class="java.lang.String"/>
+	<field name="TYPEINVESTASI" class="java.lang.String"/>
+	<field name="ALAMAT" class="java.lang.String"/>
+	<field name="FAX" class="java.lang.String"/>
+	<field name="KOTA" class="java.lang.String"/>
+	<field name="BANKHEADER" class="java.lang.String"/>
+	<field name="TANGGALAWAL" class="java.sql.Timestamp"/>
+	<field name="TERBILANG" class="java.lang.String"/>
+	<field name="TANGGALAKHIR" class="java.sql.Timestamp"/>
+	<field name="RATE" class="java.math.BigDecimal"/>
+	<field name="NOMORSURAT" class="java.lang.String"/>
+	<field name="LAMPIRAN" class="java.lang.String"/>
+	<title>
+		<band height="501" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="39" width="53" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Nomor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="305" y="111" width="250" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Kepada Yth,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="55" width="7" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="71" width="53" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Perihal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="39" width="7" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="55" width="245" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{LAMPIRAN}==null ? "--" :$F{LAMPIRAN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="39" width="250" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Jakarta, " + new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($F{NOW})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="60" y="71" width="245" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Penempatan & Pencairan "+$F{TYPEINVESTASI} + "\n" +"sebesar Rp. "+ new java.text.DecimalFormat("#,##0.-").format(Double.valueOf($F{NOMINAL}.toString()))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="305" y="132" width="250" height="27"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CABANGBANK}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="53" y="71" width="7" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="55" width="53" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Lampiran]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="39" width="245" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMORSURAT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="60" y="218" width="495" height="169"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Dengan ini kami beritahukan bahwa dana PT. Jaminan Pembiayaan Askrindo Syariah Rp. "+new java.text.DecimalFormat("#,##0.-").format(Double.valueOf($F{NOMINAL}.toString()))+" ("+$F{TERBILANG}+") yang telah ditransfer dengan fasilitas RTGS dari "+$F{Penampung Dana}+ ", agar ditempatkan sebagai Mudharabah On Call untuk jangka waktu "+$F{BULAN}+ " ("+$F{BULAN_SAY}+") bulan "+$F{HARI}+" ("+$F{HARI_SAY}+") hari, terhitung sejak tanggal "+new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($F{TANGGALAWAL})+" sampai tanggal " +new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($F{TANGGALAKHIR})+ " dengan suku bunga " + $F{RATE} + " % pa. \n\nBerhubung dana tersebut akan kami perlukan, harap Mudharabah On Call tersebut dicairkan pada saat jatuh temponya. Dana Pencairan sebesar Rp. "+new java.text.DecimalFormat("#,##0.-").format(Double.valueOf($F{NOMINAL}.toString()))+" ("+$F{TERBILANG}+") agar dilimpahkan ke rekening PT. Jaminan Pembiayaan Askrindo Syariah No. "+$F{REKENING}+" di "+$F{Penampung Dana}+" rekening nomor "+$F{REKENING}+ " sedangkan nisbahnya ke rekening "+$F{REKENING}+" di "+$F{Penampung Dana}+".\n\nDemikian kami sampaikan, atas perhatian dan kerjasama Saudara kami ucapkan terima kasih."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="424" y="485" width="131" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" isBold="true" isUnderline="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIREKSI2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="293" y="387" width="262" height="30"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["PT.JAMINAN PEMIAYAAN ASKRINDO SYARIAH "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="293" y="469" width="131" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" isBold="true" isUnderline="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAMADIREKSI1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="293" y="485" width="131" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" isBold="true" isUnderline="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIREKSI1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="424" y="469" width="131" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" isBold="true" isUnderline="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAMADIREKSI2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="305" y="159" width="250" height="27"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ALAMAT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="305" y="186" width="250" height="16"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{KOTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="52"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9" isBold="false" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[PT. JAMINAN PEMBIAYAAN ASKRINDO SYARIAH
+Gedung Askrindo, Lt. 6 Jl. Angkasa Blok B-9 Kav. No.8 Kemayoran - Jakarta 10610 Indonesia
+Telp : (021) 654 6505 Fax : (021) 654 6512, 654 6540
+Website : www.askrindosyariah.com email : cs@askrindosyariah.com]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

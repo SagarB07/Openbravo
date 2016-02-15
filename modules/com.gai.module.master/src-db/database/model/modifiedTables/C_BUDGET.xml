@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE C_BUDGET">
+    <table name="C_BUDGET" primaryKey="C_BUDGET_KEY">
+      <column name="EM_GMM_MASTER_DEPARTMENT_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_DEPARTMENT_BUDGET">
+        <reference local="EM_GMM_MASTER_DEPARTMENT_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+    </table>
+  </database>

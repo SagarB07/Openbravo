@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GCS_ISCASHFLOW_DESC">
+    <function name="GCS_ISCASHFLOW_DESC" type="NULL">
+      <parameter name="p_record_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+  * $Id: GCS_IsCashflow.sql,v 1.6 2015/07/10
+  * Title: Update IsCashFlow Fact_Acct
+  * Created By. Astri @ PT. Global Anugerah Indonesia
+  ************************************************************************/
+
+
+v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+
+ TYPE RECORD IS REF CURSOR;
+  Cur_Record RECORD;
+  Cur_Fact RECORD;
+  
+BEGIN
+    
+BEGIN
+      FOR Cur_Record IN (
+        SELECT EM_GAI_DOCUMENTNO AS DOCUMENTNO FROM FACT_ACCT
+        WHERE EM_GCS_FLAGCS='N'
+        AND trunc(dateacct) between '01-JAN-15' and '31-JAN-15'
+        --AND DESCRIPTION LIKE '%Alat tulis kantor (No. Giro Rek:)%'
+        GROUP BY EM_GAI_DOCUMENTNO
+        --AND DESCRIPTION LIKE '%TT AN RIHANDY  CHEQUE WITHDRAWAL%'
+        ORDER BY EM_GAI_DOCUMENTNO ASC
+      ) LOOP
+        FOR Cur_Fact IN (
+          SELECT FA.FACT_ACCT_ID AS REC_ID, FA.EM_GCS_ISCASHFLOW AS ISCASHFLOW--, CI.C_INVOICE_ID AS REC_ID
+          FROM FACT_ACCT FA --Left Join C_ElementValue Cv On (Cv.C_ElementValue_ID = FA.Account_ID AND Cv.EM_GCS_ISCASHFLOW = 'Y')
+          WHERE FA.EM_GCS_FLAGCS = 'N'
+          AND trunc(dateacct) between '01-JAN-15' and '31-JAN-15'
+          --AND FA.FACT_ACCT_GROUP_ID=Cur_Record.FACT_ACCT_GROUP_ID
+          AND FA.EM_GAI_DOCUMENTNO=Cur_Record.DOCUMENTNO
+        )
+        LOOP
+        
+          IF (Cur_Fact.ISCASHFLOW='Y') THEN
+            UPDATE FACT_ACCT SET EM_GCS_ISCASHFLOW = 'Y', EM_GCS_FLAGCS = 'Y' WHERE EM_GAI_DOCUMENTNO = Cur_Record.DOCUMENTNO;--FACT_ACCT_GROUP_ID = Cur_Record.FACT_ACCT_GROUP_ID;
+            --AND EM_GCS_ISCASHFLOW = 'N';
+          END IF;
+          
+          /*UPDATE FACT_ACCT SET EM_GCS_ISCASHFLOW = 'N' WHERE RECORD_ID = Cur_Record.REC_ID
+          AND ROWID = Cur_Record.RWID;*/
+          
+          --UPDATE FACT_ACCT SET  WHERE FACT_ACCT_GROUP_ID = Cur_Record.FACT_ACCT_GROUP_ID;
+         
+          COMMIT;
+          END LOOP;
+      END LOOP;
+    RETURN;
+    
+END; --Body
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  ROLLBACK;
+  RETURN;
+END GCS_ISCASHFLOW_DESC]]></body>
+    </function>
+  </database>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE FIN_PAYMENT">
+    <table name="FIN_PAYMENT" primaryKey="FIN_PAYMENT_KEY">
+      <column name="EM_GAI_KANTOR_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GAI_KANTOR" name="EM_GAI_KANTOR_ID">
+        <reference local="EM_GAI_KANTOR_ID" foreign="GAI_KANTOR_ID"/>
+      </foreign-key>
+    </table>
+  </database>

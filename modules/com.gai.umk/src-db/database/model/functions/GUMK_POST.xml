@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GUMK_POST">
+    <function name="GUMK_POST" type="NULL">
+      <parameter name="p_pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+  * Title: Insert Into Fact_Acct
+  * Created By. Nurul Hidayat @ PT. Global Anugerah Indonesia
+  ************************************************************************/
+
+v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+v_Fact_Acct_Id VARCHAR2(32);
+v_FA_Group VARCHAR2(32);
+v_AD_Table_Id VARCHAR2(32) := '8B52304A109C421BAAFF7D49F85B2BA0';
+v_LineNo NUMERIC := 10;
+v_User VARCHAR2(32);
+v_Message VARCHAR2(2000):='';
+v_Result NUMBER:=1; -- Success
+v_Posted VARCHAR2(5);
+
+ TYPE RECORD IS REF CURSOR;
+  Cur_Record RECORD;
+
+  BEGIN
+    
+    IF (p_PInstance_ID IS NOT NULL) THEN
+      --  Update AD_PInstance
+      DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
+      v_ResultStr:='PInstanceNotFound';
+      AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;
+      -- Get Parameters
+      v_ResultStr:='ReadingParameters';
+      FOR Cur_Parameter IN
+        (SELECT i.Record_ID, i.AD_User_ID, p.ParameterName, p.P_String,
+          p.P_Number, p.P_Date
+        FROM AD_PINSTANCE i
+        LEFT JOIN AD_PINSTANCE_PARA p
+          ON i.AD_PInstance_ID=p.AD_PInstance_ID
+        WHERE i.AD_PInstance_ID=p_PInstance_ID
+        ORDER BY p.SeqNo
+        )
+      LOOP
+        v_Record_ID:=Cur_Parameter.Record_ID;
+        v_User:=Cur_Parameter.AD_User_ID;
+      END LOOP; -- Get Parameter
+   END IF;
+    --DBMS_OUTPUT.PUT_LINE('  Record_ID=' || v_Record_ID) ;
+    
+    --RAISE_APPLICATION_ERROR(-20000,'  Record_ID=' || v_Record_ID);
+    
+    BEGIN
+    
+      Select Posted
+      INTO v_Posted
+      From gumk_umk
+      Where gumk_umk_ID = v_Record_ID;
+      
+      --RAISE_APPLICATION_ERROR(-20000,'  Posted=' || v_Posted);
+      
+      IF (v_Posted='N') THEN 
+      
+        FOR Cur_Record IN (
+                     SELECT 
+              C_GLITEM_ACCT.C_ACCTSCHEMA_ID,
+              --C_GLITEM_ACCT.GLITEM_DEBIT_ACCT as Account_ID, 
+              c_elementvalue.c_elementvalue_id as Account_ID,
+              gumk_realisasi.price as DebetAmt,
+              0 as CreditAmt,
+              gumk_realisasi.gumk_realisasi_id as Record_ID,
+              gumk_realisasi.AD_CLIENT_ID,
+              gumk_realisasi.AD_ORG_ID,
+              gumk_realisasi.DOCUMENT_DATE,
+              C_Period.C_Period_ID,
+              gumk_realisasi.Description,
+              c_elementvalue.value Kode_Account,
+              c_elementvalue.name Nama_Account
+              
+            from gumk_umk
+            inner join gumk_realisasi on (gumk_realisasi.gumk_umk_id = gumk_umk.gumk_umk_id)
+            left join C_GLITEM on (C_GLITEM.C_GLITEM_ID = gumk_realisasi.C_GLITEM_ID)
+            left join C_GLITEM_ACCT ON (C_GLITEM_ACCT.C_GLITEM_id = C_GLITEM.C_GLITEM_ID)
+            left join C_Period on (UPPER(C_Period.Name) = to_char(to_date(gumk_realisasi.DOCUMENT_DATE, 'dd-MM-yy'), 'MON-yy'))
+            left join C_ValidCombination on (C_ValidCombination.C_ValidCombination_id = C_GLITEM_ACCT.GLITEM_DEBIT_ACCT)
+            left join c_elementvalue on (c_elementvalue.c_elementvalue_id = C_ValidCombination.Account_ID)
+            where gumk_umk.gumk_umk_id = v_Record_ID 
+            union
+             SELECT 
+              C_GLITEM_ACCT.C_ACCTSCHEMA_ID,
+              --C_GLITEM_ACCT.GLITEM_CREDIT_ACCT as Account_ID, 
+               c_elementvalue.c_elementvalue_id as Account_ID,
+              0 as DebetAmt,
+              gumk_realisasi.price as CreditAmt,
+              gumk_realisasi.gumk_realisasi_id as Record_ID,
+              gumk_realisasi.AD_CLIENT_ID,
+              gumk_realisasi.AD_ORG_ID,
+              gumk_realisasi.DOCUMENT_DATE,
+              C_Period.C_Period_ID,
+              gumk_realisasi.Description,
+              c_elementvalue.value Kode_Account,
+              c_elementvalue.name Nama_Account
+              
+            from gumk_umk
+            inner join gumk_realisasi on (gumk_realisasi.gumk_umk_id = gumk_umk.gumk_umk_id)
+            left join C_GLITEM on (C_GLITEM.C_GLITEM_ID = gumk_realisasi.C_GLITEM_ID)
+            left join C_GLITEM_ACCT ON (C_GLITEM_ACCT.C_GLITEM_id = C_GLITEM.C_GLITEM_ID)
+            left join C_Period on (UPPER(C_Period.Name) = to_char(to_date(gumk_realisasi.DOCUMENT_DATE, 'dd-MM-yy'), 'MON-yy'))
+            left join C_ValidCombination on (C_ValidCombination.C_ValidCombination_id = C_GLITEM_ACCT.GLITEM_CREDIT_ACCT)
+            left join c_elementvalue on (c_elementvalue.c_elementvalue_id = C_ValidCombination.Account_ID)
+            where gumk_umk.gumk_umk_id = v_Record_ID 
+        ) LOOP
+        --'4398F4736C834FC092A871C009EF2EA1'
+          --RAISE_APPLICATION_ERROR(-20000,'  Masuk Loop  ');
+        --insert into Fact_Acct
+          Ad_Sequence_Next('FACT_ACCT', Cur_Record.AD_CLIENT_ID, v_Fact_Acct_Id);
+          v_FA_Group := GET_UUID();
+            --BEGIN
+            
+           
+            Insert into FACT_ACCT 
+              (FACT_ACCT_ID,AD_CLIENT_ID,AD_ORG_ID,ISACTIVE, --1
+              CREATED,CREATEDBY,UPDATED,UPDATEDBY, --2
+              C_ACCTSCHEMA_ID,ACCOUNT_ID,DATETRX,DATEACCT, --3
+              C_PERIOD_ID,AD_TABLE_ID,RECORD_ID,LINE_ID, --4
+              GL_CATEGORY_ID,POSTINGTYPE, --5
+              C_CURRENCY_ID,AMTSOURCEDR,AMTSOURCECR,
+              AMTACCTDR, --6
+              AMTACCTCR, --7
+              C_BPARTNER_ID, --8
+              DESCRIPTION, --9
+              FACT_ACCT_GROUP_ID,SEQNO,FACTACCTTYPE,DOCBASETYPE, --10
+              ACCTVALUE,ACCTDESCRIPTION, --11
+              C_DOCTYPE_ID,ISMODIFY) --12
+            values 
+              (v_Fact_Acct_Id,Cur_Record.AD_CLIENT_ID,Cur_Record.AD_ORG_ID,'Y', --1
+              to_date(now()),v_User,to_date(now()),v_User, --2
+              Cur_Record.C_ACCTSCHEMA_ID,Cur_Record.Account_ID, TO_DATE(Cur_Record.DOCUMENT_DATE, 'dd-MM-yy'), TO_DATE(Cur_Record.DOCUMENT_DATE, 'dd-MM-yy'), --3
+              Cur_Record.C_Period_ID, v_AD_Table_Id, Cur_Record.Record_ID,null, --4
+              null,'A', --5
+              '303',To_Number(Cur_Record.DebetAmt),To_Number(Cur_Record.CreditAmt),
+              To_Number(Cur_Record.DebetAmt), --6
+              To_Number(Cur_Record.CreditAmt), --7
+              null, --8
+              Cur_Record.Description, --9
+              v_FA_Group,v_LineNo,'N',null, --10
+              Cur_Record.Kode_Account,Cur_Record.Nama_Account, --11
+              null,'N'); --12
+          
+              v_LineNo := v_LineNo + 10;
+              
+              commit;
+              
+              IF (p_PInstance_ID IS NOT NULL) THEN
+              --  Update AD_PInstance
+                DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished - ' || v_Message) ;
+                v_Message := '@Gnv_Success_Posted@';
+                AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
+              END IF;
+        END LOOP;
+        Update gumk_umk set Posted='Y' Where gumk_umk_id=v_Record_ID;
+      ELSIF (v_Posted='Y') THEN
+        
+        FOR Cur_Record IN (
+          Select c_period_Id as Period_Id, OpenClose,gid.gumk_realisasi_id From gumk_realisasi gid, C_Period cp
+          Where UPPER(cp.Name) = to_char(to_date(gid.DOCUMENT_DATE, 'dd-MM-yy'), 'MON-yy')
+          and gid.gumk_umk_id=v_Record_ID
+        ) LOOP
+        
+          IF (Cur_Record.OpenClose = 'O') THEN
+            RAISE_APPLICATION_ERROR(-20000,'@Gnv_Period_Close@');
+          ELSE
+            DELETE FROM FACT_ACCT WHERE RECORD_ID=Cur_Record.gumk_realisasi_id;
+            Update gumk_umk set Posted='N' Where gumk_umk_id=v_Record_ID;
+            
+            IF (p_PInstance_ID IS NOT NULL) THEN
+            --  Update AD_PInstance
+              DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished - ' || v_Message) ;
+              v_Message := '@Gnv_Success_Unposted@';
+              AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
+            END IF;
+            
+          END IF;
+        END LOOP;
+        
+      END IF;
+      
+      RETURN;
+    
+END; --Body
+/*EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  RAISE_APPLICATION_ERROR(-20000,v_ResultStr) ;
+  ROLLBACK;
+  RETURN;*/
+END GUMK_POST]]></body>
+    </function>
+  </database>

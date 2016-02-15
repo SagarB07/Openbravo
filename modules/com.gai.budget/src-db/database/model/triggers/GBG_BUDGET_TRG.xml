@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+  <database name="TRIGGER GBG_BUDGET_TRG">
+    <trigger name="GBG_BUDGET_TRG" table="C_BUDGET" fires="before" insert="true" update="false" delete="false" foreach="row">
+      <body><![CDATA[
+    /*************************************************************************
+    * $Id: GBG_BUDGET_TRG.sql, 2015/07/13
+    ***
+    * Title: GBB_Budget_Trg
+    * Description:
+    *    - Update EM_GBG_Saved
+    ************************************************************************/
+    
+BEGIN
+    
+    IF AD_isTriggerEnabled()='N' THEN RETURN;
+    END IF;
+
+
+  IF(INSERTING) THEN
+    :NEW.EM_GBG_SAVED := 'Y';
+  END IF;
+  
+EXCEPTION WHEN NO_DATA_FOUND THEN
+  RAISE_APPLICATION_ERROR(-20000, '@20270@') ;
+END GBG_BUDGET_TRG
+]]></body>
+    </trigger>
+  </database>

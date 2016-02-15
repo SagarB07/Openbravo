@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE M_REQUISITION">
+    <table name="M_REQUISITION" primaryKey="M_REQUISITION_KEY">
+      <column name="EM_GNV_MASTER_DATADIREKSI_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GNV_MASTER_DATADIREKSI2_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GNV_MASTER_DATADIREKSI3_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GNV_MASTER_DATADIREKSI" name="EM_GNV_M_REQUISITION_FK1">
+        <reference local="EM_GNV_MASTER_DATADIREKSI3_ID" foreign="GNV_MASTER_DATADIREKSI_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GNV_MASTER_DATADIREKSI" name="EM_GNV_M_REQUISITION_FK2">
+        <reference local="EM_GNV_MASTER_DATADIREKSI2_ID" foreign="GNV_MASTER_DATADIREKSI_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GNV_MASTER_DATADIREKSI" name="EM_GNV_REQUISITION_FK1">
+        <reference local="EM_GNV_MASTER_DATADIREKSI_ID" foreign="GNV_MASTER_DATADIREKSI_ID"/>
+      </foreign-key>
+    </table>
+  </database>

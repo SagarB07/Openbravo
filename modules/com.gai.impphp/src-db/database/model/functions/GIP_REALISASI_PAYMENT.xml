@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GIP_REALISASI_PAYMENT">
+    <function name="GIP_REALISASI_PAYMENT" type="NULL">
+      <parameter name="p_client_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_ord_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_bpartner_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_refno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_invoiceno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_creditused" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_invoice_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_paymentused" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_Payment_ID VARCHAR(32):= get_uuid();
+v_FinPayDetail_ID VARCHAR(32):= get_uuid();
+v_Schedule_ID VARCHAR(32):= get_uuid();
+v_Financial_ID VARCHAR(32);
+v_Partner_ID_Used VARCHAR(32);
+v_DocumentNo VARCHAR(32);
+
+v_Partner_Daldo NUMBER;
+v_Currency_ID VARCHAR(32);
+v_Pricelist_ID VARCHAR(32);
+v_Term_ID VARCHAR(32);
+v_PaymentMethod_ID VARCHAR(32);
+v_ResultStr VARCHAR(32);
+
+v_KPS_ID VARCHAR(32);
+
+BEGIN
+    BEGIN
+      Select FIN_FINANCIAL_ACCOUNT_ID, M_PRICELIST_ID, C_PAYMENTTERM_ID, FIN_PAYMENTMETHOD_ID
+      INTO v_Financial_ID, v_Pricelist_ID, v_Term_ID,v_PaymentMethod_ID
+      from C_BPARTNER where C_BPARTNER_ID = p_BPartner_ID;
+    EXCEPTION WHEN OTHERS THEN 
+        v_ResultStr:= '@ERROR=' || SQLERRM;
+        DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END;    
+    
+    BEGIN
+      Select GAI_KANTOR.GAI_KANTOR_ID
+      INTO v_KPS_ID
+      from GAI_KANTOR, AD_ORG 
+      WHERE GAI_KANTOR.VALUE = AD_ORG.VALUE
+      AND AD_ORG.AD_ORG_ID=p_ord_id;
+    EXCEPTION WHEN OTHERS THEN 
+        v_KPS_ID := NULL;
+    END;
+    
+    BEGIN
+      SELECT CR.C_CURRENCY_ID INTO v_Currency_ID FROM C_BPARTNER BP,M_PRICELIST MP,C_CURRENCY CR WHERE 
+      BP.M_PRICELIST_ID = MP.M_PRICELIST_ID
+      AND CR.C_CURRENCY_ID = MP.C_CURRENCY_ID 
+      AND BP.C_BPARTNER_ID = p_BPartner_ID;
+    EXCEPTION WHEN OTHERS THEN 
+        v_ResultStr:= '@ERROR=' || SQLERRM;
+        DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END; 
+        
+    Ad_Sequence_Doctype('D132517AE775435B8EB2832CC61FCAB1', '800DEBB742384A71BBD363493A6E7333', 'Y', v_DocumentNo);    
+    
+    BEGIN
+      Insert into FIN_PAYMENT 
+      (
+        FIN_PAYMENT_ID,AD_CLIENT_ID,AD_ORG_ID,CREATED,CREATEDBY,UPDATED, --1
+        UPDATEDBY,ISACTIVE,ISRECEIPT,C_BPARTNER_ID,PAYMENTDATE,C_CURRENCY_ID, --2
+        AMOUNT,WRITEOFFAMT,FIN_PAYMENTMETHOD_ID,DOCUMENTNO,REFERENCENO,STATUS, --3
+        PROCESSED,PROCESSING,POSTED,DESCRIPTION,FIN_FINANCIAL_ACCOUNT_ID,C_DOCTYPE_ID, --4
+        GENERATED_CREDIT, --5
+        USED_CREDIT,CREATEDBYALGORITHM,FINACC_TXN_CONVERT_RATE,FINACC_TXN_AMOUNT, --6
+        EM_GAI_KANTOR_ID,EM_APRM_PROCESS_PAYMENT,EM_APRM_RECONCILE_PAYMENT,EM_APRM_ADD_SCHEDULEDPAYMENTS,EM_APRM_EXECUTEPAYMENT --7 / 5
+      ) --8
+      values (
+          v_Payment_ID,p_Client_ID,p_Ord_ID,now(),'100',now(), --1
+          '100','Y','Y',p_BPartner_ID,now(),coalesce(v_Currency_ID,'303'), --2
+          0,0,COALESCE(v_PaymentMethod_ID,'06DF9C1CDA6D4CF8B7ABA635422DEB4F'),v_DocumentNo,Coalesce(p_RefNo,NULL),'RPPC', --3
+          'N','N','N','Invoice No.: '|| p_InvoiceNo,COALESCE(v_Financial_ID,'E54AA1A1BD2246668E89502D42027616'),'D132517AE775435B8EB2832CC61FCAB1',--4
+          0, --5
+          p_CreditUsed,'N',1,0, --6
+          v_KPS_ID,'N','N','N','N' --7 / 5
+      --8
+      );
+    EXCEPTION WHEN OTHERS THEN 
+        v_ResultStr:= '@ERROR=' || SQLERRM;
+        DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END; 
+    
+    
+    BEGIN
+      Insert into FIN_PAYMENT_DETAIL 
+      (
+        FIN_PAYMENT_DETAIL_ID,AD_CLIENT_ID,AD_ORG_ID,CREATED,CREATEDBY,UPDATED,
+        UPDATEDBY,FIN_PAYMENT_ID,AMOUNT,REFUND,ISACTIVE,WRITEOFFAMT,
+        C_GLITEM_ID,ISPREPAYMENT
+      ) 
+      values 
+      (
+        v_FinPayDetail_ID,p_Client_ID,p_Ord_ID,now(),'100',now(),
+        '100',v_Payment_ID,p_CreditUsed,'N','Y',0,
+        NULL,'Y'
+      );
+    EXCEPTION WHEN OTHERS THEN 
+        v_ResultStr:= '@ERROR=' || SQLERRM;
+        DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END;
+    
+    BEGIN
+      Insert into 
+        FIN_PAYMENT_SCHEDULE (
+          FIN_PAYMENT_SCHEDULE_ID,AD_CLIENT_ID,AD_ORG_ID,CREATED,CREATEDBY,UPDATED, --1
+          UPDATEDBY,C_INVOICE_ID,DUEDATE,FIN_PAYMENTMETHOD_ID,C_CURRENCY_ID, --2
+          AMOUNT,PAIDAMT,OUTSTANDINGAMT,ISACTIVE,FIN_PAYMENT_PRIORITY_ID,UPDATE_PAYMENT_PLAN, --3
+          EXPECTEDDATE,EM_APRM_MODIF_PAYM_SCHED,EM_APRM_MODIF_PAYM_OUT_SCHED--4
+        ) 
+      values (
+          v_Schedule_ID,p_Client_ID,p_Ord_ID,now(),'100',now(),
+          '100',p_Invoice_ID,now(),v_PaymentMethod_ID,v_Currency_ID,
+          p_CreditUsed,p_CreditUsed,0,'Y',NULL,'Y',
+          now(),'N','N'
+          );
+    EXCEPTION WHEN OTHERS THEN 
+          v_ResultStr:= '@ERROR=' || SQLERRM;
+          DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END;
+    
+    
+    BEGIN
+    Insert into 
+      FIN_PAYMENT_SCHEDULEDETAIL (
+          FIN_PAYMENT_SCHEDULEDETAIL_ID,AD_CLIENT_ID,AD_ORG_ID,CREATED,CREATEDBY,UPDATED, --1
+          UPDATEDBY,FIN_PAYMENT_DETAIL_ID,FIN_PAYMENT_SCHEDULE_ORDER,FIN_PAYMENT_SCHEDULE_INVOICE,AMOUNT,ISACTIVE, --2
+          WRITEOFFAMT,ISCANCELED, --3
+          DOUBTFULDEBT_AMOUNT, --4
+          ISINVOICEPAID) --5
+      values (
+        get_uuid(),p_Client_ID,p_Ord_ID,now(),'100',now(), --1
+        '100',v_FinPayDetail_ID,NULL,v_Schedule_ID,p_CreditUsed,'Y', --2
+        0,'N',--3
+        0, --4
+        'N' --5
+        );
+    EXCEPTION WHEN OTHERS THEN 
+          v_ResultStr:= '@ERROR=' || SQLERRM;
+          DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END;
+    
+    
+    BEGIN
+    Insert into FIN_Payment_Credit
+    (
+      FIN_Payment_Credit_ID,AD_CLIENT_ID,AD_ORG_ID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,
+      ISACTIVE, FIN_PAYMENT_ID, FIN_PAYMENT_ID_USED, AMOUNT, C_CURRENCY_ID
+    )
+    Values
+    (
+      get_uuid(),p_Client_ID,p_Ord_ID,now(),'100',now(),'100',
+      'Y', v_Payment_ID, p_PaymentUsed, p_CreditUsed,v_Currency_ID
+    );
+    END;
+    
+    BEGIN    
+      Update FIN_Payment set Processed = 'Y' where FIN_Payment_id = v_Payment_ID;
+      
+      update C_Invoice set 
+      IsPaid ='Y' , TotalPaid=p_CreditUsed, OutstandingAmt=0, DaysTillDue=0, Dueamt=0,
+      LastcalculatedOnDate=now(),FinalSettlement=now(),DaysOutstanding=now() - TO_DATE('2014-07-07','YYYY-MM-DD'),
+      PercentageOverdue=100 where C_Invoice_ID = p_Invoice_ID; 
+  
+      --Select c_bpartner_id into v_partner_id_used from fin_payment where fin_payment_id = payment_used;
+      
+      Update FIN_Payment set Used_Credit = Used_Credit + p_CreditUsed where FIN_Payment_id = p_PaymentUsed;
+    EXCEPTION WHEN OTHERS THEN 
+          v_ResultStr:= '@ERROR=' || SQLERRM;
+          DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+    END;
+
+  
+EXCEPTION
+WHEN OTHERS THEN 
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+END GIP_REALISASI_PAYMENT
+]]></body>
+    </function>
+  </database>

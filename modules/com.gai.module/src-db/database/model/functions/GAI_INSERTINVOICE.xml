@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTINVOICE">
+    <function name="GAI_INSERTINVOICE" type="NULL">
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="issotrx" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="documentno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="description" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="mitra_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="produk_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="price" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_id VARCHAR(32):= get_uuid();
+v_location_id VARCHAR(32);
+v_total NUMBER;
+v_cur_id VARCHAR(32);
+v_pricelist_id VARCHAR(32);
+v_term_id VARCHAR(32);
+v_payment_id VARCHAR(32);
+
+BEGIN
+BEGIN
+Select c_bpartner_location_id into v_location_id from c_bpartner_location where c_bpartner_id = mitra_id;
+END;
+
+BEGIN
+SELECT CR.C_CURRENCY_ID INTO v_cur_id FROM C_BPARTNER BP,M_PRICELIST MP,C_CURRENCY CR WHERE 
+BP.M_PRICELIST_ID = MP.M_PRICELIST_ID
+AND CR.C_CURRENCY_ID = MP.C_CURRENCY_ID 
+AND BP.C_BPARTNER_ID = mitra_id;
+END;
+
+BEGIN
+SELECT BP.M_PRICELIST_ID INTO v_pricelist_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = mitra_id;
+END;
+
+BEGIN
+SELECT BP.C_PAYMENTTERM_ID INTO v_term_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = mitra_id;
+END;
+
+BEGIN
+SELECT BP.FIN_PAYMENTMETHOD_ID INTO v_payment_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = mitra_id;
+END;
+
+
+
+BEGIN
+Select c_bpartner_location_id into v_location_id from c_bpartner_location where c_bpartner_id = mitra_id;
+END;
+  BEGIN
+    INSERT INTO C_INVOICE values(v_id,ad_client,ad_org,'Y',
+    now(),'100',now(),'100',issotrx,documentno,'DR','CO','N','N','N','40EE9B1CD3B345FABEFDA62B407B407F','40EE9B1CD3B345FABEFDA62B407B407F',
+    NULL,description,'N',NULL,now(),
+    NULL,now(),mitra_id,v_location_id,NULL,'N',NULL,v_cur_id,NULL,
+    v_term_id,NULL,0,0,0,v_pricelist_id,'N',NULL,NULL,NULL,'N','N',NULL,'N',
+    'N',NULL,NULL,NULL,NULL,NULL,NULL,'N',0,0,0,0,NULL,'N',v_payment_id,NULL,NULL,NULL,NULL,'NULL','N',NULL,'N',NULL,'Y' ,'CO');
+  END;
+
+
+
+  BEGIN
+  v_total := 1*price;
+
+    INSERT INTO C_INVOICELINE values (get_uuid(),ad_client,ad_org,'Y',now(),'100',now(),
+    '100',v_id,NULL,NULL,10,NULL,'N',NULL,produk_id,1,0,price,0,v_total,NULL,0,'100',
+    'A6CC4665E07C4AC5A97C74A766D3911B',NULL,0,NULL,'N',NULL,NULL,NULL,NULL,NULL,v_total,'N','N',v_total,0,0,mitra_id,
+    NULL,0,NULL,NULL,0,NULL,'N',NULL,NULL,NULL,NULL,'N',NULL);
+  END;
+
+    EXCEPTION
+WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('gagal ') ;
+END GAI_INSERTINVOICE
+]]></body>
+    </function>
+  </database>

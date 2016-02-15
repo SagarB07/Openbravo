@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_GET_UJRAH">
+    <function name="GAI_GET_UJRAH" type="NUMERIC">
+      <parameter name="awal" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="akhir" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[hasil_return NUMBER;
+BEGIN
+ 
+ select 
+ sum(ci.totalpaid)
+ into hasil_return
+ from c_invoice ci
+	 left join c_bpartner bp on bp.c_bpartner_id = ci.c_bpartner_id
+	 
+where ci.issotrx='Y'
+and ci.dateinvoiced between trunc(awal) and trunc(akhir)
+and ci.totalpaid > 0;
+    
+  RETURN hasil_return;
+END GAI_GET_UJRAH
+]]></body>
+    </function>
+  </database>

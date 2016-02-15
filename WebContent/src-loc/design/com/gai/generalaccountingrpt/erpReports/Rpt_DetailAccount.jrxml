@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Rpt_DetailAccount" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="C_ElementValue_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="C_Period_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CE.VALUE AS ACCOUNT_VALUE, CE.NAME AS ACCOUNT_NAME, CEA.VALUE AS ACCOUNT_OPERAND_VALUE,
+CEA.NAME AS ACCOUNT_OPERAND_NAME, SUM(FA.AMTACCTDR) AS DEBET, SUM(FA.AMTACCTCR) AS CREDIT
+FROM C_ELEMENTVALUE CE LEFT JOIN C_ELEMENTVALUE_OPERAND CO ON CE.C_ELEMENTVALUE_ID = CO.C_ELEMENTVALUE_ID
+                       LEFT JOIN C_ELEMENTVALUE CEA ON CO.ACCOUNT_ID = CEA.C_ELEMENTVALUE_ID
+                       LEFT JOIN FACT_ACCT FA ON FA.ACCOUNT_ID = CEA.C_ELEMENTVALUE_ID
+WHERE CE.C_ELEMENTVALUE_ID = $P{C_ElementValue_ID}
+AND FA.C_PERIOD_ID = $P{C_Period_ID}
+GROUP BY CE.VALUE, CE.NAME, CEA.VALUE, CEA.NAME
+ORDER BY CE.VALUE, CEA.VALUE ASC]]>
+	</queryString>
+	<field name="ACCOUNT_VALUE" class="java.lang.String"/>
+	<field name="ACCOUNT_NAME" class="java.lang.String"/>
+	<field name="ACCOUNT_OPERAND_VALUE" class="java.lang.String"/>
+	<field name="ACCOUNT_OPERAND_NAME" class="java.lang.String"/>
+	<field name="DEBET" class="java.math.BigDecimal"/>
+	<field name="CREDIT" class="java.math.BigDecimal"/>
+	<variable name="SUMNilai" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{DEBET}.subtract($F{CREDIT})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="108" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="47" width="387" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Account : "+$F{ACCOUNT_VALUE}+" - "+$F{ACCOUNT_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="88" width="387" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="88" width="168" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nilai]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ACCOUNT_OPERAND_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="165" y="0" width="222" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ACCOUNT_OPERAND_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="387" y="0" width="168" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{DEBET}.subtract($F{CREDIT})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="387" y="0" width="168" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMNilai}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

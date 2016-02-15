@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GNV_INVESTASI_CALCULATE">
+    <function name="GNV_INVESTASI_CALCULATE" type="NULL">
+      <parameter name="p_pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+  * $Id: GNV_INVESTASI_CALCULATE.sql,v 1.6 2015/07/10
+  * Title: Calculate Nisbah
+  * Description:
+  * Created By. Marshela @ PT. Global Anugerah Indonesia
+  * Modified By. NuruL Hidayat
+  ************************************************************************/
+
+
+v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+v_AD_User_ID VARCHAR2(32);
+v_AD_Client_ID VARCHAR2(32);
+v_AD_Org_ID VARCHAR2(32);
+v_GBG_AdditionalBudget VARCHAR2(32);
+v_AdditionalAmt NUMBER := 0;
+V_GNV_INVESTASI_DETAIL VARCHAR2(32);
+v_line numeric;
+V_PERIODE VARCHAR(32);
+V_JUMLAHHARI NUMERIC;
+V_COUNT NUMERIC;
+V_AMOUNT NUMERIC;
+V_AKHIRBULAN DATE;
+v_totalnisbah numeric;
+v_totalamount numeric;
+v_swap_tgl_awal number;
+v_swap_tgl_akhir number;
+v_mount_level numeric;
+v_accouting_Date DATE;
+V_RECALCULATE VARCHAR(2);
+V_RECALCULATE_STATUS number := 0;
+ TYPE RECORD IS REF CURSOR;
+  Cur_Parameter RECORD;
+  Cur_Additional RECORD;
+  Cur_ELSE RECORD;
+  Cur_MOUNT RECORD;
+BEGIN
+      select to_number(TO_CHAR(TANGGALAWAL,'dd')),to_number(TO_CHAR(TANGGALAKHIR,'dd')) into v_swap_tgl_awal,v_swap_tgl_akhir FROM GNV_INVESTASI_LINE where GNV_INVESTASI_LINE_ID=p_pinstance_id;
+        if (v_swap_tgl_awal >=  v_swap_tgl_akhir) then 
+            v_mount_level:=2;
+        else
+            v_mount_level:=1;
+        end if;
+        
+        
+    --CEK SUDAH ADA RECORD APA BELUM
+     SELECT COALESCE(COUNT(*),0) INTO V_RECALCULATE
+        FROM GNV_INVESTASI_DETAIL GID 
+        LEFT JOIN gnv_investasi_line GIL ON  GIL.gnv_investasi_line_ID =GID.gnv_investasi_line_ID
+        --left join GNV_INVESTASI_HEADER GIH ON GIH.GNV_INVESTASI_HEADER_ID= GIL.GNV_INVESTASI_HEADER_ID
+        WHERE GIL.gnv_investasi_line_ID=p_pinstance_id;
+    --  Update AD_PInstance
+    --RAISE_APPLICATION_ERROR(-20000,V_RECALCULATE );
+    DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
+    v_ResultStr:='PInstanceNotFound';
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;
+    -- Get Parameters
+    v_ResultStr:='ReadingParameters';
+    BEGIN
+      FOR Cur_Parameter IN
+        (SELECT i.CreatedBy, i.AD_Org_ID, i.AD_Client_ID,i.GNV_INVESTASI_HEADER_ID
+        FROM GNV_INVESTASI_LINE i
+        WHERE i.GNV_INVESTASI_LINE_ID=p_pinstance_id
+        )
+      LOOP
+        v_Record_ID:= p_pinstance_id ;
+        v_AD_Org_ID:=Cur_Parameter.AD_Org_ID;
+        v_AD_Client_ID:=Cur_Parameter.AD_Client_ID;
+    FOR Cur_Investasi IN(
+    
+  SELECT
+  add_months(TANGGALAWAL, (level - 1)) TANGGALAWAL,
+  add_months(TANGGALAWAL,  level     ) end_date,
+  TANGGALAKHIR,
+  GNV_INVESTASI_LINE_ID, AD_CLIENT_ID, AD_ORG_ID, CREATED, CREATEDBY, ISACTIVE, updated, UPDATEDBY,
+  AMOUNT,RATE, C_CURRENCY_ID, DOCUMENTNO,
+  
+  last_day(TANGGALAWAL) AS LASTDAYAWAL,
+  last_day(TANGGALAKHIR) AS LASTDAYAKHIR,
+  TO_CHAR(ADD_MONTHS(TANGGALAWAL, level -1 ),'MM-YYYY') AS BULAN,
+  TO_CHAR(ADD_MONTHS(TANGGALAWAL, level -1 ),'MM') AS BLN,
+  TO_CHAR(TANGGALAWAL,'MM') AS BULANAWAL,
+  TO_CHAR(TANGGALAKHIR,'MM') AS BULANAKHIR,
+  
+  TO_CHAR(ADD_MONTHS(TANGGALAWAL, level -1 ),'YYYY') AS THNAKHIR,
+  TO_CHAR(TANGGALAKHIR,'YYYY') AS TAHUNAKHIR,
+  GNV_DATEDIFF(TANGGALAKHIR,TANGGALAWAL) AS JUMLAHTOTALHARI
+
+FROM (
+  -- Set the input date here
+  SELECT 
+  gil.GNV_INVESTASI_LINE_ID, gil.AD_CLIENT_ID, gil.AD_ORG_ID, gil.CREATED, gil.CREATEDBY, gil.ISACTIVE, gil.updated, gil.UPDATEDBY,
+  gil.AMOUNT,GIL.RATE, gil.C_CURRENCY_ID,
+  GIL.TANGGALAWAL, GIL.TANGGALAKHIR, GIL.NOBILYET AS DOCUMENTNO 
+
+  FROM gnv_investasi_line GIL WHERE gnv_investasi_line_ID=v_Record_ID
+)
+ GNV_INVESTASI_LINE 
+CONNECT BY
+  add_months(TANGGALAWAL, (level - v_mount_level)) < GNV_INVESTASI_LINE.TANGGALAKHIR
+
+        order by level
+        
+    )
+    
+        
+    loop
+    Ad_Sequence_Next('GNV_INVESTASI_DETAIL', v_AD_Client_ID, V_GNV_INVESTASI_DETAIL);
+        SELECT COALESCE(MAX(GID.Lineno),0)+10 INTO v_line
+        FROM GNV_INVESTASI_DETAIL GID 
+        LEFT JOIN GNV_INVESTASI_LINE GIL ON GIL.GNV_INVESTASI_LINE_ID = GID.GNV_INVESTASI_LINE_ID
+        --LEFT JOIN GNV_INVESTASI_HEADER GIH ON GIH.GNV_INVESTASI_HEADER_ID = GIH.GNV_INVESTASI_HEADER_ID
+        WHERE GIL.gnv_investasi_line_ID= v_Record_ID;
+        
+        SELECT COALESCE(COUNT(*),0) INTO V_COUNT
+        FROM GNV_INVESTASI_DETAIL GID 
+        LEFT JOIN gnv_investasi_line GIL ON  GIL.gnv_investasi_line_ID =GID.gnv_investasi_line_ID
+        --left join GNV_INVESTASI_HEADER GIH ON GIH.GNV_INVESTASI_HEADER_ID= GIL.GNV_INVESTASI_HEADER_ID
+        WHERE GIL.gnv_investasi_line_ID= v_Record_ID;    
+        
+    IF(TO_DATE(Cur_Investasi.LASTDAYAWAL) > TO_DATE(Cur_Investasi.TANGGALAKHIR)) THEN
+      
+      V_PERIODE := Cur_Investasi.TANGGALAWAL ||' - '||Cur_Investasi.TANGGALAKHIR;   
+      V_JUMLAHHARI := GNV_DATEDIFF(Cur_Investasi.TANGGALAKHIR,Cur_Investasi.TANGGALAWAL);
+      V_AKHIRBULAN := LAST_DAY(TO_DATE(Cur_Investasi.TANGGALAWAL));
+      v_accouting_Date := LAST_DAY(TO_DATE(Cur_Investasi.TANGGALAWAL));
+    ELSIF(TO_DATE(Cur_Investasi.LASTDAYAWAL) <= TO_DATE(Cur_Investasi.TANGGALAKHIR)) THEN
+      IF(V_COUNT = 0) THEN
+        V_PERIODE := TO_DATE(Cur_investasi.TANGGALAWAL) ||' - '||TO_CHAR(LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY')));
+        V_JUMLAHHARI := GNV_DATEDIFF(TO_CHAR(LAST_DAY(TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN))),Cur_investasi.TANGGALAWAL);
+        V_AKHIRBULAN := LAST_DAY(TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN));
+          v_accouting_Date := LAST_DAY(TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN));
+        --RAISE_APPLICATION_ERROR(-20000,V_JUMLAHHARI );
+        
+      ELSE
+        IF(Cur_Investasi.BLN = Cur_Investasi.BULANAKHIR AND Cur_Investasi.TAHUNAKHIR = Cur_Investasi.THNAKHIR) THEN
+          V_PERIODE := TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN)) ||' - '||TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN);
+          V_JUMLAHHARI := GNV_DATEDIFF(TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN),TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN)));
+          V_AKHIRBULAN := LAST_DAY(TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN));
+          v_accouting_Date := TO_DATE(TO_CHAR(Cur_Investasi.TANGGALAKHIR,'dd')||'-'||Cur_Investasi.BULAN);
+        ELSE
+            IF (V_RECALCULATE > 0 AND V_RECALCULATE_STATUS = 0) THEN
+              -- V_PERIODE := '01-'||TO_CHAR(Cur_Investasi.BULAN)||' - '||TO_CHAR(LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY')));--'31-'||TO_CHAR(Cur_Investasi.BULAN);
+              V_RECALCULATE_STATUS := 1;
+              V_PERIODE := TO_DATE(Cur_investasi.TANGGALAWAL)||' - '||TO_CHAR(LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY')));--'31-'||TO_CHAR(Cur_Investasi.BULAN);
+              V_JUMLAHHARI := GNV_DATEDIFF(TO_DATE(TO_CHAR(LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY')))),TO_DATE(Cur_investasi.TANGGALAWAL));
+          
+            ELSE
+             V_PERIODE := '01-'||TO_CHAR(Cur_Investasi.BULAN)||' - '||TO_CHAR(LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY')));--'31-'||TO_CHAR(Cur_Investasi.BULAN);
+             V_JUMLAHHARI := GNV_DATEDIFF(TO_DATE(TO_CHAR(LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY')))),TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN)));
+            
+            END IF;
+            V_AKHIRBULAN := LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY'));
+            v_accouting_Date := LAST_DAY(TO_DATE('01-'||TO_CHAR(Cur_Investasi.BULAN),'dd-MM-YYYY'));
+        END IF;
+      END IF;
+    END IF;
+    V_JUMLAHHARI := V_JUMLAHHARI+1;
+        V_AMOUNT := (Cur_Investasi.AMOUNT * (Cur_Investasi.RATE /100)/365 ) * V_JUMLAHHARI;
+            
+        INSERT INTO GNV_INVESTASI_DETAIL (
+            GNV_INVESTASI_LINE_ID,GNV_INVESTASI_DETAIL_ID, AD_CLIENT_ID,AD_ORG_ID,CREATED,CREATEDBY,ISACTIVE,updated,UPDATEDBY,
+            LINENO, PERIODE, JUMLAHHARI, AMOUNT, C_CURRENCY_ID, ACCOUNTINGDATE, DOCUMENTNO
+        )
+        VALUES(Cur_Investasi.GNV_INVESTASI_LINE_ID,V_GNV_INVESTASI_DETAIL, Cur_Investasi.AD_CLIENT_ID,Cur_Investasi.AD_ORG_ID,
+        Cur_Investasi.CREATED,Cur_Investasi.CREATEDBY,Cur_Investasi.ISACTIVE,Cur_Investasi.updated,Cur_Investasi.UPDATEDBY,
+        v_line,V_PERIODE, V_JUMLAHHARI,V_AMOUNT,Cur_Investasi.C_CURRENCY_ID, v_accouting_Date, Cur_Investasi.DOCUMENTNO
+        
+        ); 
+        
+    end loop;
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, V_AD_User_ID, 'Y', 1, '@Success@'); 
+        
+        select sum(gid.amount)INTO v_totalnisbah FROM GNV_INVESTASI_DETAIL GID ,GNV_INVESTASI_LINE GIL
+        where
+        GID.GNV_INVESTASI_LINE_ID = GID.GNV_INVESTASI_LINE_ID
+        and GIL.GNV_INVESTASI_LINE_ID = GID.GNV_INVESTASI_LINE_ID
+         and GIL.GNV_INVESTASI_HEADER_id= Cur_Parameter.GNV_INVESTASI_HEADER_ID
+        ;
+        select sum(gil.amount) into v_totalamount FROM  GNV_INVESTASI_LINE GIL
+        WHERE GIL.GNV_INVESTASI_HEADER_ID= Cur_Parameter.GNV_INVESTASI_HEADER_ID;
+        
+        
+        update GNV_INVESTASI_HEADER set totalnisbah = v_totalnisbah, totalamount = v_totalamount where gnv_investasi_header_id =Cur_Parameter.GNV_INVESTASI_HEADER_ID;
+        update GNV_INVESTASI_LINE set Calculate = 'Y', BTNPROSES='N' Where GNV_INVESTASI_LINE_ID = v_Record_ID;
+    
+    
+    END LOOP; 
+    COMMIT;
+    RETURN;
+    
+END; --Body
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  ROLLBACK;
+  IF(p_PInstance_ID IS NOT NULL) THEN
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_ResultStr) ;
+  ELSE
+    RAISE;
+  END IF;
+  RETURN;
+END GNV_INVESTASI_CALCULATE  ]]></body>
+    </function>
+  </database>

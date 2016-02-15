@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+GAI - Sodikin
+ ************************************************************************
+-->
+
+<SqlClass name="GnvGetRasioKeuanganData" package="com.gai.investasi.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+    <![CDATA[
+    SELECT C_BPARTNER_ID,GMR.TANGGAL , GMR.CAR AS car, GMR.NPL AS npl ,GMR.LDR AS ldr, GMR.BIRATE AS birate ,GMR.LPSRATE AS lpsrate, 
+        GMR.TOTAL_ASSET as totalaset
+        FROM GNV_MASTER_RASIOKEUANGAN GMR
+        WHERE C_BPARTNER_ID = ?
+        AND GMR.TANGGAL = 
+        (SELECT max(GMR2.TANGGAL)
+        FROM GNV_MASTER_RASIOKEUANGAN GMR2
+        WHERE GMR2.C_BPARTNER_ID IN
+          (SELECT GIL2.C_BPARTNER_ID 
+          FROM GNV_INVESTASI_LINE GIL2
+          )
+        AND GMR2.TANGGAL <= (to_date(?)))
+        
+    ]]>
+      
+      </Sql>
+      <Parameter name="cBpartnerId"/>
+      <Parameter name="tglAwal"/>
+   </SqlMethod>
+   
+</SqlClass>

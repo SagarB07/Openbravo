@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+  <database name="TRIGGER GAS_ASSET_TRG">
+    <trigger name="GAS_ASSET_TRG" table="A_ASSET" fires="before" insert="true" update="false" delete="false" foreach="row">
+      <body><![CDATA[
+    /*************************************************************************
+    * $Id: GAS_ASSET_TRG.sql, 2015/07/14
+    ***
+    * Title: GAS_ASSET_TRG
+    * Description:
+    *    - Update EM_GBG_Saved
+    ************************************************************************/
+    --pragma autonomous_transaction;
+BEGIN
+    
+    IF AD_isTriggerEnabled()='N' THEN RETURN;
+    END IF;
+
+
+  IF(INSERTING) THEN
+    :NEW.EM_GAS_SAVED := 'Y';   
+  END IF;
+  
+EXCEPTION WHEN NO_DATA_FOUND THEN
+  RAISE_APPLICATION_ERROR(-20000, '@20270@') ;
+END GAS_ASSET_TRG]]></body>
+    </trigger>
+  </database>

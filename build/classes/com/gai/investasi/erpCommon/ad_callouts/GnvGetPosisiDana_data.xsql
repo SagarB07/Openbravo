@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+GAI - Sodikin
+ ************************************************************************
+-->
+
+<SqlClass name="GnvGetPosisiDanaData" package="com.gai.investasi.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+      	select sum(gil.AMOUNT) as danasaatini from GNV_INVESTASI_LINE gil where gil.GNV_INVESTASI_HEADER_ID = ?
+		and gil.TANGGALAWAL between (select min(gil2.TANGGALAWAL) from GNV_INVESTASI_LINE gil2 where gil2.GNV_INVESTASI_HEADER_ID =gil.GNV_INVESTASI_HEADER_ID ) and 
+		to_date(?)  
+      </Sql>
+      <Parameter name="gnvInvestasiHeaderId"/>
+      <Parameter name="tanggal"/>
+   </SqlMethod>  
+</SqlClass>

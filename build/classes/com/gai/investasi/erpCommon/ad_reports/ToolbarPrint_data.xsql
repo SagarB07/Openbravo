@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+ *************************************************************************
+ * The contents of this file are subject to the Openbravo  Public  License
+ * Version  1.1  (the  "License"),  being   the  Mozilla   Public  License
+ * Version 1.1  with a permitted attribution clause; you may not  use this
+ * file except in compliance with the License. You  may  obtain  a copy of
+ * the License at http://www.openbravo.com/legal/license.html 
+ * Software distributed under the License  is  distributed  on  an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific  language  governing  rights  and  limitations
+ * under the License. 
+ * The Original Code is Openbravo ERP. 
+ * The Initial Developer of the Original Code is Openbravo SLU 
+ * All portions are Copyright (C) 2001-2011 Openbravo SLU 
+ * All Rights Reserved. 
+ * Contributor(s):  ______________________________________.
+ ************************************************************************
+-->
+
+<SqlClass name="ToolbarPrintData" package="com.gai.investasi.erpCommon.ad_reports">
+  <SqlClassComment></SqlClassComment>
+  
+  <SqlMethod name="select" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql>    
+	<![CDATA[
+		SELECT GIL.STATUSINVESTASI AS type, GIL.GNV_INVESTASI_LINE_ID  AS GNV_INVESTASI_LINE_ID ,GIL.AD_ORG_ID AS ORGANISASI,au.name as managerkeuangan,GIL.DOCUMENTNO AS NOMOR, GIH.DESCRIPTION AS PERIHAL, CB.NAME AS CABANGBANK,
+    GIL.AMOUNT AS NOMINAL, gil.AMOUNT as amount, cb.NAME as bank_cabang,GIL.NOBILYET AS NOBILYET,
+		trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL) ) as bulan,
+		 GAI_SAY_AMOUNT(trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)),'IDR') as bulan_say,
+		GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)) ) as Hari,
+		GAI_SAY_AMOUNT(GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL))),'IDR') as Hari_say,
+    gil.TANGGALAWAL as TANGGALAWAL,	gil.TANGGALAKHIR AS TANGGALAKHIR,CBL.NAME as alamat, 
+		gil.RATE as suku_bunga, cbp.NAME AS bank_cabang_hader,
+		TANGGALAWAL||' s/d '|| TANGGALAKHIR as tanggal,GIL.RATE as sukubunga, CB.NAME as bank, GIL.STATUSKEPEMILIKAN AS STATUSKEPEMILIKAN,
+		GIL.CAR  as car, GIL.NPL  AS NPL, GIL.LDR  AS LDR , GIL.KESIMPULANRASIO as KESIMPULANRASIO, GIL.KEPADA as KEPADA, GIL.DARI as DARI, NOW() as NOW, CU.ISO_CODE AS CURRENCY,
+		GIL.AD_ORG_ID AS ORGANIZATIONID,Gil.BI AS BI,	Gil.LPS AS LPS,Gil.DESCRIPTION as deskripsi_line,	Gil.KESIMPULAN as kesimpulan_line,	NOW() as today,	KESIMPULAN as kesimpulan,
+    TANGGALAKHIR as JATUHTEMPO,Gil.TOTALASSET AS TOTALASSET,	Gil.kesimpulanrasio AS KESIPULANRASIO,
+    ((GIL.TANGGALAKHIR - GIL.TANGGALAWAL)|| '('||(GAI_SAY_AMOUNT((GIL.TANGGALAKHIR - GIL.TANGGALAWAL),'IDR')||')'|| ' hari') ) AS JANGKAWAKTU, GIL.STATUSAPPROVED AS statusapprove
+		
+    FROM  GNV_INVESTASI_LINE GIL
+		LEFT JOIN GNV_INVESTASI_HEADER GIH ON GIL.GNV_INVESTASI_HEADER_ID = GIH.GNV_INVESTASI_HEADER_ID
+		LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = GIL.C_BPARTNER_ID
+    LEFT JOIN C_BPARTNER CBP ON CB.C_BPARTNER_ID = GIH.C_BPARTNER_ID
+    LEFT JOIN C_BPARTNER_LOCATION CBL ON CBL.C_BPARTNER_ID= CB.C_BPARTNER_ID
+		left join C_CURRENCY cu ON CU.C_CURRENCY_ID = GIL.C_CURRENCY_ID
+		, ad_user au
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ('1')
+		and GIL.STATUSINVESTASI = 'Penempatan Deposito On Call'
+		--and AU.AD_ORG_ID = GIL.AD_ORG_ID
+		and AU.TITLE = 'Manajer Keuangan'
+		
+	]]></Sql>
+	<Parameter name="recordId" type="replace" optional="true" after="GIL.GNV_INVESTASI_LINE_ID IN (" text="'1'"/>
+  </SqlMethod>  
+
+  <SqlMethod name="selectPenempatanDepositoOnCall" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql> 
+    <![CDATA[
+    	SELECT GIL.GNV_INVESTASI_LINE_ID as GNV_INVESTASI_LINE_ID ,GIL.AD_ORG_ID AS ORGANISASI,au.name as managerkeuangan,GIL.DOCUMENTNO AS NOMOR, GIH.DESCRIPTION AS PERIHAL, CB.NAME AS CABANGBANK, GIL.AMOUNT AS NOMINAL,
+		trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL) ) as bulan,
+		 GAI_SAY_AMOUNT(trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)),'IDR') as bulan_say,
+		GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)) ) as Hari,
+		GAI_SAY_AMOUNT(GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL))),'IDR') as Hari_say,
+		TANGGALAWAL||' s/d '|| TANGGALAKHIR as tanggal,GIL.RATE as sukubunga, CB.NAME as bank, GIL.STATUSKEPEMILIKAN AS STATUSKEPEMILIKAN,
+		GIL.CAR  as car, GIL.NPL  AS NPL, GIL.LDR  AS LDR , GIL.KESIMPULANRASIO, GIL.KEPADA, GIL.DARI, NOW() as NOW, CU.ISO_CODE AS CURRENCY,
+		GIL.AD_ORG_ID AS ORGANIZATIONID
+		FROM  GNV_INVESTASI_LINE GIL
+		LEFT JOIN GNV_INVESTASI_HEADER GIH ON GIL.GNV_INVESTASI_HEADER_ID = GIH.GNV_INVESTASI_HEADER_ID
+		LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = GIL.C_BPARTNER_ID
+		left join C_CURRENCY cu ON CU.C_CURRENCY_ID = GIL.C_CURRENCY_ID
+		, ad_user au
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ('1')
+		and GIL.STATUSINVESTASI = 'Penempatan Deposito On Call'
+		--and AU.AD_ORG_ID = GIL.AD_ORG_ID
+		and AU.TITLE = 'Manajer Keuangan'
+    ]]>
+    </Sql>
+	<Parameter name="recordId" type="replace" optional="true" after="GIL.GNV_INVESTASI_LINE_ID IN (" text="'1'"/>
+	    
+  </SqlMethod>
+	
+	<SqlMethod name="selectPenempatanMudharabah" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql> 
+    <![CDATA[
+		select
+		au.name as managerkeuangan,
+		gil.AD_ORG_ID as ORGANIZATIONID,
+		gil.DOCUMENTNO as nomor,
+		gil.KEPADA as kepada,
+		gil.DARI as dari,
+		gil.PERIHAL as perihal,
+		gil.AMOUNT as amount,
+		cb.NAME as bank_cabang,
+		gil.TANGGALAWAL as TANGGALAWAL,
+		gil.TANGGALAKHIR AS TANGGALAKHIR,
+		 trunc(months_between(gil.TANGGALAKHIR,gil.TANGGALAWAL) ) AS bulan,
+		 GAI_SAY_AMOUNT(trunc(months_between(gil.TANGGALAKHIR,gil.TANGGALAWAL)),'IDR') as bulan_say,
+		 gil.TANGGALAKHIR - add_months( gil.TANGGALAWAL, trunc(months_between(gil.TANGGALAKHIR,gil.TANGGALAWAL)) ) AS Hari,
+		GAI_SAY_AMOUNT(gil.TANGGALAKHIR - add_months( gil.TANGGALAWAL, trunc(months_between(gil.TANGGALAKHIR,gil.TANGGALAWAL))) ,'IDR') as Hari_Say,
+		gil.RATE as suku_bunga,
+		cbp.NAME AS bank_cabang_hader,
+		gil.CAR AS CAR,
+		gil.NPL AS NPL,
+		gil.LDR AS LDR,
+		Gil.BI AS BI,
+		Gil.LPS AS LPS,
+		Gil.DESCRIPTION as deskripsi_line,
+		Gil.KESIMPULAN as kesimpulan_line,
+		NOW() as today,
+		Gil.TOTALASSET AS TOTALASSET,
+		Gil.kesimpulanrasio AS KESIPULANRASIO,
+		 Gil.AD_ORG_ID AS ORGANIZATIONID
+		from GNV_INVESTASI_HEADER gih
+		left join GNV_INVESTASI_lINE gil on (gil.GNV_INVESTASI_HEADER_ID = gih.GNV_INVESTASI_HEADER_ID)
+		left join C_BPARTNER cb ON (cb.C_BPARTNER_ID = gil.C_BPARTNER_ID)
+		left join C_BPARTNER cbp ON (cbp.C_BPARTNER_ID = gih.C_BPARTNER_ID)
+		, ad_user au
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ('1')
+		and gil.STATUSINVESTASI = 'Penempatan Mudharabah'
+		--and AU.AD_ORG_ID = gil.AD_ORG_ID
+		and AU.TITLE = 'Manajer Keuangan'
+    ]]>
+    </Sql>
+    <Parameter name="recordId" type="replace" optional="true" after="GIL.GNV_INVESTASI_LINE_ID IN (" text="'1'"/>
+	    
+  </SqlMethod>
+  
+  	<SqlMethod name="selectPerpanjanganMudharabah" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql> 
+    <![CDATA[
+    	SELECT GIL.GNV_INVESTASI_LINE_ID AS GNV_INVESTASI_LINE_ID,GIL.AD_ORG_ID AS ORGANISASI,au.name as managerkeuangan,GIL.DOCUMENTNO AS NOMOR , GIL.KEPADA AS KEPADA,
+		GIL.DARI AS DARI, GIH.DESCRIPTION AS PERIHAL, CB.NAME AS CABANGBANK, GIL.NOBILYET AS NOBILYET,
+		GIL.AMOUNT AS NOMINAL,
+		((GIL.TANGGALAKHIR - GIL.TANGGALAWAL)|| '('||(GAI_SAY_AMOUNT((GIL.TANGGALAKHIR - GIL.TANGGALAWAL),'IDR')||')'|| ' hari') ) AS JANGKAWAKTU,
+		GIL.TANGGALAWAL AS TANGGALAWAL,
+		TANGGALAKHIR as JATUHTEMPO,GIL.RATE as sukubunga,
+		GIL.CAR  as car, GIL.NPL  AS NPL, GIL.LDR  AS LDR , GIL.KESIMPULANRASIO AS KESIMPULANRASIO, NOW() AS NOW, CU.ISO_CODE AS CURRENCY,
+		GIL.DESCRIPTION as deskripsi_line, GIL.BI AS BI, GIL.LPS AS LPS, GIL.KESIMPULAN AS KESIMPULAN,
+		trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL) ) AS bulan,
+		 GAI_SAY_AMOUNT(trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)),'IDR') as bulan_say,
+		GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)) ) AS Hari,
+		GAI_SAY_AMOUNT(GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL))),'IDR') AS Hari_say,
+		GIL.AD_ORG_ID AS ORGANIZATIONID
+
+
+
+		FROM  GNV_INVESTASI_LINE GIL
+		LEFT JOIN GNV_INVESTASI_HEADER GIH ON GIL.GNV_INVESTASI_HEADER_ID = GIH.GNV_INVESTASI_HEADER_ID
+		LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = GIL.C_BPARTNER_ID
+		left join C_CURRENCY cu ON CU.C_CURRENCY_ID = GIL.C_CURRENCY_ID
+		, ad_user au
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ('1')
+		and
+		GIL.STATUSINVESTASI = 'Perpanjangan Mudharabah'
+		--and AU.AD_ORG_ID = GIL.AD_ORG_ID
+		and
+		AU.TITLE = 'Manajer Keuangan'
+    ]]>
+    </Sql>
+    <Parameter name="recordId" type="replace" optional="true" after="GIL.GNV_INVESTASI_LINE_ID IN (" text="'1'"/>
+	    
+  </SqlMethod>
+    
+  	<SqlMethod name="selectPencairanMudharabah" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql> 
+    <![CDATA[
+    	SELECT GIL.STATUSINVESTASI AS type, GIL.GNV_INVESTASI_LINE_ID  AS GNV_INVESTASI_LINE_ID ,GIL.AD_ORG_ID AS ORGANISASI,au.name as managerkeuangan,GIL.DOCUMENTNO AS NOMOR, GIH.DESCRIPTION AS PERIHAL, CB.NAME AS CABANGBANK,
+    GIL.AMOUNT AS NOMINAL, gil.AMOUNT as amount, cb.NAME as bank_cabang,GIL.NOBILYET AS NOBILYET,
+		trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL) ) as bulan,
+		 GAI_SAY_AMOUNT(trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)),'IDR') as bulan_say,
+		GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL)) ) as Hari,
+		GAI_SAY_AMOUNT(GIL.TANGGALAKHIR - add_months( GIL.TANGGALAWAL, trunc(months_between(GIL.TANGGALAKHIR,GIL.TANGGALAWAL))),'IDR') as Hari_say,
+    gil.TANGGALAWAL as TANGGALAWAL,	gil.TANGGALAKHIR AS TANGGALAKHIR,CBL.NAME as alamat, 
+		 gil.RATE as suku_bunga, cbp.NAME AS bank_cabang_hader,
+		TANGGALAWAL||' s/d '|| TANGGALAKHIR as tanggal,GIL.RATE as sukubunga, CB.NAME as bank, GIL.STATUSKEPEMILIKAN AS STATUSKEPEMILIKAN,
+		GIL.CAR  as car, GIL.NPL  AS NPL, GIL.LDR  AS LDR , GIL.KESIMPULANRASIO as KESIMPULANRASIO, GIL.KEPADA as KEPADA, GIL.DARI as DARI, NOW() as NOW, CU.ISO_CODE AS CURRENCY,
+		GIL.AD_ORG_ID AS ORGANIZATIONID,Gil.BI AS BI,	Gil.LPS AS LPS,Gil.DESCRIPTION as deskripsi_line,	Gil.KESIMPULAN as kesimpulan_line,	NOW() as today,	KESIMPULAN as kesimpulan,
+    TANGGALAKHIR as JATUHTEMPO,Gil.TOTALASSET AS TOTALASSET,	Gil.kesimpulanrasio AS KESIPULANRASIO,
+    ((GIL.TANGGALAKHIR - GIL.TANGGALAWAL)|| '('||(GAI_SAY_AMOUNT((GIL.TANGGALAKHIR - GIL.TANGGALAWAL),'IDR')||')'|| ' hari') ) AS JANGKAWAKTU
+		
+    FROM  GNV_INVESTASI_LINE GIL
+		LEFT JOIN GNV_INVESTASI_HEADER GIH ON GIL.GNV_INVESTASI_HEADER_ID = GIH.GNV_INVESTASI_HEADER_ID
+		LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = GIL.C_BPARTNER_ID
+    LEFT JOIN C_BPARTNER CBP ON CB.C_BPARTNER_ID = GIH.C_BPARTNER_ID
+    LEFT JOIN C_BPARTNER_LOCATION CBL ON CBL.C_BPARTNER_ID= CB.C_BPARTNER_ID
+		left join C_CURRENCY cu ON CU.C_CURRENCY_ID = GIL.C_CURRENCY_ID
+		, ad_user au
+		
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ('1')
+		and gil.STATUSINVESTASI = 'Pencairan Mudharabah'
+		--and AU.AD_ORG_ID = GIL.AD_ORG_ID
+		and AU.TITLE = 'Manajer Keuangan'
+    ]]>
+    </Sql>
+    <Parameter name="recordId" type="replace" optional="true" after="GIL.GNV_INVESTASI_LINE_ID IN (" text="'1'"/>
+	    
+  </SqlMethod>
+  <SqlMethod name="selectType" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql> 
+    <![CDATA[ 
+    	SELECT GIL.STATUSINVESTASI AS type, GIL.STATUSAPPROVED AS statusapprove
+		FROM  GNV_INVESTASI_LINE GIL
+		WHERE
+		GIL.GNV_INVESTASI_LINE_ID IN ('1')
+    ]]>
+    </Sql>
+    <Parameter name="recordId" type="replace" optional="true" after="GIL.GNV_INVESTASI_LINE_ID IN (" text="'1'"/>
+  </SqlMethod>
+  
+
+</SqlClass>

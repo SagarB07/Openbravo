@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SqlClass id="class" name="UangMukaKerjaD19722629D7C4798BB884F703BE8F32FData" package="org.openbravo.erpWindows.com.gai.umk.UangMukaKerja">
+  <SqlClassComment>WAD Generated class</SqlClassComment>
+
+  <SqlMethod name="selectEdit" type="preparedStatement" return="multiple">
+    <SqlMethodComment>Select for edit</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT to_char(gumk_umk.Created, ?) as created, 
+        (SELECT NAME FROM AD_USER u WHERE AD_USER_ID = gumk_umk.CreatedBy) as CreatedByR, 
+        to_char(gumk_umk.Updated, ?) as updated, 
+        to_char(gumk_umk.Updated, 'YYYYMMDDHH24MISS') as Updated_Time_Stamp,  
+        gumk_umk.UpdatedBy, 
+        (SELECT NAME FROM AD_USER u WHERE AD_USER_ID = gumk_umk.UpdatedBy) as UpdatedByR,
+        gumk_umk.AD_Org_ID, 
+(CASE WHEN gumk_umk.AD_Org_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table1.Value), ''))),'') ) END) AS AD_Org_IDR, 
+COALESCE(gumk_umk.Isactive, 'N') AS Isactive, 
+gumk_umk.Documentno, 
+gumk_umk.Nominal_Penjaguann_Umk, 
+gumk_umk.Tanggal_Penerimaan_Umk, 
+gumk_umk.EM_Gnv_Master_Datadireksi_ID, 
+gumk_umk.EM_Gmm_Master_Department_ID, 
+gumk_umk.AD_User_ID, 
+gumk_umk.Description, 
+gumk_umk.TOT_Amount_Realisasi, 
+gumk_umk.Selisih, 
+gumk_umk.Complete, 
+gumk_umk.Realisasi, 
+gumk_umk.Status, 
+(CASE WHEN gumk_umk.Status IS NULL THEN '' ELSE  ( COALESCE(TO_CHAR(list1.name),'') ) END) AS StatusR, 
+gumk_umk.C_Currency_ID, 
+gumk_umk.FIN_Paymentmethod_ID, 
+gumk_umk.FIN_Financial_Account_ID, 
+(CASE WHEN gumk_umk.FIN_Financial_Account_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))),'')  || ' - ' || COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table3.ISO_Code), ''))),'')  || ' - ' || COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.EM_Gac_Noperkiraan), ''))),'') ) END) AS FIN_Financial_Account_IDR, 
+gumk_umk.C_Doctype_ID, 
+(CASE WHEN gumk_umk.C_Doctype_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR((CASE WHEN tableTRL4.Name IS NULL THEN TO_CHAR(table4.Name) ELSE TO_CHAR(tableTRL4.Name) END)), ''))),'') ) END) AS C_Doctype_IDR, 
+gumk_umk.Gumk_Jenisumk_ID, 
+gumk_umk.Tanggalmemointernal, 
+gumk_umk.Nomemointernal, 
+gumk_umk.Memointernaldari, 
+gumk_umk.Perihal, 
+gumk_umk.EM_Gbg_Budget_ID, 
+gumk_umk.Posted, 
+list2.name as Posted_BTN, 
+gumk_umk.BTN_Reactive, 
+gumk_umk.AD_Client_ID, 
+gumk_umk.Gumk_Umk_ID, 
+ 
+        ? AS LANGUAGE 
+        FROM gumk_umk left join (select AD_Org_ID, Value from AD_Org) table1 on (gumk_umk.AD_Org_ID = table1.AD_Org_ID) left join ad_ref_list_v list1 on (gumk_umk.Status = list1.value and list1.ad_reference_id = '8D57A5E1511D48AEAABCCBC52953E89B' and list1.ad_language = ?)  left join (select FIN_Financial_Account_ID, Name, C_Currency_ID, EM_Gac_Noperkiraan from FIN_Financial_Account) table2 on (gumk_umk.FIN_Financial_Account_ID = table2.FIN_Financial_Account_ID) left join (select C_Currency_ID, ISO_Code from C_Currency) table3 on (table2.C_Currency_ID = table3.C_Currency_ID) left join (select C_Doctype_ID, Name from C_Doctype) table4 on (gumk_umk.C_Doctype_ID = table4.C_Doctype_ID) left join (select C_DocType_ID,AD_Language, Name from C_DocType_TRL) tableTRL4 on (table4.C_DocType_ID = tableTRL4.C_DocType_ID and tableTRL4.AD_Language = ?)  left join ad_ref_list_v list2 on (list2.ad_reference_id = '234' and list2.ad_language = ?  AND gumk_umk.Posted = TO_CHAR(list2.value))
+        WHERE 2=2 
+
+        AND 1=1 
+        AND gumk_umk.Gumk_Umk_ID = ? 
+        AND gumk_umk.AD_Client_ID IN ('1') 
+           AND gumk_umk.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="dateTimeFormat"></Parameter>
+    <Parameter name="dateTimeFormat"></Parameter>
+    
+    <Parameter name="paramLanguage"></Parameter>
+<Parameter name="paramLanguage"/>
+<Parameter name="paramLanguage"/>
+<Parameter name="paramLanguage"/>
+
+
+    <Parameter name="key"></Parameter>
+        <Parameter name="adUserClient" type="replace" optional="true" after="gumk_umk.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="gumk_umk.AD_Org_ID IN (" text="'1'"/>
+
+    <Field name="adUserClient" value="void"></Field>
+    <Field name="adOrgClient" value="void"></Field>
+    <Field name="createdby" value="void"></Field>
+    
+    <Field name="trBgcolor" value="void"></Field>
+    <Field name="totalCount" value="void"></Field>
+    <Field name="dateTimeFormat" value=""></Field>
+  </SqlMethod>
+  
+  
+
+  <SqlMethod name="set" type="constant" return="multiple">
+      <SqlMethodComment>Create a registry</SqlMethodComment>
+      <Sql></Sql>
+
+<Parameter name="adOrgId"></Parameter><Parameter name="nomemointernal"></Parameter><Parameter name="description"></Parameter><Parameter name="status"></Parameter><Parameter name="gumkUmkId"></Parameter><Parameter name="isactive"></Parameter><Parameter name="posted"></Parameter><Parameter name="postedBtn"></Parameter><Parameter name="memointernaldari"></Parameter><Parameter name="cDoctypeId"></Parameter><Parameter name="complete"></Parameter><Parameter name="emGnvMasterDatadireksiId"></Parameter><Parameter name="cCurrencyId"></Parameter><Parameter name="perihal"></Parameter><Parameter name="documentno"></Parameter><Parameter name="emGbgBudgetId"></Parameter><Parameter name="tanggalPenerimaanUmk"></Parameter><Parameter name="selisih"></Parameter><Parameter name="finPaymentmethodId"></Parameter><Parameter name="emGmmMasterDepartmentId"></Parameter><Parameter name="finFinancialAccountId"></Parameter><Parameter name="tanggalmemointernal"></Parameter><Parameter name="adClientId"></Parameter><Parameter name="nominalPenjaguannUmk"></Parameter><Parameter name="totAmountRealisasi"></Parameter><Parameter name="btnReactive"></Parameter><Parameter name="realisasi"></Parameter><Parameter name="gumkJenisumkId"></Parameter><Parameter name="updatedby"></Parameter><Parameter name="updatedbyr"></Parameter><Parameter name="createdby"></Parameter><Parameter name="createdbyr"></Parameter><Parameter name="adUserId"></Parameter>
+   </SqlMethod>
+
+
+   <SqlMethod name="selectAuxA75FAAF5624C4CEBB7517BD70911DD1D" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT (CASE WHEN GU.STATUS = 'complete' AND COUNT(GR.GUMK_REALISASI_ID) > 0 THEN 'Y' ELSE 'N' END) AS ISYES FROM (GUMK_UMK GU LEFT JOIN GUMK_REALISASI GR ON GU.GUMK_UMK_ID=GR.GUMK_UMK_ID) WHERE GU.GUMK_UMK_ID = ? GROUP BY GU.STATUS 
+    ]]></Sql>
+
+<Parameter name="GUMK_UMK_ID"/>
+  </SqlMethod>
+
+
+
+
+
+   <SqlMethod name="selectDef3D36CB8249144F90AA95B3D60A3EE9A6" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        Select C_DocType_ID From C_DocType Where Name = 'Uang Muka Payment' 
+    ]]></Sql>
+
+  </SqlMethod>
+
+   <SqlMethod name="selectDef90F612F15466443C99DAE9DD6FDA605B" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+         SELECT FIN_Paymentmethod_ID FROM FIN_Paymentmethod WHERE name ='Cash' 
+    ]]></Sql>
+
+  </SqlMethod>
+
+   <SqlMethod name="selectDefAC6D49613B4946D597F5FB2FCF7D57CF" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+         SELECT FIN_Financial_Account_ID FROM FIN_Financial_Account WHERE name ='KAS KANTOR PUSAT' 
+    ]]></Sql>
+
+  </SqlMethod>
+
+   <SqlMethod name="selectDefE7EEE8F405834A73B16FBED7F27C51BA" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        select GUMK_JENISUMK_ID from  GUMK_JENISUMK where value= 'Non Belanja Modal' 
+    ]]></Sql>
+
+  </SqlMethod>
+
+   <SqlMethod name="selectDefF1F608507BB8459A9106FA012C1F1678_0" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT  ( COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))), '') ) as Updatedby FROM AD_User left join (select AD_User_ID, Name from AD_User) table2 on (AD_User.AD_User_ID = table2.AD_User_ID) WHERE AD_User.isActive='Y' AND AD_User.AD_User_ID = ?  
+    ]]></Sql>
+<Parameter name="UpdatedbyR"/>
+  </SqlMethod>
+
+   <SqlMethod name="selectDefFA50AA599C794479A7EB9A37B098437E_1" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT  ( COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))), '') ) as Createdby FROM AD_User left join (select AD_User_ID, Name from AD_User) table2 on (AD_User.AD_User_ID = table2.AD_User_ID) WHERE AD_User.isActive='Y' AND AD_User.AD_User_ID = ?  
+    ]]></Sql>
+<Parameter name="CreatedbyR"/>
+  </SqlMethod>
+
+
+
+
+
+
+
+
+
+
+  <SqlMethod name="update" type="preparedStatement" return="rowCount" static="false" connection="true">
+    <Sql><![CDATA[
+        UPDATE gumk_umk
+        SET AD_Org_ID = (?) , Isactive = (?) , Documentno = (?) , Nominal_Penjaguann_Umk = TO_NUMBER(?) , Tanggal_Penerimaan_Umk = TO_DATE(?) , EM_Gnv_Master_Datadireksi_ID = (?) , EM_Gmm_Master_Department_ID = (?) , AD_User_ID = (?) , Description = (?) , TOT_Amount_Realisasi = TO_NUMBER(?) , Selisih = TO_NUMBER(?) , Complete = (?) , Realisasi = (?) , Status = (?) , C_Currency_ID = (?) , FIN_Paymentmethod_ID = (?) , FIN_Financial_Account_ID = (?) , C_Doctype_ID = (?) , Gumk_Jenisumk_ID = (?) , Tanggalmemointernal = TO_DATE(?) , Nomemointernal = (?) , Memointernaldari = (?) , Perihal = (?) , EM_Gbg_Budget_ID = (?) , Posted = (?) , BTN_Reactive = (?) , AD_Client_ID = (?) , Gumk_Umk_ID = (?) , updated = now(), updatedby = ? 
+        WHERE gumk_umk.Gumk_Umk_ID = ? 
+        
+        AND gumk_umk.AD_Client_ID IN ('1') 
+        AND gumk_umk.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="adOrgId"></Parameter> <Parameter name="isactive"></Parameter> <Parameter name="documentno"></Parameter> <Parameter name="nominalPenjaguannUmk"></Parameter> <Parameter name="tanggalPenerimaanUmk"></Parameter> <Parameter name="emGnvMasterDatadireksiId"></Parameter> <Parameter name="emGmmMasterDepartmentId"></Parameter> <Parameter name="adUserId"></Parameter> <Parameter name="description"></Parameter> <Parameter name="totAmountRealisasi"></Parameter> <Parameter name="selisih"></Parameter> <Parameter name="complete"></Parameter> <Parameter name="realisasi"></Parameter> <Parameter name="status"></Parameter> <Parameter name="cCurrencyId"></Parameter> <Parameter name="finPaymentmethodId"></Parameter> <Parameter name="finFinancialAccountId"></Parameter> <Parameter name="cDoctypeId"></Parameter> <Parameter name="gumkJenisumkId"></Parameter> <Parameter name="tanggalmemointernal"></Parameter> <Parameter name="nomemointernal"></Parameter> <Parameter name="memointernaldari"></Parameter> <Parameter name="perihal"></Parameter> <Parameter name="emGbgBudgetId"></Parameter> <Parameter name="posted"></Parameter> <Parameter name="btnReactive"></Parameter> <Parameter name="adClientId"></Parameter> <Parameter name="gumkUmkId"></Parameter> 
+    <Parameter name="updatedby"></Parameter>
+    <Parameter id="paramKey" name="gumkUmkId"></Parameter>
+    
+    
+        <Parameter name="adUserClient" type="replace" optional="true" after="gumk_umk.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="gumk_umk.AD_Org_ID IN (" text="'1'"/>
+  </SqlMethod>
+
+  <SqlMethod name="insert" type="preparedStatement" return="rowCount" static="false" connection="true">
+    <Sql><![CDATA[
+        INSERT INTO gumk_umk 
+        (AD_Org_ID, Isactive, Documentno, Nominal_Penjaguann_Umk, Tanggal_Penerimaan_Umk, EM_Gnv_Master_Datadireksi_ID, EM_Gmm_Master_Department_ID, AD_User_ID, Description, TOT_Amount_Realisasi, Selisih, Complete, Realisasi, Status, C_Currency_ID, FIN_Paymentmethod_ID, FIN_Financial_Account_ID, C_Doctype_ID, Gumk_Jenisumk_ID, Tanggalmemointernal, Nomemointernal, Memointernaldari, Perihal, EM_Gbg_Budget_ID, Posted, BTN_Reactive, AD_Client_ID, Gumk_Umk_ID, created, createdby, updated, updatedBy)
+        VALUES ((?), (?), (?), TO_NUMBER(?), TO_DATE(?), (?), (?), (?), (?), TO_NUMBER(?), TO_NUMBER(?), (?), (?), (?), (?), (?), (?), (?), (?), TO_DATE(?), (?), (?), (?), (?), (?), (?), (?), (?), now(), ?, now(), ?)
+    ]]></Sql>
+    <Parameter name="adOrgId"></Parameter> <Parameter name="isactive"></Parameter> <Parameter name="documentno"></Parameter> <Parameter name="nominalPenjaguannUmk"></Parameter> <Parameter name="tanggalPenerimaanUmk"></Parameter> <Parameter name="emGnvMasterDatadireksiId"></Parameter> <Parameter name="emGmmMasterDepartmentId"></Parameter> <Parameter name="adUserId"></Parameter> <Parameter name="description"></Parameter> <Parameter name="totAmountRealisasi"></Parameter> <Parameter name="selisih"></Parameter> <Parameter name="complete"></Parameter> <Parameter name="realisasi"></Parameter> <Parameter name="status"></Parameter> <Parameter name="cCurrencyId"></Parameter> <Parameter name="finPaymentmethodId"></Parameter> <Parameter name="finFinancialAccountId"></Parameter> <Parameter name="cDoctypeId"></Parameter> <Parameter name="gumkJenisumkId"></Parameter> <Parameter name="tanggalmemointernal"></Parameter> <Parameter name="nomemointernal"></Parameter> <Parameter name="memointernaldari"></Parameter> <Parameter name="perihal"></Parameter> <Parameter name="emGbgBudgetId"></Parameter> <Parameter name="posted"></Parameter> <Parameter name="btnReactive"></Parameter> <Parameter name="adClientId"></Parameter> <Parameter name="gumkUmkId"></Parameter> 
+    <Parameter name="createdby"></Parameter>
+    <Parameter name="updatedby"></Parameter>
+  </SqlMethod>
+
+  <SqlMethod name="delete" type="preparedStatement" return="rowCount">
+    <Sql><![CDATA[
+        DELETE FROM gumk_umk
+        WHERE gumk_umk.Gumk_Umk_ID = ? 
+        
+        AND gumk_umk.AD_Client_ID IN ('1') 
+        AND gumk_umk.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="param1"></Parameter>
+    
+        <Parameter name="adUserClient" type="replace" optional="true" after="gumk_umk.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="gumk_umk.AD_Org_ID IN (" text="'1'"/>
+  </SqlMethod>
+
+  <SqlMethod name="selectOrg" type="preparedStatement" return="string">
+    <SqlMethodComment>Select for relation</SqlMethodComment>
+    <Sql><![CDATA[ 
+        SELECT AD_ORG_ID
+          FROM gumk_umk
+         WHERE gumk_umk.Gumk_Umk_ID = ? 
+    ]]></Sql>
+    <Parameter name="id"></Parameter>
+  </SqlMethod>
+  
+  <SqlMethod name="getCurrentDBTimestamp" type="preparedStatement" return="string">
+    <Sql><![CDATA[ 
+        SELECT to_char(Updated, 'YYYYMMDDHH24MISS') as Updated_Time_Stamp
+          FROM gumk_umk
+         WHERE gumk_umk.Gumk_Umk_ID = ? 
+    ]]></Sql>
+    <Parameter name="id"></Parameter>
+  </SqlMethod>
+</SqlClass>

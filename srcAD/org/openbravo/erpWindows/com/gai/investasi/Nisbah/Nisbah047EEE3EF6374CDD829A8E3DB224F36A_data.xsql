@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SqlClass id="class" name="Nisbah047EEE3EF6374CDD829A8E3DB224F36AData" package="org.openbravo.erpWindows.com.gai.investasi.Nisbah">
+  <SqlClassComment>WAD Generated class</SqlClassComment>
+
+  <SqlMethod name="selectEdit" type="preparedStatement" return="multiple">
+    <SqlMethodComment>Select for edit</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT to_char(GNV_INVESTASI_DETAIL.Created, ?) as created, 
+        (SELECT NAME FROM AD_USER u WHERE AD_USER_ID = GNV_INVESTASI_DETAIL.CreatedBy) as CreatedByR, 
+        to_char(GNV_INVESTASI_DETAIL.Updated, ?) as updated, 
+        to_char(GNV_INVESTASI_DETAIL.Updated, 'YYYYMMDDHH24MISS') as Updated_Time_Stamp,  
+        GNV_INVESTASI_DETAIL.UpdatedBy, 
+        (SELECT NAME FROM AD_USER u WHERE AD_USER_ID = GNV_INVESTASI_DETAIL.UpdatedBy) as UpdatedByR,
+        GNV_INVESTASI_DETAIL.AD_Org_ID, 
+(CASE WHEN GNV_INVESTASI_DETAIL.AD_Org_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table1.Value), ''))),'') ) END) AS AD_Org_IDR, 
+COALESCE(GNV_INVESTASI_DETAIL.Isactive, 'N') AS Isactive, 
+GNV_INVESTASI_DETAIL.Lineno, 
+GNV_INVESTASI_DETAIL.Periode, 
+GNV_INVESTASI_DETAIL.Jumlahhari, 
+GNV_INVESTASI_DETAIL.Amount, 
+GNV_INVESTASI_DETAIL.C_Currency_ID, 
+(CASE WHEN GNV_INVESTASI_DETAIL.C_Currency_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.ISO_Code), ''))),'') ) END) AS C_Currency_IDR, 
+GNV_INVESTASI_DETAIL.GNV_Investasi_Line_ID, 
+GNV_INVESTASI_DETAIL.Accountingdate, 
+GNV_INVESTASI_DETAIL.Posted, 
+list1.name as Posted_BTN, 
+GNV_INVESTASI_DETAIL.Documentno, 
+GNV_INVESTASI_DETAIL.AD_Client_ID, 
+GNV_INVESTASI_DETAIL.GNV_Investasi_Detail_ID, 
+ 
+        ? AS LANGUAGE 
+        FROM GNV_INVESTASI_DETAIL left join (select AD_Org_ID, Value from AD_Org) table1 on (GNV_INVESTASI_DETAIL.AD_Org_ID = table1.AD_Org_ID) left join (select C_Currency_ID, ISO_Code from C_Currency) table2 on (GNV_INVESTASI_DETAIL.C_Currency_ID = table2.C_Currency_ID) left join ad_ref_list_v list1 on (list1.ad_reference_id = '234' and list1.ad_language = ?  AND GNV_INVESTASI_DETAIL.Posted = TO_CHAR(list1.value))
+        WHERE 2=2 
+
+        AND 1=1 
+        AND GNV_INVESTASI_DETAIL.GNV_Investasi_Detail_ID = ? 
+        AND GNV_INVESTASI_DETAIL.AD_Client_ID IN ('1') 
+           AND GNV_INVESTASI_DETAIL.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="dateTimeFormat"></Parameter>
+    <Parameter name="dateTimeFormat"></Parameter>
+    
+    <Parameter name="paramLanguage"></Parameter>
+<Parameter name="paramLanguage"/>
+
+
+    <Parameter name="key"></Parameter>
+        <Parameter name="adUserClient" type="replace" optional="true" after="GNV_INVESTASI_DETAIL.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="GNV_INVESTASI_DETAIL.AD_Org_ID IN (" text="'1'"/>
+
+    <Field name="adUserClient" value="void"></Field>
+    <Field name="adOrgClient" value="void"></Field>
+    <Field name="createdby" value="void"></Field>
+    
+    <Field name="trBgcolor" value="void"></Field>
+    <Field name="totalCount" value="void"></Field>
+    <Field name="dateTimeFormat" value=""></Field>
+  </SqlMethod>
+  
+  
+
+  <SqlMethod name="set" type="constant" return="multiple">
+      <SqlMethodComment>Create a registry</SqlMethodComment>
+      <Sql></Sql>
+
+<Parameter name="adOrgId"></Parameter><Parameter name="jumlahhari"></Parameter><Parameter name="amount"></Parameter><Parameter name="gnvInvestasiDetailId"></Parameter><Parameter name="cCurrencyId"></Parameter><Parameter name="posted"></Parameter><Parameter name="postedBtn"></Parameter><Parameter name="isactive"></Parameter><Parameter name="updatedby"></Parameter><Parameter name="updatedbyr"></Parameter><Parameter name="gnvInvestasiLineId"></Parameter><Parameter name="createdby"></Parameter><Parameter name="createdbyr"></Parameter><Parameter name="documentno"></Parameter><Parameter name="adClientId"></Parameter><Parameter name="periode"></Parameter><Parameter name="accountingdate"></Parameter><Parameter name="lineno"></Parameter>
+   </SqlMethod>
+
+
+
+
+
+
+   <SqlMethod name="selectDef9B39F07FFF414354A475A2CA829DBEAB_0" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT  ( COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))), '') ) as Updatedby FROM AD_User left join (select AD_User_ID, Name from AD_User) table2 on (AD_User.AD_User_ID = table2.AD_User_ID) WHERE AD_User.isActive='Y' AND AD_User.AD_User_ID = ?  
+    ]]></Sql>
+<Parameter name="UpdatedbyR"/>
+  </SqlMethod>
+
+   <SqlMethod name="selectDefAF710ADD493C44F084369951725732F1_1" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT  ( COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))), '') ) as Createdby FROM AD_User left join (select AD_User_ID, Name from AD_User) table2 on (AD_User.AD_User_ID = table2.AD_User_ID) WHERE AD_User.isActive='Y' AND AD_User.AD_User_ID = ?  
+    ]]></Sql>
+<Parameter name="CreatedbyR"/>
+  </SqlMethod>
+
+   <SqlMethod name="selectDefF17D441E6E024C98A34F199C4E5210EF" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT COALESCE(MAX(Lineno),0)+10 AS DefaultValue FROM GNV_INVESTASI_DETAIL WHERE GNV_INVESTASI_LINE_ID=? 
+    ]]></Sql>
+
+<Parameter name="GNV_Investasi_Line_ID"/>
+  </SqlMethod>
+
+
+
+
+
+
+
+
+
+
+  <SqlMethod name="update" type="preparedStatement" return="rowCount" static="false" connection="true">
+    <Sql><![CDATA[
+        UPDATE GNV_INVESTASI_DETAIL
+        SET AD_Org_ID = (?) , Isactive = (?) , Lineno = TO_NUMBER(?) , Periode = (?) , Jumlahhari = TO_NUMBER(?) , Amount = TO_NUMBER(?) , C_Currency_ID = (?) , GNV_Investasi_Line_ID = (?) , Accountingdate = TO_DATE(?) , Posted = (?) , Documentno = (?) , AD_Client_ID = (?) , GNV_Investasi_Detail_ID = (?) , updated = now(), updatedby = ? 
+        WHERE GNV_INVESTASI_DETAIL.GNV_Investasi_Detail_ID = ? 
+        
+        AND GNV_INVESTASI_DETAIL.AD_Client_ID IN ('1') 
+        AND GNV_INVESTASI_DETAIL.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="adOrgId"></Parameter> <Parameter name="isactive"></Parameter> <Parameter name="lineno"></Parameter> <Parameter name="periode"></Parameter> <Parameter name="jumlahhari"></Parameter> <Parameter name="amount"></Parameter> <Parameter name="cCurrencyId"></Parameter> <Parameter name="gnvInvestasiLineId"></Parameter> <Parameter name="accountingdate"></Parameter> <Parameter name="posted"></Parameter> <Parameter name="documentno"></Parameter> <Parameter name="adClientId"></Parameter> <Parameter name="gnvInvestasiDetailId"></Parameter> 
+    <Parameter name="updatedby"></Parameter>
+    <Parameter id="paramKey" name="gnvInvestasiDetailId"></Parameter>
+    
+    
+        <Parameter name="adUserClient" type="replace" optional="true" after="GNV_INVESTASI_DETAIL.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="GNV_INVESTASI_DETAIL.AD_Org_ID IN (" text="'1'"/>
+  </SqlMethod>
+
+  <SqlMethod name="insert" type="preparedStatement" return="rowCount" static="false" connection="true">
+    <Sql><![CDATA[
+        INSERT INTO GNV_INVESTASI_DETAIL 
+        (AD_Org_ID, Isactive, Lineno, Periode, Jumlahhari, Amount, C_Currency_ID, GNV_Investasi_Line_ID, Accountingdate, Posted, Documentno, AD_Client_ID, GNV_Investasi_Detail_ID, created, createdby, updated, updatedBy)
+        VALUES ((?), (?), TO_NUMBER(?), (?), TO_NUMBER(?), TO_NUMBER(?), (?), (?), TO_DATE(?), (?), (?), (?), (?), now(), ?, now(), ?)
+    ]]></Sql>
+    <Parameter name="adOrgId"></Parameter> <Parameter name="isactive"></Parameter> <Parameter name="lineno"></Parameter> <Parameter name="periode"></Parameter> <Parameter name="jumlahhari"></Parameter> <Parameter name="amount"></Parameter> <Parameter name="cCurrencyId"></Parameter> <Parameter name="gnvInvestasiLineId"></Parameter> <Parameter name="accountingdate"></Parameter> <Parameter name="posted"></Parameter> <Parameter name="documentno"></Parameter> <Parameter name="adClientId"></Parameter> <Parameter name="gnvInvestasiDetailId"></Parameter> 
+    <Parameter name="createdby"></Parameter>
+    <Parameter name="updatedby"></Parameter>
+  </SqlMethod>
+
+  <SqlMethod name="delete" type="preparedStatement" return="rowCount">
+    <Sql><![CDATA[
+        DELETE FROM GNV_INVESTASI_DETAIL
+        WHERE GNV_INVESTASI_DETAIL.GNV_Investasi_Detail_ID = ? 
+        
+        AND GNV_INVESTASI_DETAIL.AD_Client_ID IN ('1') 
+        AND GNV_INVESTASI_DETAIL.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="param1"></Parameter>
+    
+        <Parameter name="adUserClient" type="replace" optional="true" after="GNV_INVESTASI_DETAIL.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="GNV_INVESTASI_DETAIL.AD_Org_ID IN (" text="'1'"/>
+  </SqlMethod>
+
+  <SqlMethod name="selectOrg" type="preparedStatement" return="string">
+    <SqlMethodComment>Select for relation</SqlMethodComment>
+    <Sql><![CDATA[ 
+        SELECT AD_ORG_ID
+          FROM GNV_INVESTASI_DETAIL
+         WHERE GNV_INVESTASI_DETAIL.GNV_Investasi_Detail_ID = ? 
+    ]]></Sql>
+    <Parameter name="id"></Parameter>
+  </SqlMethod>
+  
+  <SqlMethod name="getCurrentDBTimestamp" type="preparedStatement" return="string">
+    <Sql><![CDATA[ 
+        SELECT to_char(Updated, 'YYYYMMDDHH24MISS') as Updated_Time_Stamp
+          FROM GNV_INVESTASI_DETAIL
+         WHERE GNV_INVESTASI_DETAIL.GNV_Investasi_Detail_ID = ? 
+    ]]></Sql>
+    <Parameter name="id"></Parameter>
+  </SqlMethod>
+</SqlClass>

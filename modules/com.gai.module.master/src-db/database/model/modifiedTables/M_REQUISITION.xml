@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE M_REQUISITION">
+    <table name="M_REQUISITION" primaryKey="M_REQUISITION_KEY">
+      <column name="EM_GMM_METODEPEMBELIAN_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GMM_MASTER_DEPARTMENT_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GMM_DIPERIKAS_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GMM_DISETUJUI_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GMM_DISETUJUI2_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GMM_DISETUJUI3_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="EM_GMM_DISETUJUI4_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_DIPERIKSA">
+        <reference local="EM_GMM_DIPERIKAS_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_DISETUJUI">
+        <reference local="EM_GMM_DISETUJUI_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_DISETUJUI2">
+        <reference local="EM_GMM_DISETUJUI2_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_DISETUJUI3">
+        <reference local="EM_GMM_DISETUJUI3_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_DISETUJUI4">
+        <reference local="EM_GMM_DISETUJUI4_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GMM_MASTER_DEPARTMENT" name="EM_GMM_MASDEPART_REQ">
+        <reference local="EM_GMM_MASTER_DEPARTMENT_ID" foreign="GMM_MASTER_DEPARTMENT_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="GMM_METODEPEMBELIAN" name="EM_GMM_METODE_M_REQUISITION">
+        <reference local="EM_GMM_METODEPEMBELIAN_ID" foreign="GMM_METODEPEMBELIAN_ID"/>
+      </foreign-key>
+    </table>
+  </database>

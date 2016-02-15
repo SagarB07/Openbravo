@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="KasDebet_subreport1" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DOCUMENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+fp.documentno as "KD No.",
+ac.name as "Dijurnal Oleh",
+fp.paymentdate as "Tgl",
+ce.value as "Kode No",
+fa.AmtAcctDr as "Debet",
+fa.AmtAcctCr as "Kredit",
+bp.name as "Dibayarkan",
+fp.amount as "Uang sejumlah",
+fp.description as "Keterangan"
+from fin_payment fp
+	left join fin_payment_detail_v fpv on fp.fin_payment_id = fpv.fin_payment_id
+	left join c_bpartner bp on bp.c_bpartner_id = fp.c_bpartner_id
+	left join ad_client ac on fp.ad_client_id = ac.ad_client_id
+	left join fact_acct fa on fp.fin_payment_id = fa.RECORD_ID
+  	left join C_ELEMENTVALUE ce on fa.ACCOUNT_ID=ce.C_ELEMENTVALUE_ID
+where fp.fin_payment_id =$P{DOCUMENT_ID}
+and fp.isreceipt ='Y' and fa.AmtAcctDr != 0]]>
+	</queryString>
+	<field name="KD No." class="java.lang.String"/>
+	<field name="Dijurnal Oleh" class="java.lang.String"/>
+	<field name="Tgl" class="java.sql.Timestamp"/>
+	<field name="Kode No" class="java.lang.String"/>
+	<field name="Debet" class="java.math.BigDecimal"/>
+	<field name="Kredit" class="java.math.BigDecimal"/>
+	<field name="Dibayarkan" class="java.lang.String"/>
+	<field name="Uang sejumlah" class="java.math.BigDecimal"/>
+	<field name="Keterangan" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="58" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="3" width="249" height="40"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="14" width="66" height="15"/>
+				<textElement/>
+				<text><![CDATA[Dijurnal oleh :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="156" y="14" width="23" height="15"/>
+				<textElement/>
+				<text><![CDATA[Tgl.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="14" width="85" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Dijurnal Oleh}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="179" y="14" width="68" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[(new SimpleDateFormat("dd-MM-yyyy").format($F{Tgl}))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="43" width="83" height="15"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Kode No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="43" width="84" height="15"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Debet]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="43" width="82" height="15"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Kredit]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="83" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Kode No} == null ? "-" : $F{Kode No}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="83" y="0" width="84" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{Debet}==null ? "0" : new DecimalFormat("#,##0.00").format($F{Debet}))]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="167" y="0" width="82" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{Kredit}==null ? "0" : new DecimalFormat("#,##0.00").format($F{Kredit}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,3 @@
+function popupReference(e){var b=800;var d=500;var a=(screen.width-b)/2;var c=(screen.height-d)/2;oWindow=window.open("reference.php?s="+e,"winRef","directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,width="+b+",height="+d+",left="+a+",top="+c);oWindow.focus();}function ymd2dmy(c){var b=c.split("-");
+return b[2]+"-"+b[1]+"-"+b[0];}function popupReferenceMob(e){var b=1000;var d=500;var a=(screen.width-b)/2;var c=(screen.height-d)/2;oWindow=window.open("reference-mob.php?s="+e,"winRef","directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,width="+b+",height="+d+",left="+a+",top="+c);
+oWindow.focus();}

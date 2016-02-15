@@ -1,0 +1,1183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name=" LAPORAN_LABA-RUGI_KOMPREHENSIF" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="140"/>
+	<property name="ireport.y" value="1151"/>
+	<parameter name="F_DATE" class="java.util.Date"/>
+	<parameter name="E_DATE" class="java.util.Date"/>
+	<parameter name="RF_DATE" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="RE_DATE" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+C_ELEMENT_ID,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='191930041DF64EC4B4A6B77B16AEB73A'
+    AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS UKB ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='191930041DF64EC4B4A6B77B16AEB73A'
+    AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS UKBREF ,
+
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='63165BD380024A0AA6C74A1467B13751'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS BA ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='DC42BE48669843938A5A689BC84597B4'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS UPU ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='A79978C11027449C91CF540949EEB7FE'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS YTMP ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='4F562D279BFF46CAB9B8C4533C6ABCDE'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS YBMP ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='ADB1BD6D7B944435B539976B572C7E3A'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS PKL ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='573E0E6C5A27417BBEFC437F6349A178'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS T ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='002997D83BBC46D685470012DE56DB5A'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS R ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='00D4CB9F834946328FB9B89827ECA3CD'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS BPU ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='75032F3CD6D24623BACABE9FFB38F9E0'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS TL ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='0AC1DEEB5EB141189B04124985E57F8A'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS TB ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='7AC9D939FB98411F83F161BAC45345ED'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS PI ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='9119EF3335C640228CC26B37F43FCFB4'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS BP ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='916E929030524C2B81E495F59B6C3CF8'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS BU ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='0D53BB9C8FA448F7B72D26C49807EC10'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS BA1,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='19B0E156C29E42E9A2827263B01DEA30'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS BPDA,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='A3FE8EB0689441EABE29D5DFA256E120'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS PBL,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID=''
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS PBPT,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID=''
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS PK,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='5D1C386625EA4D5E88F756D1F3953547'
+      AND FA.DATEACCT BETWEEN NVL($P{F_DATE},FA.DATEACCT) AND  NVL($P{E_DATE},FA.DATEACCT)
+  ),0) AS Z,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='63165BD380024A0AA6C74A1467B13751'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS BAREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='DC42BE48669843938A5A689BC84597B4'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS UPUREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='A79978C11027449C91CF540949EEB7FE'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS YTMPREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='4F562D279BFF46CAB9B8C4533C6ABCDE'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS YBMPREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='ADB1BD6D7B944435B539976B572C7E3A'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS PKLREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID ='573E0E6C5A27417BBEFC437F6349A178'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS TREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='002997D83BBC46D685470012DE56DB5A'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS RREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='00D4CB9F834946328FB9B89827ECA3CD'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS BPUREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='75032F3CD6D24623BACABE9FFB38F9E0'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS TLREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='0AC1DEEB5EB141189B04124985E57F8A'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS TBREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='7AC9D939FB98411F83F161BAC45345ED'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS PIREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='9119EF3335C640228CC26B37F43FCFB4'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS BPREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='916E929030524C2B81E495F59B6C3CF8'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS BUREF ,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='0D53BB9C8FA448F7B72D26C49807EC10'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS BA1REF,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='19B0E156C29E42E9A2827263B01DEA30'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS BPDAREF,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='A3FE8EB0689441EABE29D5DFA256E120'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS PBLREF,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID=''
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS PBPTREF,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID=''
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS PKREF,
+  NVL((SELECT FA.AMTACCTDR-AMTACCTCR FROM C_ELEMENTVALUE CE
+    LEFT JOIN FACT_ACCT FA ON CE.C_ELEMENTVALUE_ID = FA.ACCOUNT_ID
+    WHERE CE.C_ELEMENTVALUE_ID='5D1C386625EA4D5E88F756D1F3953547'
+      AND FA.DATEACCT BETWEEN NVL($P{RF_DATE},FA.DATEACCT) AND  NVL($P{RE_DATE},FA.DATEACCT)
+  ),0) AS ZREF
+FROM C_ELEMENT WHERE C_ELEMENT_ID = '9D9F93F5225E45B29919BF7BCF27B8EB']]>
+	</queryString>
+	<field name="C_ELEMENT_ID" class="java.lang.String"/>
+	<field name="UKB" class="java.lang.Double"/>
+	<field name="UKBREF" class="java.lang.Double"/>
+	<field name="BA" class="java.lang.Double"/>
+	<field name="UPU" class="java.lang.Double"/>
+	<field name="YTMP" class="java.lang.Double"/>
+	<field name="YBMP" class="java.lang.Double"/>
+	<field name="PKL" class="java.lang.Double"/>
+	<field name="T" class="java.lang.Double"/>
+	<field name="R" class="java.lang.Double"/>
+	<field name="BPU" class="java.lang.Double"/>
+	<field name="TL" class="java.lang.Double"/>
+	<field name="TB" class="java.lang.Double"/>
+	<field name="PI" class="java.lang.Double"/>
+	<field name="BP" class="java.lang.Double"/>
+	<field name="BU" class="java.lang.Double"/>
+	<field name="BA1" class="java.lang.Double"/>
+	<field name="BPDA" class="java.lang.Double"/>
+	<field name="PBL" class="java.lang.Double"/>
+	<field name="PBPT" class="java.lang.Double"/>
+	<field name="PK" class="java.lang.Double"/>
+	<field name="Z" class="java.lang.Double"/>
+	<field name="BAREF" class="java.lang.Double"/>
+	<field name="UPUREF" class="java.lang.Double"/>
+	<field name="YTMPREF" class="java.lang.Double"/>
+	<field name="YBMPREF" class="java.lang.Double"/>
+	<field name="PKLREF" class="java.lang.Double"/>
+	<field name="TREF" class="java.lang.Double"/>
+	<field name="RREF" class="java.lang.Double"/>
+	<field name="BPUREF" class="java.lang.Double"/>
+	<field name="TLREF" class="java.lang.Double"/>
+	<field name="TBREF" class="java.lang.Double"/>
+	<field name="PIREF" class="java.lang.Double"/>
+	<field name="BPREF" class="java.lang.Double"/>
+	<field name="BUREF" class="java.lang.Double"/>
+	<field name="BA1REF" class="java.lang.Double"/>
+	<field name="BPDAREF" class="java.lang.Double"/>
+	<field name="PBLREF" class="java.lang.Double"/>
+	<field name="PBPTREF" class="java.lang.Double"/>
+	<field name="PKREF" class="java.lang.Double"/>
+	<field name="ZREF" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="14" width="555" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ PT JAMINAN PEMBIAYAAN ASKRINDO SYARIAH
+ LAPORAN LABA-RUGI KOMPREHENSIF
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="77" width="273" height="44"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[URAIAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="367" y="77" width="94" height="44"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="461" y="77" width="94" height="44"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="273" y="77" width="94" height="44"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="121" width="273" height="641"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="122" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENDAPATAN KAFALAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="142" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ujrah Kafalah Bruto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="162" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Beban Akuisisi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="182" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ujrah Kafalah Neto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="202" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ujrah Penjaminan Ulang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="222" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ujrah YTMP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="242" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ujrah YBMP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="262" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Penerimaan Kafalah Lain]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="282" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUMLAH PENDAPATAN KAFALAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="302" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[BEBAN KAFALAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="322" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Ta'widh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="342" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Recoveries]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="382" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Estimasi Tad'widh Rtn Sndr TL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="362" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Beban Penjamin Ulang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="402" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Estimasi Tad'widh Rtn Sndr TB]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="422" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUMLAH BEBAN KAFALAH
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="482" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[BEBAN USAHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="502" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Beban Pemasaran
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="442" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENDAPATAN KAFALAH BERSIH
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="462" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[PENDAPATAN INVESTASI
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="522" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Beban Umum
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="542" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Beban Administrasi
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="562" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Beban Penyusutan dan Amortisasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="582" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUMLAH BEBAN USAHA
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="602" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LABA USAHA
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="622" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENDAPATAN (BEBAN) LAIN
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="642" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Pendapatan (Beban) Lain]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="662" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LABA SEBELUM PAJAK DAN ZAKAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="682" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Pendapatan (Beban) Pajak Tangguhan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="702" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Pajak Kini
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="722" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Zakat
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="742" width="236" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LABA (RUGI) TAHUN BERJALAN
+]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="273" y="121" width="94" height="61"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="121" width="94" height="61"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="121" width="94" height="61"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="202" width="94" height="80"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="202" width="94" height="80"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="202" width="94" height="80"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="302" width="94" height="120"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="302" width="94" height="120"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="302" width="94" height="120"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="482" width="94" height="100"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="482" width="94" height="100"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="482" width="94" height="100"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="622" width="94" height="40"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="622" width="94" height="40"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="622" width="94" height="40"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="682" width="94" height="60"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="682" width="94" height="60"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="682" width="94" height="60"/>
+			</rectangle>
+			<textField>
+				<reportElement x="273" y="78" width="94" height="43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($P{E_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="367" y="78" width="94" height="43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($P{F_DATE}) + " s/d " + new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($P{E_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="461" y="78" width="94" height="43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($P{RE_DATE})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="142" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UKB}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="162" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="202" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UPU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="222" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{YTMP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="242" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{YBMP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="262" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PKL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="322" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{T}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="342" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{R}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="362" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="382" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="402" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TB}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="502" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="522" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="562" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPDA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="272" y="642" width="95" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PBL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="722" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Z}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="542" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BA1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="682" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PBPT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="274" y="702" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PK}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="142" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UKBREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="162" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BAREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="202" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UPUREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="222" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{YTMPREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="242" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{YBMPREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="262" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PKLREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="322" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="342" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{RREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="362" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPUREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="382" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TLREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="402" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TBREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="502" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="522" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BUREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="542" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BA1REF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="562" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPDAREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="642" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PBLREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="682" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PBPTREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="702" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PKREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="722" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{ZREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="142" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UKB}-$F{UKBREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="162" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BA}-$F{BAREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="202" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UPU}-$F{UPUREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="222" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{YTMP}-$F{YTMPREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="242" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{YBMP}-$F{YBMPREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="262" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PKL}-$F{PKLREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="368" y="322" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{T}-$F{TREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="342" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{R}-$F{RREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="362" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPU}-$F{BPUREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="368" y="382" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TL}-$F{TLREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="402" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TB}-$F{TBREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="502" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BP}-$F{BPREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="522" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BU}-$F{BUREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="542" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BA1}-$F{BA1REF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="562" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPDA}-$F{BPDAREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="642" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PBL}-$F{PBLREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="682" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PBPT}-$F{PBPTREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="702" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PK}-$F{PKREF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="369" y="722" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{Z}-$F{ZREF}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="461" y="182" width="1" height="20"/>
+			</line>
+			<line>
+				<reportElement x="554" y="183" width="1" height="19"/>
+			</line>
+			<rectangle>
+				<reportElement x="273" y="182" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="272" y="182" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UKB}-$F{BA}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="367" y="183" width="94" height="19"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="368" y="182" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{UKB}-$F{BA})-($F{UKBREF}-$F{BAREF})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="183" width="94" height="19"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="183" width="92" height="19"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{UKBREF}-$F{BAREF}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="273" y="282" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="275" y="283" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{UKB}-$F{BA})+$F{UPU}+$F{YTMP}+$F{YBMP}+$F{PKL}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="367" y="282" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="366" y="283" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[(($F{UKB}-$F{BA})-($F{UKBREF}-$F{BAREF}))+($F{UPU}-$F{UPUREF})+($F{YTMP}-$F{YTMPREF})+($F{YBMP}-$F{YBMPREF})+($F{PKL}-$F{PKLREF})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="282" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="283" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{UKBREF}-$F{BAREF})+$F{UPUREF}+$F{YTMPREF}+$F{YBMPREF}+$F{PKLREF}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="273" y="422" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="272" y="422" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[(($F{UKB}-$F{BA})+$F{UPU}+$F{YTMP}+$F{YBMP}+$F{PKL})-($F{T}+$F{R}+$F{BPU}+$F{TL}+$F{TB})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="367" y="422" width="94" height="60"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="582" width="95" height="21"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="273" y="583" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BP}+$F{BU}+$F{BA1}+$F{BPDA}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="367" y="582" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="368" y="582" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{BP}+$F{BU}+$F{BA1}+$F{BPDA})-($F{BPREF}+$F{BUREF}+$F{BA1REF}+$F{BPDAREF})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="582" width="94" height="19"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="583" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{BPREF}+$F{BUREF}+$F{BA1REF}+$F{BPDAREF}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="273" y="662" width="95" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="742" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="662" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="662" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="742" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="742" width="94" height="20"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="44" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Periode " + new SimpleDateFormat("dd MMMMM",new java.util.Locale("id")).format($P{F_DATE}) +" sampai dengan " +new SimpleDateFormat("dd MMMMM yyyy",new java.util.Locale("id")).format($P{E_DATE})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="273" y="442" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="273" y="462" width="94" height="21"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="272" y="443" width="95" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{T}+$F{R}+$F{BPU}+$F{TL}+$F{TB}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="272" y="463" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PI}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="367" y="422" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="442" width="94" height="20"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="462" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="367" y="442" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[((($F{UKB}-$F{BA})+$F{UPU}+$F{YTMP}+$F{YBMP}+$F{PKL})-($F{T}+$F{R}+$F{BPU}+$F{TL}+$F{TB}))-((($F{UKBREF}-$F{BAREF})+$F{UPUREF}+$F{YTMPREF}+$F{YBMPREF}+$F{PKLREF})-($F{TREF}+$F{RREF}+$F{BPUREF}+$F{TLREF}+$F{TBREF}))]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="368" y="423" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[($F{T}+$F{R}+$F{BPU}+$F{TL}+$F{TB}) -($F{TREF}+$F{RREF}+$F{BPUREF}+$F{TLREF}+$F{TBREF})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="368" y="462" width="92" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PI}-$F{PIREF}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="422" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="423" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{TREF}+$F{RREF}+$F{BPUREF}+$F{TLREF}+$F{TBREF}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="442" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="445" y="442" width="93" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PIREF}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="461" y="462" width="94" height="20"/>
+			</rectangle>
+			<textField pattern="#,##0.00">
+				<reportElement x="462" y="463" width="94" height="20"/>
+				<box leftPadding="3" rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[(($F{UKBREF}-$F{BAREF})+$F{UPUREF}+$F{YTMPREF}+$F{YBMPREF}+$F{PKLREF})-($F{TREF}+$F{RREF}+$F{BPUREF}+$F{TLREF}+$F{TBREF})]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="273" y="601" width="94" height="21"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="367" y="601" width="94" height="21"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="461" y="601" width="94" height="21"/>
+			</rectangle>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<printWhenExpression><![CDATA[]]></printWhenExpression>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

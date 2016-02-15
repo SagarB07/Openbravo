@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE GUMK_UMK">
+    <table name="GUMK_UMK" primaryKey="GUMK_UMK_KEY">
+      <column name="EM_GBG_BUDGET_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="C_BUDGET" name="EM_GBG_BUDGET_UMK">
+        <reference local="EM_GBG_BUDGET_ID" foreign="C_BUDGET_ID"/>
+      </foreign-key>
+    </table>
+  </database>

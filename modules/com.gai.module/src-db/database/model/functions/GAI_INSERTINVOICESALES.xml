@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAI_INSERTINVOICESALES">
+    <function name="GAI_INSERTINVOICESALES" type="NULL">
+      <parameter name="ad_client" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="ad_org" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="issotrx" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="documentno" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="description" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="dateinvoice" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="mitra_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="produk_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="price" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kps" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="financial" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="kafalah" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="administrasi" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="debitur" type="NUMERIC" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_id VARCHAR(32):= get_uuid();
+--v_detail_id VARCHAR(32):= get_uuid();
+v_location_id VARCHAR(32);
+v_total NUMBER;
+v_adm NUMBER;
+v_cur_id VARCHAR(32);
+v_pricelist_id VARCHAR(32);
+v_term_id VARCHAR(32);
+v_payment_id VARCHAR(32);
+v_product_category VARCHAR(32);
+v_product_adm VARCHAR(32);
+v_ResultStr VARCHAR2(2000):='';
+
+BEGIN
+BEGIN
+Select c_bpartner_location_id into v_location_id from c_bpartner_location where c_bpartner_id = mitra_id;
+END;
+
+
+BEGIN
+select m_product_category_id  into v_product_category from m_product where m_product_id = produk_id;
+select m_product_id  into v_product_adm from m_product where m_product_category_id = v_product_category and value like 'ADM%';
+END;
+
+
+BEGIN
+SELECT CR.C_CURRENCY_ID INTO v_cur_id FROM C_BPARTNER BP,M_PRICELIST MP,C_CURRENCY CR WHERE 
+BP.M_PRICELIST_ID = MP.M_PRICELIST_ID
+AND CR.C_CURRENCY_ID = MP.C_CURRENCY_ID 
+AND BP.C_BPARTNER_ID = mitra_id;
+END;
+
+BEGIN
+SELECT BP.M_PRICELIST_ID INTO v_pricelist_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = mitra_id;
+END;
+
+BEGIN
+SELECT BP.C_PAYMENTTERM_ID INTO v_term_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = mitra_id;
+END;
+
+BEGIN
+SELECT BP.FIN_PAYMENTMETHOD_ID INTO v_payment_id FROM C_BPARTNER BP WHERE BP.C_BPARTNER_ID = mitra_id;
+END;
+
+
+  BEGIN
+    INSERT INTO C_INVOICE values(
+    v_id, ad_client, ad_org, 'Y', now(),'100',now(),'100',issotrx,documentno,
+    'DR','CO','N','N','N','40EE9B1CD3B345FABEFDA62B407B407F','40EE9B1CD3B345FABEFDA62B407B407F',NULL,(CASE WHEN description='' then 'OSA' else description END),'N',
+    NULL,dateinvoice, NULL, dateinvoice,mitra_id,v_location_id,NULL,'N',NULL,v_cur_id,
+    NULL, v_term_id,NULL,0,0,0,v_pricelist_id,'N',NULL,NULL,
+    NULL,'N','N',NULL,'N','N',NULL,NULL,NULL,NULL,
+    NULL,NULL,'N',0,0,0,0,NULL,'N',v_payment_id,NULL,
+    NULL,NULL,NULL,NULL,'N',NULL,'N',(CASE WHEN kps='' then null else kps END),'Y','CO');
+    --added 'N' before (Cashe When
+  END;
+
+
+  BEGIN
+    INSERT INTO GAI_INVOICE_DETAIL values(get_uuid(),ad_client,ad_org,'Y',
+    now(),'100',now(),'100',v_id,(CASE WHEN financial='' THEN null ELSE financial END),documentno,(CASE WHEN kafalah=null THEN 0 ELSE kafalah END),(CASE WHEN administrasi=null THEN 0 ELSE administrasi END),(CASE WHEN debitur=null THEN 0 ELSE debitur END));
+  END;
+
+  BEGIN
+  v_total := 1*price;
+
+    INSERT INTO C_INVOICELINE values (get_uuid(),ad_client,ad_org,'Y',now(),'100',now(),
+    '100',v_id,NULL,NULL,10,NULL,'N',NULL,produk_id,1,0,v_total,0,v_total,NULL,0,'100',
+    'A6CC4665E07C4AC5A97C74A766D3911B',NULL,0,NULL,'N',NULL,NULL,NULL,NULL,NULL,v_total,'N','N',v_total,0,0,mitra_id,
+    NULL,0,NULL,NULL,0,NULL,'N',NULL,NULL,NULL,NULL,'N',NULL);
+
+    v_adm := 1*administrasi;
+
+    INSERT INTO C_INVOICELINE values (get_uuid(),ad_client,ad_org,'Y',now(),'100',now(),
+    '100',v_id,NULL,NULL,20,NULL,'N',NULL,v_product_adm,1,0,administrasi,0,v_adm,NULL,0,'100',
+    'A6CC4665E07C4AC5A97C74A766D3911B',NULL,0,NULL,'N',NULL,NULL,NULL,NULL,NULL,v_adm,'N','N',v_adm,0,0,mitra_id,
+    NULL,0,NULL,NULL,0,NULL,'N',NULL,NULL,NULL,NULL,'N',NULL);
+    
+  END;
+
+
+ C_INVOICE_POST(NULL, v_id);
+
+    EXCEPTION
+WHEN OTHERS THEN 
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+END GAI_INSERTINVOICESALES
+]]></body>
+    </function>
+  </database>

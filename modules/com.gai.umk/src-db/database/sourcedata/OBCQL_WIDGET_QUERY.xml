@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+<!--B9650F43843248BB8CAD837BF7FBFCB1--><OBCQL_WIDGET_QUERY>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <OBCQL_WIDGET_QUERY_ID><![CDATA[B9650F43843248BB8CAD837BF7FBFCB1]]></OBCQL_WIDGET_QUERY_ID>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <AD_CLIENT_ID><![CDATA[0]]></AD_CLIENT_ID>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <AD_ORG_ID><![CDATA[0]]></AD_ORG_ID>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <ISACTIVE><![CDATA[Y]]></ISACTIVE>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <OBKMO_WIDGET_CLASS_ID><![CDATA[ED8E53052C8B419B87A3C80F1045436F]]></OBKMO_WIDGET_CLASS_ID>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <HQL><![CDATA[Select e.documentno as docno, e.nominalPenjaguannUmk as nominal, e.status as status, u.name as requestor, p.name as paymentmethod, f.name as finacc, j.name as jenisumk
+From gumk_umk as e, ADUser as u, FIN_PaymentMethod as p, FIN_Financial_Account as f, GUMK_JENISUMK as j
+Where e.user = u.id
+And p.id = e.fINPaymentmethod
+And f.id = e.fINFinancialAccount
+And j.id = e.gumkJenisumk
+And NOT EXISTS (Select 1 From gumk_realisasi as r Where r.gumkUmk = e.id)
+And (to_date(sysdate,'dd-MM-yyyy') - to_date(e.tanggalPenerimaanUmk,'dd-MM-yyyy')) > j.realizationDeadline]]></HQL>
+<!--B9650F43843248BB8CAD837BF7FBFCB1-->  <TYPE><![CDATA[HQL]]></TYPE>
+<!--B9650F43843248BB8CAD837BF7FBFCB1--></OBCQL_WIDGET_QUERY>
+
+</data>

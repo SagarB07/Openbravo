@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+  <database name="TABLE GAI_TEMP_FA_10">
+    <table name="GAI_TEMP_FA_10">
+      <column name="KODE_JURNAL" primaryKey="false" required="false" type="VARCHAR" size="2" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="KODE_KANTOR" primaryKey="false" required="false" type="VARCHAR" size="2" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="TANGGAL_TRX" primaryKey="false" required="false" type="VARCHAR" size="10" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="DEBET" primaryKey="false" required="false" type="VARCHAR" size="30" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="CREDIT" primaryKey="false" required="false" type="VARCHAR" size="30" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="KETERANGAN" primaryKey="false" required="false" type="VARCHAR" size="500" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="TAHUN" primaryKey="false" required="false" type="VARCHAR" size="4" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="TANGGAL_ENTRI" primaryKey="false" required="false" type="VARCHAR" size="10" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="BULAN" primaryKey="false" required="false" type="VARCHAR" size="1" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="NO_GIRO_REK" primaryKey="false" required="false" type="VARCHAR" size="30" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="JENIS_TRANSAKSI" primaryKey="false" required="false" type="VARCHAR" size="10" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="KODE_GL" primaryKey="false" required="false" type="VARCHAR" size="8" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="NAMA_GL" primaryKey="false" required="false" type="VARCHAR" size="100" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="KODE_LAP" primaryKey="false" required="false" type="VARCHAR" size="5" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+    </table>
+  </database>

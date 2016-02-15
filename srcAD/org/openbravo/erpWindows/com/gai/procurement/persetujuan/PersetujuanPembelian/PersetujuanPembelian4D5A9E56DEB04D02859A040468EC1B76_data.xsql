@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SqlClass id="class" name="PersetujuanPembelian4D5A9E56DEB04D02859A040468EC1B76Data" package="org.openbravo.erpWindows.com.gai.procurement.persetujuan.PersetujuanPembelian">
+  <SqlClassComment>WAD Generated class</SqlClassComment>
+
+  <SqlMethod name="selectEdit" type="preparedStatement" return="multiple">
+    <SqlMethodComment>Select for edit</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT to_char(GPP_PERSPEMBELIAN.Created, ?) as created, 
+        (SELECT NAME FROM AD_USER u WHERE AD_USER_ID = GPP_PERSPEMBELIAN.CreatedBy) as CreatedByR, 
+        to_char(GPP_PERSPEMBELIAN.Updated, ?) as updated, 
+        to_char(GPP_PERSPEMBELIAN.Updated, 'YYYYMMDDHH24MISS') as Updated_Time_Stamp,  
+        GPP_PERSPEMBELIAN.UpdatedBy, 
+        (SELECT NAME FROM AD_USER u WHERE AD_USER_ID = GPP_PERSPEMBELIAN.UpdatedBy) as UpdatedByR,
+        GPP_PERSPEMBELIAN.AD_Org_ID, 
+(CASE WHEN GPP_PERSPEMBELIAN.AD_Org_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table1.Value), ''))),'') ) END) AS AD_Org_IDR, 
+COALESCE(GPP_PERSPEMBELIAN.Isactive, 'N') AS Isactive, 
+GPP_PERSPEMBELIAN.C_Doctype_ID, 
+(CASE WHEN GPP_PERSPEMBELIAN.C_Doctype_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR((CASE WHEN tableTRL2.Name IS NULL THEN TO_CHAR(table2.Name) ELSE TO_CHAR(tableTRL2.Name) END)), ''))),'') ) END) AS C_Doctype_IDR, 
+GPP_PERSPEMBELIAN.Documentno, 
+GPP_PERSPEMBELIAN.Docstatus, 
+(CASE WHEN GPP_PERSPEMBELIAN.Docstatus IS NULL THEN '' ELSE  ( COALESCE(TO_CHAR(list1.name),'') ) END) AS DocstatusR, 
+GPP_PERSPEMBELIAN.Needbydate, 
+GPP_PERSPEMBELIAN.C_Bpartner_ID, 
+GPP_PERSPEMBELIAN.Keterangan, 
+GPP_PERSPEMBELIAN.Description, 
+GPP_PERSPEMBELIAN.Quantity, 
+GPP_PERSPEMBELIAN.Price, 
+GPP_PERSPEMBELIAN.Diskon, 
+GPP_PERSPEMBELIAN.Unitprice, 
+GPP_PERSPEMBELIAN.Dasar, 
+GPP_PERSPEMBELIAN.AD_User_ID, 
+(CASE WHEN GPP_PERSPEMBELIAN.AD_User_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table4.Name), ''))),'') ) END) AS AD_User_IDR, 
+GPP_PERSPEMBELIAN.Divisi, 
+GPP_PERSPEMBELIAN.Complete, 
+GPP_PERSPEMBELIAN.EM_Gmm_Master_Dept_ID, 
+GPP_PERSPEMBELIAN.M_Requisition_ID, 
+(CASE WHEN GPP_PERSPEMBELIAN.M_Requisition_ID IS NULL THEN '' ELSE  (COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table5.DocumentNo), ''))),'') ) END) AS M_Requisition_IDR, 
+GPP_PERSPEMBELIAN.Diperiksa_ID, 
+GPP_PERSPEMBELIAN.Dirkeu_ID, 
+GPP_PERSPEMBELIAN.Mankeu_ID, 
+GPP_PERSPEMBELIAN.GPP_Perspembelian_ID, 
+GPP_PERSPEMBELIAN.AD_Client_ID, 
+ 
+        ? AS LANGUAGE 
+        FROM GPP_PERSPEMBELIAN left join (select AD_Org_ID, Value from AD_Org) table1 on (GPP_PERSPEMBELIAN.AD_Org_ID = table1.AD_Org_ID) left join (select C_Doctype_ID, Name from C_Doctype) table2 on (GPP_PERSPEMBELIAN.C_Doctype_ID = table2.C_Doctype_ID) left join (select C_DocType_ID,AD_Language, Name from C_DocType_TRL) tableTRL2 on (table2.C_DocType_ID = tableTRL2.C_DocType_ID and tableTRL2.AD_Language = ?)  left join ad_ref_list_v list1 on (GPP_PERSPEMBELIAN.Docstatus = list1.value and list1.ad_reference_id = '8F416C326CB84BFF8F0E1C176E638FCB' and list1.ad_language = ?)  left join (select AD_User_ID, Name from AD_User) table4 on (GPP_PERSPEMBELIAN.AD_User_ID = table4.AD_User_ID) left join (select M_Requisition_ID, DocumentNo from M_Requisition) table5 on (GPP_PERSPEMBELIAN.M_Requisition_ID = table5.M_Requisition_ID)
+        WHERE 2=2 
+
+        AND 1=1 
+        AND GPP_PERSPEMBELIAN.GPP_Perspembelian_ID = ? 
+        AND GPP_PERSPEMBELIAN.AD_Client_ID IN ('1') 
+           AND GPP_PERSPEMBELIAN.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="dateTimeFormat"></Parameter>
+    <Parameter name="dateTimeFormat"></Parameter>
+    
+    <Parameter name="paramLanguage"></Parameter>
+<Parameter name="paramLanguage"/>
+<Parameter name="paramLanguage"/>
+
+
+    <Parameter name="key"></Parameter>
+        <Parameter name="adUserClient" type="replace" optional="true" after="GPP_PERSPEMBELIAN.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="GPP_PERSPEMBELIAN.AD_Org_ID IN (" text="'1'"/>
+
+    <Field name="adUserClient" value="void"></Field>
+    <Field name="adOrgClient" value="void"></Field>
+    <Field name="createdby" value="void"></Field>
+    
+    <Field name="trBgcolor" value="void"></Field>
+    <Field name="totalCount" value="void"></Field>
+    <Field name="dateTimeFormat" value=""></Field>
+  </SqlMethod>
+  
+  
+
+  <SqlMethod name="set" type="constant" return="multiple">
+      <SqlMethodComment>Create a registry</SqlMethodComment>
+      <Sql></Sql>
+
+<Parameter name="emGmmMasterDeptId"></Parameter><Parameter name="dirkeuId"></Parameter><Parameter name="docstatus"></Parameter><Parameter name="dasar"></Parameter><Parameter name="keterangan"></Parameter><Parameter name="description"></Parameter><Parameter name="updatedby"></Parameter><Parameter name="updatedbyr"></Parameter><Parameter name="quantity"></Parameter><Parameter name="mRequisitionId"></Parameter><Parameter name="adClientId"></Parameter><Parameter name="divisi"></Parameter><Parameter name="adOrgId"></Parameter><Parameter name="needbydate"></Parameter><Parameter name="cDoctypeId"></Parameter><Parameter name="gppPerspembelianId"></Parameter><Parameter name="documentno"></Parameter><Parameter name="diskon"></Parameter><Parameter name="unitprice"></Parameter><Parameter name="createdby"></Parameter><Parameter name="createdbyr"></Parameter><Parameter name="complete"></Parameter><Parameter name="cBpartnerId"></Parameter><Parameter name="isactive"></Parameter><Parameter name="adUserId"></Parameter><Parameter name="price"></Parameter><Parameter name="diperiksaId"></Parameter><Parameter name="mankeuId"></Parameter>
+   </SqlMethod>
+
+
+   <SqlMethod name="selectAux50432C3020E94B859089E0F6EC1EF47C" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT COUNT(LINENO) FROM GPP_PERSPEMBLINE WHERE GPP_Perspembelian_ID = ? 
+    ]]></Sql>
+
+<Parameter name="GPP_Perspembelian_ID"/>
+  </SqlMethod>
+
+
+
+
+
+   <SqlMethod name="selectDef4C4FB55AF3DE4711929780BCC9B71E71_0" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT  ( COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))), '') ) as Updatedby FROM AD_User left join (select AD_User_ID, Name from AD_User) table2 on (AD_User.AD_User_ID = table2.AD_User_ID) WHERE AD_User.isActive='Y' AND AD_User.AD_User_ID = ?  
+    ]]></Sql>
+<Parameter name="UpdatedbyR"/>
+  </SqlMethod>
+
+   <SqlMethod name="selectDef9D34DA26FE5244F283CA1388FE73A4A7" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        Select C_DocType_ID From C_DocType Where DocBaseType='GPP_STJ' 
+    ]]></Sql>
+
+  </SqlMethod>
+
+   <SqlMethod name="selectDefC30E886745F04299BCE59F05B6246538_1" type="preparedStatement" return="String" default="">
+    <SqlMethodComment>Select for auxiliar field</SqlMethodComment>
+    <Sql><![CDATA[
+        SELECT  ( COALESCE(TO_CHAR(TO_CHAR(COALESCE(TO_CHAR(table2.Name), ''))), '') ) as Createdby FROM AD_User left join (select AD_User_ID, Name from AD_User) table2 on (AD_User.AD_User_ID = table2.AD_User_ID) WHERE AD_User.isActive='Y' AND AD_User.AD_User_ID = ?  
+    ]]></Sql>
+<Parameter name="CreatedbyR"/>
+  </SqlMethod>
+
+
+
+
+
+
+
+
+
+
+  <SqlMethod name="update" type="preparedStatement" return="rowCount" static="false" connection="true">
+    <Sql><![CDATA[
+        UPDATE GPP_PERSPEMBELIAN
+        SET AD_Org_ID = (?) , Isactive = (?) , C_Doctype_ID = (?) , Documentno = (?) , Docstatus = (?) , Needbydate = TO_DATE(?) , C_Bpartner_ID = (?) , Keterangan = (?) , Description = (?) , Quantity = TO_NUMBER(?) , Price = TO_NUMBER(?) , Diskon = TO_NUMBER(?) , Unitprice = TO_NUMBER(?) , Dasar = (?) , AD_User_ID = (?) , Divisi = (?) , Complete = (?) , EM_Gmm_Master_Dept_ID = (?) , M_Requisition_ID = (?) , Diperiksa_ID = (?) , Dirkeu_ID = (?) , Mankeu_ID = (?) , GPP_Perspembelian_ID = (?) , AD_Client_ID = (?) , updated = now(), updatedby = ? 
+        WHERE GPP_PERSPEMBELIAN.GPP_Perspembelian_ID = ? 
+        
+        AND GPP_PERSPEMBELIAN.AD_Client_ID IN ('1') 
+        AND GPP_PERSPEMBELIAN.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="adOrgId"></Parameter> <Parameter name="isactive"></Parameter> <Parameter name="cDoctypeId"></Parameter> <Parameter name="documentno"></Parameter> <Parameter name="docstatus"></Parameter> <Parameter name="needbydate"></Parameter> <Parameter name="cBpartnerId"></Parameter> <Parameter name="keterangan"></Parameter> <Parameter name="description"></Parameter> <Parameter name="quantity"></Parameter> <Parameter name="price"></Parameter> <Parameter name="diskon"></Parameter> <Parameter name="unitprice"></Parameter> <Parameter name="dasar"></Parameter> <Parameter name="adUserId"></Parameter> <Parameter name="divisi"></Parameter> <Parameter name="complete"></Parameter> <Parameter name="emGmmMasterDeptId"></Parameter> <Parameter name="mRequisitionId"></Parameter> <Parameter name="diperiksaId"></Parameter> <Parameter name="dirkeuId"></Parameter> <Parameter name="mankeuId"></Parameter> <Parameter name="gppPerspembelianId"></Parameter> <Parameter name="adClientId"></Parameter> 
+    <Parameter name="updatedby"></Parameter>
+    <Parameter id="paramKey" name="gppPerspembelianId"></Parameter>
+    
+    
+        <Parameter name="adUserClient" type="replace" optional="true" after="GPP_PERSPEMBELIAN.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="GPP_PERSPEMBELIAN.AD_Org_ID IN (" text="'1'"/>
+  </SqlMethod>
+
+  <SqlMethod name="insert" type="preparedStatement" return="rowCount" static="false" connection="true">
+    <Sql><![CDATA[
+        INSERT INTO GPP_PERSPEMBELIAN 
+        (AD_Org_ID, Isactive, C_Doctype_ID, Documentno, Docstatus, Needbydate, C_Bpartner_ID, Keterangan, Description, Quantity, Price, Diskon, Unitprice, Dasar, AD_User_ID, Divisi, Complete, EM_Gmm_Master_Dept_ID, M_Requisition_ID, Diperiksa_ID, Dirkeu_ID, Mankeu_ID, GPP_Perspembelian_ID, AD_Client_ID, created, createdby, updated, updatedBy)
+        VALUES ((?), (?), (?), (?), (?), TO_DATE(?), (?), (?), (?), TO_NUMBER(?), TO_NUMBER(?), TO_NUMBER(?), TO_NUMBER(?), (?), (?), (?), (?), (?), (?), (?), (?), (?), (?), (?), now(), ?, now(), ?)
+    ]]></Sql>
+    <Parameter name="adOrgId"></Parameter> <Parameter name="isactive"></Parameter> <Parameter name="cDoctypeId"></Parameter> <Parameter name="documentno"></Parameter> <Parameter name="docstatus"></Parameter> <Parameter name="needbydate"></Parameter> <Parameter name="cBpartnerId"></Parameter> <Parameter name="keterangan"></Parameter> <Parameter name="description"></Parameter> <Parameter name="quantity"></Parameter> <Parameter name="price"></Parameter> <Parameter name="diskon"></Parameter> <Parameter name="unitprice"></Parameter> <Parameter name="dasar"></Parameter> <Parameter name="adUserId"></Parameter> <Parameter name="divisi"></Parameter> <Parameter name="complete"></Parameter> <Parameter name="emGmmMasterDeptId"></Parameter> <Parameter name="mRequisitionId"></Parameter> <Parameter name="diperiksaId"></Parameter> <Parameter name="dirkeuId"></Parameter> <Parameter name="mankeuId"></Parameter> <Parameter name="gppPerspembelianId"></Parameter> <Parameter name="adClientId"></Parameter> 
+    <Parameter name="createdby"></Parameter>
+    <Parameter name="updatedby"></Parameter>
+  </SqlMethod>
+
+  <SqlMethod name="delete" type="preparedStatement" return="rowCount">
+    <Sql><![CDATA[
+        DELETE FROM GPP_PERSPEMBELIAN
+        WHERE GPP_PERSPEMBELIAN.GPP_Perspembelian_ID = ? 
+        
+        AND GPP_PERSPEMBELIAN.AD_Client_ID IN ('1') 
+        AND GPP_PERSPEMBELIAN.AD_Org_ID IN ('1') 
+    ]]></Sql>
+    <Parameter name="param1"></Parameter>
+    
+        <Parameter name="adUserClient" type="replace" optional="true" after="GPP_PERSPEMBELIAN.AD_Client_ID IN (" text="'1'"/>
+        <Parameter name="adOrgClient" type="replace" optional="true" after="GPP_PERSPEMBELIAN.AD_Org_ID IN (" text="'1'"/>
+  </SqlMethod>
+
+  <SqlMethod name="selectOrg" type="preparedStatement" return="string">
+    <SqlMethodComment>Select for relation</SqlMethodComment>
+    <Sql><![CDATA[ 
+        SELECT AD_ORG_ID
+          FROM GPP_PERSPEMBELIAN
+         WHERE GPP_PERSPEMBELIAN.GPP_Perspembelian_ID = ? 
+    ]]></Sql>
+    <Parameter name="id"></Parameter>
+  </SqlMethod>
+  
+  <SqlMethod name="getCurrentDBTimestamp" type="preparedStatement" return="string">
+    <Sql><![CDATA[ 
+        SELECT to_char(Updated, 'YYYYMMDDHH24MISS') as Updated_Time_Stamp
+          FROM GPP_PERSPEMBELIAN
+         WHERE GPP_PERSPEMBELIAN.GPP_Perspembelian_ID = ? 
+    ]]></Sql>
+    <Parameter name="id"></Parameter>
+  </SqlMethod>
+</SqlClass>

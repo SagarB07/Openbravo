@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+  <database name="MODIFIED TABLE GNV_HISTORY_PERPANJANGAN">
+    <table name="GNV_HISTORY_PERPANJANGAN" primaryKey="GNV_HISTORY_PERPANJANGAN_PK">
+      <column name="EM_GMM_MASTER_STATUSBANK_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="GMM_MASTER_STATUSBANK" name="EM_GMM_STATUS_HISTORY">
+        <reference local="EM_GMM_MASTER_STATUSBANK_ID" foreign="GMM_MASTER_STATUSBANK_ID"/>
+      </foreign-key>
+    </table>
+  </database>

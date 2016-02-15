@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="KasDebet" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="14" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DOCUMENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/com/gai/module/erpReports/SubReport/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+fp.documentno as "KD No.",
+ac.name as "Dijurnal Oleh",
+fp.paymentdate as "Tgl",
+bp.name as "Diterima dari",
+fp.amount as "Uang sejumlah",
+fp.description as "Keterangan"
+from fin_payment fp
+	left join fin_payment_detail_v fpv on fp.fin_payment_id = fpv.fin_payment_id
+	left join c_bpartner bp on bp.c_bpartner_id = fp.c_bpartner_id
+	left join ad_client ac on fp.ad_client_id = ac.ad_client_id
+where fp.fin_payment_id =$P{DOCUMENT_ID}
+and fp.isreceipt ='Y']]>
+	</queryString>
+	<field name="KD No." class="java.lang.String"/>
+	<field name="Dijurnal Oleh" class="java.lang.String"/>
+	<field name="Tgl" class="java.sql.Timestamp"/>
+	<field name="Diterima dari" class="java.lang.String"/>
+	<field name="Uang sejumlah" class="java.math.BigDecimal"/>
+	<field name="Keterangan" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="112" splitType="Stretch">
+			<staticText>
+				<reportElement x="327" y="5" width="51" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[K.D. No. :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="207" y="83" width="120" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANK DEBET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="194" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Gedung Askrindo Lt. 6
+Jl. Angkasa Blok B-9 Kav. No. 8 Kota Baru
+Bandar Kemayoran, Jakarta 10610]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="327" y="24" width="240" height="16"/>
+				<subreportParameter name="DOCUMENT_ID">
+					<subreportParameterExpression><![CDATA[$P{DOCUMENT_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BankDebet_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="378" y="5" width="100" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{KD No.}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="143" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="78" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Diterima dari]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="10" width="12" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="36" width="78" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Uang Sejumlah]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="36" width="12" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="81" width="78" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Keterangan]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="91" y="10" width="476" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Diterima dari}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="91" y="36" width="476" height="15"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Uang sejumlah}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="97" width="567" height="40"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Keterangan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="129"/>
+	</pageFooter>
+	<summary>
+		<band height="117">
+			<staticText>
+				<reportElement x="86" y="53" width="21" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rp.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="38" width="214" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Penerima,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="69" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Lihat bukti-bukti]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="339" y="21" width="216" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Jakarta,"+(new java.text.SimpleDateFormat("dd MMMM yyyy",new Locale("id", "ID"))).format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="21" width="58" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Mengetahui,]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="107" y="53" width="208" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Uang sejumlah}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

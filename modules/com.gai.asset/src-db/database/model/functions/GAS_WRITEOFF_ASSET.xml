@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAS_WRITEOFF_ASSET">
+    <function name="GAS_WRITEOFF_ASSET" type="NULL">
+      <parameter name="p_aasset_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_date" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_movement" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_locator" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_resultstr" type="VARCHAR" mode="out">
+        <default/>
+      </parameter>
+      <body><![CDATA[-- Variable
+v_ResultStr VARCHAR2(2000):='';
+v_Message VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+
+v_Product VARCHAR2(32);
+v_Locator VARCHAR2(32);
+v_Warehouse VARCHAR2(32);
+v_Org VARCHAR2(32);
+v_Client VARCHAR2(32);
+v_User VARCHAR2(32);
+v_NextC VARCHAR2(32);
+v_NextCLine VARCHAR2(32);
+v_Docno VARCHAR2(32);
+v_DocTypeTargt VARCHAR2(32);
+v_MovementDate DATE;
+v_Description VARCHAR2(32);
+v_Name VARCHAR2(32);
+v_date DATE;
+v_pLocator VARCHAR2(32);
+v_Warehouse_Id VARCHAR2(32);
+
+TYPE RECORD IS REF CURSOR;
+	Temp_ILine RECORD;
+	 
+BEGIN
+  --  Process Parameters
+  IF((p_AASSET_ID IS NOT NULL)) THEN
+  --  Update AD_PInstance
+     v_ResultStr:='PInstanceNotFound';
+                
+        v_Record_ID:= p_AASSET_ID;
+        --  Get Parameters
+     v_ResultStr:='ReadingParameters';
+     v_pLocator := p_locator;
+  ELSE
+      DBMS_OUTPUT.PUT_LINE('Kosong') ;
+  END IF;
+v_date :=P_DATE;   
+  BEGIN --BODY
+    SELECT MW.M_WAREHOUSE_ID
+    INTO v_Warehouse_Id
+    FROM M_WAREHOUSE MW, M_LOCATOR ML
+    WHERE MW.M_WAREHOUSE_ID = ML.M_WAREHOUSE_ID
+    AND ML.M_LOCATOR_ID = v_pLocator;
+  
+    FOR Temp_Header IN
+    (
+    SELECT AA.AD_CLIENT_ID,AA.UPDATEDBY, MLOC.M_WAREHOUSE_ID, AA.AD_ORG_ID, AA.DESCRIPTION, AA.VALUE ||'-'||AA.NAME as NAMA
+   -- INTO
+    --v_Client,v_User, v_Warehouse, v_Org, v_Description, v_Name
+    FROM A_ASSET AA LEFT JOIN M_LOCATOR MLOC ON MLOC.M_LOCATOR_ID = AA.M_LOCATOR_ID
+    WHERE AA.A_ASSET_ID = v_Record_ID
+    )
+    LOOP
+    Ad_Sequence_Next('M_INVENTORY', v_Client, v_NextC);
+      
+    INSERT INTO M_INVENTORY
+    (
+      M_INVENTORY_ID, AD_ORG_ID, AD_CLIENT_ID, ISACTIVE, CREATED, CREATEDBY, UPDATED, UPDATEDBY, 
+      NAME, DESCRIPTION, M_WAREHOUSE_ID, MOVEMENTDATE, POSTED, PROCESSED, EM_GIN_DOCTYPE
+    )
+    VALUES
+    (
+      v_NextC, Temp_Header.AD_ORG_ID, Temp_Header.AD_CLIENT_ID, 'Y', now(), Temp_Header.UPDATEDBY, now(), Temp_Header.UPDATEDBY,
+      'ASSET-'||Temp_Header.NAMA, Temp_Header.DESCRIPTION, v_Warehouse_Id, P_DATE, 'N', 'N', 'O'
+    );
+     
+    FOR Temp_ILine IN
+    (
+    	SELECT MLOC.M_LOCATOR_ID, AA.AD_ORG_ID, AA.DESCRIPTION, AA.VALUE ||'-'||AA.NAME, AA.M_PRODUCT_ID, CU.C_UOM_ID
+      FROM A_ASSET AA LEFT JOIN M_LOCATOR MLOC ON MLOC.M_LOCATOR_ID = AA.M_LOCATOR_ID
+                      LEFT JOIN M_PRODUCT MP ON MP.M_PRODUCT_ID = AA.M_PRODUCT_ID
+                      LEFT JOIN C_UOM CU ON CU.C_UOM_ID = MP.C_UOM_ID
+      WHERE AA.A_ASSET_ID = v_Record_ID
+    )
+    LOOP
+	   Ad_Sequence_Next('M_INVENTORYLINE', Temp_Header.AD_CLIENT_ID, v_NextCLine);
+	   INSERT INTO M_INVENTORYLINE
+	   (
+	     M_INVENTORYLINE_ID, AD_ORG_ID, AD_CLIENT_ID, ISACTIVE, CREATED, CREATEDBY, UPDATED, UPDATEDBY, 
+	     M_INVENTORY_ID, M_LOCATOR_ID, M_PRODUCT_ID, LINE, QTYBOOK, QTYCOUNT, C_UOM_ID
+	   )
+	   VALUES
+	   (
+	     v_NextCLine, Temp_Header.AD_ORG_ID, Temp_Header.AD_CLIENT_ID, 'Y', now(), Temp_Header.UPDATEDBY, now(), Temp_Header.UPDATEDBY,
+	     v_NextC, v_pLocator, Temp_ILine.M_PRODUCT_ID, 10, 1, 0, Temp_ILine.C_UOM_ID
+	   );
+
+    END LOOP;
+    
+    END LOOP;
+      UPDATE A_ASSET SET EM_GAS_STATUS = p_movement||'S', EM_GAS_INVENTORY_ID = v_NextC
+      WHERE A_ASSET_ID = v_Record_ID; 
+--    UPDATE M_MOVEMENT SET CONSUMPTION_ORG='Y' WHERE M_MOVEMENT_ID=v_Record_ID; 
+    
+  END; --BODY
+  
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  p_ResultStr := v_ResultStr;
+  RETURN;
+END GAS_WRITEOFF_ASSET]]></body>
+    </function>
+  </database>

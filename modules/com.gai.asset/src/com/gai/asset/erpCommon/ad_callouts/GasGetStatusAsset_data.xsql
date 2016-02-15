@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<SqlClass name="GasGetStatusAssetData" package="com.gai.asset.erpCommon.ad_callouts">
+   <SqlClassComment></SqlClassComment>
+   <SqlMethod name="select" type="preparedStatement" return="multiple">
+      <SqlMethodComment></SqlMethodComment>
+      <Sql>
+        SELECT EM_GAS_TANGGALAKHIRGARANSI as tanggalakhir FROM A_ASSET WHERE A_ASSET_ID = ?
+      </Sql>
+      <Parameter name="aAssetId"/>
+   </SqlMethod>
+   
+</SqlClass>

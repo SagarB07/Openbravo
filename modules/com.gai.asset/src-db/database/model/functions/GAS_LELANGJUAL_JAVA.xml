@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GAS_LELANGJUAL_JAVA">
+    <function name="GAS_LELANGJUAL_JAVA" type="NULL">
+      <parameter name="p_aasset_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_date" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_movement" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_cbpartner" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_tax" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_pricelist" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_locator" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_netunitprice" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="p_resultstr" type="VARCHAR" mode="out">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_ResultStr VARCHAR2(2000):='';
+v_Record_ID VARCHAR2(32);
+v_AD_User_ID VARCHAR2(32);
+V_CORDER VARCHAR(32);
+V_GAHHISTORICALASSET VARCHAR(32);
+v_User VARCHAR2(32);
+v_GMM_Master_Department_ID VARCHAR(32);
+v_DATE DATE;
+v_fin_paymentmethod_id VARCHAR(32);
+v_DocType_ID VARCHAR2(32); 
+V_C_BPARTNER_ID VARCHAR2(32);
+v_DocumentNo VARCHAR(32);
+V_CORDERLINE VARCHAR(32);
+v_line number;
+v_tax VARCHAR(32);
+V_PRICELIST VARCHAR(32);
+v_pLocator VARCHAR(32);
+ TYPE RECORD IS REF CURSOR;
+  Cur_Parameter RECORD;
+  
+BEGIN
+BEGIN
+  IF(p_AASSET_ID IS NOT NULL) THEN
+      --  Update AD_PInstance
+      DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_AASSET_ID) ;
+      v_ResultStr:='PInstanceNotFound';
+      AD_UPDATE_PINSTANCE(p_AASSET_ID, NULL, 'Y', NULL, NULL) ;
+      -- Get Parameters
+      v_ResultStr:='ReadingParameters';
+        
+        v_DATE := p_date;        
+        v_Record_ID:= p_AASSET_ID;
+        V_C_BPARTNER_ID := p_cbpartner;
+        v_tax := p_tax;
+        V_PRICELIST := p_pricelist;
+        v_pLocator := p_locator;
+      --BEGIN
+      
+      FOR CUR_ORDER_ASSET IN
+      (
+        SELECT AA.A_ASSET_ID, AA.AD_CLIENT_ID, AA.AD_ORG_ID, AA.ISACTIVE, AA.CREATED, AA.CREATEDBY, AA.UPDATED, AA.UPDATEDBY,
+        AA.AD_USER_ID, CBL.C_BPARTNER_LOCATION_ID, AA.C_CURRENCY_ID, CP.C_PAYMENTTERM_ID, ML.M_WAREHOUSE_ID,
+        MPR.M_PRICELIST_ID, FP.FIN_PAYMENTMETHOD_ID
+        
+        FROM A_ASSET AA 
+        LEFT JOIN C_BPARTNER CB ON CB.C_BPARTNER_ID = V_C_BPARTNER_ID
+        LEFT JOIN M_LOCATOR ML ON ML.M_LOCATOR_ID = v_pLocator
+        LEFT JOIN C_BPARTNER_LOCATION CBL ON CBL.C_BPARTNER_ID = CB.C_BPARTNER_ID
+        LEFT JOIN C_PAYMENTTERM CP ON CP.C_PAYMENTTERM_ID = CB.C_PAYMENTTERM_ID
+        LEFT JOIN M_PRICELIST MPR ON MPR.M_PRICELIST_ID = CB.M_PRICELIST_ID
+        LEFT JOIN FIN_PAYMENTMETHOD FP ON FP.FIN_PAYMENTMETHOD_ID = CB.FIN_PAYMENTMETHOD_ID
+        WHERE 
+        AA.A_ASSET_ID = v_Record_ID
+      )
+  
+    LOOP
+    --DBMS_OUTPUT.PUT_LINE('kkkk ' || v_Record_ID) ;
+      v_DocType_ID:=Ad_Get_Doctype(CUR_ORDER_ASSET.AD_Client_ID, CUR_ORDER_ASSET.AD_Org_ID, 'SOO', 'WR') ;
+      Ad_Sequence_Doctype(v_DocType_ID, CUR_ORDER_ASSET.AD_Client_ID, 'Y', v_DocumentNo) ;
+      Ad_Sequence_Next('C_ORDER', CUR_ORDER_ASSET.AD_CLIENT_ID, V_CORDER);
+      
+      --RAISE_APPLICATION_ERROR(-20000,v_DocType_ID ) ;
+    
+    INSERT INTO C_ORDER(
+            c_order_id, ad_client_id, ad_org_id, isactive, created,createdby, updated, updatedby ,
+            issotrx,documentno, docstatus,docaction , processing, processed, c_doctype_id , c_doctypetarget_id,
+            isdelivered,isinvoiced,isprinted,isselected,dateordered,datepromised , dateacct ,c_bpartner_id,
+            billto_id, c_bpartner_location_id,c_currency_id,paymentrule, c_paymentterm_id,totallines, grandtotal, m_warehouse_id,
+            m_pricelist_id,istaxincluded,posted , fin_paymentmethod_id, INVOICERULE,DELIVERYRULE,FREIGHTCOSTRULE,DELIVERYVIARULE,
+            PRIORITYRULE
+            )
+      VALUES (V_CORDER, CUR_ORDER_ASSET.AD_Client_ID, CUR_ORDER_ASSET.AD_Org_ID, 'Y', TO_DATE(NOW()),CUR_ORDER_ASSET.AD_User_ID, TO_DATE(NOW()), CUR_ORDER_ASSET.AD_User_ID,
+            'Y', v_DocumentNo,'DR','CO','N','N',v_DocType_ID ,v_DocType_ID,
+            'N','N','N','N',v_DATE, v_DATE, v_DATE,
+           V_C_BPARTNER_ID, CUR_ORDER_ASSET.C_BPARTNER_LOCATION_ID, CUR_ORDER_ASSET.C_BPARTNER_LOCATION_ID ,CUR_ORDER_ASSET.C_CURRENCY_ID,'P' ,CUR_ORDER_ASSET.C_PAYMENTTERM_ID,
+            0 ,0, CUR_ORDER_ASSET.M_WAREHOUSE_ID ,
+            CUR_ORDER_ASSET.M_PRICELIST_ID,'N' ,'N' , CUR_ORDER_ASSET.fin_paymentmethod_id ,'D','A','I','P',
+            '5'
+            );
+    
+             FOR CUR_ORDERLINE_ASSET IN
+            (
+            /*SELECT MP.M_PRODUCT_ID, CU.C_UOM_ID, CT.C_TAX_ID, MPP.PRICELIST,MPP.PRICELIMIT, MPP.PRICESTD
+                
+                FROM A_ASSET AA 
+                LEFT JOIN M_PRODUCT MP ON MP.M_PRODUCT_ID = AA.M_PRODUCT_ID
+                LEFT JOIN C_UOM CU ON CU.C_UOM_ID = MP.C_UOM_ID, 
+                M_PRICELIST MPL
+                LEFT JOIN M_PRICELIST_VERSION MPV ON MPV.M_PRICELIST_ID = MPL.M_PRICELIST_ID
+                LEFT JOIN M_PRODUCTPRICE MPP ON MPP.M_PRICELIST_VERSION_ID = MPV.M_PRICELIST_VERSION_ID, C_TAX CT
+                WHERE AA.A_ASSET_ID = 'F4FF68365BED44E981123447377C49B8' AND CT.C_TAX_ID = '9AE8B557F4414A498F3780F29152AF92'
+                AND MPL.M_PRICELIST_ID = 'AEE66281A08F42B6BC509B8A80A33C29'
+                AND MPP.M_PRODUCT_ID = MP.M_PRODUCT_ID
+            */
+            SELECT MP.M_PRODUCT_ID, CU.C_UOM_ID--, CT.C_TAX_ID, MPP.PRICELIST,MPP.PRICELIMIT, MPP.PRICESTD
+                
+                FROM A_ASSET AA 
+                LEFT JOIN M_PRODUCT MP ON MP.M_PRODUCT_ID = AA.M_PRODUCT_ID
+                LEFT JOIN C_UOM CU ON CU.C_UOM_ID = MP.C_UOM_ID--,
+                /*M_PRICELIST MPL
+                LEFT JOIN M_PRICELIST_VERSION MPV ON MPV.M_PRICELIST_ID = MPL.M_PRICELIST_ID
+                LEFT JOIN M_PRODUCTPRICE MPP ON MPP.M_PRICELIST_VERSION_ID = MPV.M_PRICELIST_VERSION_ID,C_TAX CT*/
+                WHERE 
+                AA.A_ASSET_ID = v_Record_ID
+                --AND CT.C_TAX_ID = v_tax
+                --AND MPL.M_PRICELIST_ID = V_PRICELIST
+                --AND MPP.M_PRODUCT_ID = MP.M_PRODUCT_ID
+              )
+            LOOP
+                Ad_Sequence_Next('C_ORDERLINE', CUR_ORDER_ASSET.AD_CLIENT_ID, V_CORDERLINE);
+                SELECT COALESCE(MAX(Line),0)+10 INTO v_line FROM C_OrderLine WHERE C_Order_ID= V_CORDER;
+                INSERT INTO c_orderline(
+                      c_orderline_id, ad_client_id, ad_org_id, isactive, created,createdby, updated, updatedby ,
+                      c_order_id , line, c_bpartner_id , c_bpartner_location_id, dateordered, datepromised, dateinvoiced, m_product_id, m_warehouse_id,
+                      c_uom_id, qtyordered,c_currency_id , pricelist, priceactual, pricelimit,
+                      linenetamt, C_TAX_ID, pricestd,taxbaseamt
+                      )
+                VALUES (
+                      V_CORDERLINE, CUR_ORDER_ASSET.AD_Client_ID, CUR_ORDER_ASSET.AD_Org_ID, 'Y', TO_DATE(NOW()),
+                      CUR_ORDER_ASSET.AD_User_ID, TO_DATE(NOW()), CUR_ORDER_ASSET.AD_User_ID,
+                      V_CORDER, v_line, V_C_BPARTNER_ID, CUR_ORDER_ASSET.C_BPARTNER_LOCATION_ID, 
+                      v_DATE, v_DATE, v_DATE, CUR_ORDERLINE_ASSET.M_PRODUCT_ID, CUR_ORDER_ASSET.M_WAREHOUSE_ID,
+                      CUR_ORDERLINE_ASSET.c_uom_id, '1', CUR_ORDER_ASSET.C_CURRENCY_ID , p_NetUnitPrice, 
+                      p_NetUnitPrice, p_NetUnitPrice/*CUR_ORDERLINE_ASSET.PRICELIMIT*/,
+                      '0', p_tax/*CUR_ORDERLINE_ASSET.C_TAX_ID*/, p_NetUnitPrice, p_NetUnitPrice
+                      );
+            END LOOP;
+      END LOOP;
+      
+      UPDATE A_ASSET SET EM_GAS_STATUS = p_movement||'S'
+      WHERE A_ASSET_ID = v_Record_ID; 
+    
+      C_ORDER_POST1(NULL,V_CORDER);
+    
+      AD_UPDATE_PINSTANCE(p_AASSET_ID, V_AD_User_ID, 'Y', 1, '@Success@');
+      COMMIT;
+    
+     /* EXCEPTION WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20000, 'Masuk Error') ;
+      END;*/
+  END IF;
+  --RETURN;
+END; --BODY
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  p_ResultStr:= v_ResultStr;
+  ROLLBACK;
+
+END GAS_LELANGJUAL_JAVA]]></body>
+    </function>
+  </database>

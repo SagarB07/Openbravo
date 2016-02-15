@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportPersetujuan" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DOCUMENTNO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select NOW() AS Tgl_skg,gp.Documentno as Nomor , gp.Needbydate as Tanggal, aus.name as NamaPemohon, GMP.DEPARTMENT  as Divisi ,
+gp.Unitprice as Nilai, gp.Description as Keterangan ,
+gpl.Lineno as no, c_bpartner.name as NamaVendor,
+TO_CHAR(GPL.TANGGALPENAWARAN,'dd-MM-yyyy') as tanggalpenawaran, COALESCE(gpl.Nethargapenawaran, gpl.Hargapenawaran) as HargaPenawaran,
+gpl.Description as Keterangan2,
+cb.name as NamaVendorTerpilih,
+gp.Dasar as DasarPemilihan, au.name as dibuatoleh,
+adip.name as diperiksa, adirkeu.name as dirkeu, amankeu.name as mankeu
+from GPP_PERSPEMBLINE gpl
+left join GPP_PERSPEMBELIAN gp on gp.GPP_PERSPEMBELIAN_id = gpl.GPP_PERSPEMBELIAN_id
+left join C_Bpartner cb on cb.C_Bpartner_id = gp.C_Bpartner_id
+left join C_Bpartner on C_Bpartner.C_Bpartner_id = gpl.C_Bpartner_id
+left join ad_user au on au.ad_user_id = gp.createdby
+left join ad_user aus on aus.ad_user_id = gp.ad_user_id
+left join ad_user adip on adip.ad_user_id = gp.diperiksa_id
+left join ad_user adirkeu on adirkeu.ad_user_id = gp.dirkeu_id
+left join ad_user amankeu on amankeu.ad_user_id = gp.mankeu_id
+left join GMM_MASTER_DEPARTMENT GMP ON GMP.GMM_MASTER_DEPARTMENT_ID = gp.EM_GMM_MASTER_DEPT_ID
+where gp.GPP_PERSPEMBELIAN_ID = $P{DOCUMENTNO}]]>
+	</queryString>
+	<field name="TGL_SKG" class="java.sql.Timestamp"/>
+	<field name="NOMOR" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.sql.Timestamp"/>
+	<field name="NAMAPEMOHON" class="java.lang.String"/>
+	<field name="DIVISI" class="java.lang.String"/>
+	<field name="NILAI" class="java.math.BigDecimal"/>
+	<field name="KETERANGAN" class="java.lang.String"/>
+	<field name="NO" class="java.math.BigDecimal"/>
+	<field name="NAMAVENDOR" class="java.lang.String"/>
+	<field name="TANGGALPENAWARAN" class="java.lang.String"/>
+	<field name="HARGAPENAWARAN" class="java.math.BigDecimal"/>
+	<field name="KETERANGAN2" class="java.lang.String"/>
+	<field name="NAMAVENDORTERPILIH" class="java.lang.String"/>
+	<field name="DASARPEMILIHAN" class="java.lang.String"/>
+	<field name="DIBUATOLEH" class="java.lang.String"/>
+	<field name="DIPERIKSA" class="java.lang.String"/>
+	<field name="DIRKEU" class="java.lang.String"/>
+	<field name="MANKEU" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="99" splitType="Stretch">
+			<staticText>
+				<reportElement x="279" y="3" width="248" height="24"/>
+				<textElement>
+					<font fontName="Times New Roman" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Permohonan Pembelian]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="279" y="27" width="248" height="20" forecolor="#FF0000"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="85" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="6" width="555" height="32"/>
+			</rectangle>
+			<line>
+				<reportElement x="138" y="6" width="1" height="32"/>
+			</line>
+			<line>
+				<reportElement x="275" y="6" width="1" height="32"/>
+			</line>
+			<line>
+				<reportElement x="418" y="6" width="1" height="32"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="6" width="138" height="15"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tanggal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="139" y="6" width="138" height="15"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nama Pemohon :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="6" width="143" height="15"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Divisi / Bagian :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="419" y="6" width="136" height="15"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nilai (Rp.):]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="44" width="555" height="36"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="44" width="304" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Keterangan mengenai Barang / Jasa:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="21" width="138" height="17"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{TANGGAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="138" y="21" width="137" height="17"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAMAPEMOHON}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="276" y="21" width="142" height="17"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIVISI}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="418" y="21" width="137" height="17"/>
+				<box leftPadding="3" rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NILAI}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="60" width="552" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{KETERANGAN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="29" height="26"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="0" width="161" height="26"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[NAMA VENDOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="86" height="26"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[TANGGAL PENAWARAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="0" width="100" height="26"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[HARGA PENAWARAN (RP.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="0" width="179" height="26"/>
+				<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[KETERANGAN]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="29" height="27"/>
+				<box leftPadding="0" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="0" width="86" height="27"/>
+				<box leftPadding="3" rightPadding="4">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TANGGALPENAWARAN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="276" y="0" width="100" height="27"/>
+				<box leftPadding="3" rightPadding="4">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{HARGAPENAWARAN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="376" y="0" width="179" height="27"/>
+				<box leftPadding="3" rightPadding="4">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{KETERANGAN2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="29" y="0" width="161" height="27"/>
+				<box leftPadding="3" rightPadding="4">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAMAVENDOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Prevent"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="406" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="6" width="555" height="64"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="11" width="172" height="32"/>
+				<textElement/>
+				<text><![CDATA[Nama vendor yang dipilih :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="175" y="7" width="1" height="63"/>
+			</line>
+			<staticText>
+				<reportElement x="177" y="11" width="378" height="18"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Dasar pemilihan vendor :]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="77" width="555" height="328"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="2" y="82" width="100" height="34"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Dibuat oleh
+Tanda Tangan,
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="176" y="77" width="1" height="137"/>
+			</line>
+			<staticText>
+				<reportElement x="179" y="83" width="100" height="33"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Diperiksa oleh
+Tanda Tangan,
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="359" y="78" width="1" height="137"/>
+			</line>
+			<staticText>
+				<reportElement x="361" y="84" width="194" height="33"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Diperiksa oleh MGR Keu,SDM&Umum
+Tanda Tangan,
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="214" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="276" y="215" width="1" height="190"/>
+			</line>
+			<staticText>
+				<reportElement x="2" y="217" width="272" height="37"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Disetujui oleh Direktur Keuangan
+Tanda Tangan,
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="217" width="276" height="37"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Disetujui oleh Direktur Utama
+Tanda Tangan,
+]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="43" width="172" height="27"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAMAVENDORTERPILIH}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="177" y="43" width="378" height="27"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DASARPEMILIHAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="173" width="173" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIBUATOLEH}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="179" y="173" width="180" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIPERIKSA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="361" y="173" width="194" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MANKEU}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="349" width="272" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIRKEU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="3" y="193" width="173" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TGL_SKG}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="179" y="193" width="180" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TGL_SKG}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="361" y="193" width="194" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TGL_SKG}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="3" y="369" width="273" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TGL_SKG}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="279" y="369" width="276" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TGL_SKG}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="279" y="349" width="276" height="20"/>
+				<box leftPadding="2"/>
+				<textElement/>
+				<text><![CDATA[Direktur]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

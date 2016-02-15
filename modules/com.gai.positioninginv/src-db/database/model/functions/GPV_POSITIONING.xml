@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION GPV_POSITIONING">
+    <function name="GPV_POSITIONING" type="NULL">
+      <parameter name="pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_Record_ID VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  v_Message VARCHAR2(2000):=''; --OBTG:VARCHAR2--
+  v_Result NUMBER:=0; -- 0=failure
+  v_ResultStr VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  v_AD_User_ID VARCHAR2(32):=''; --OBTG:VARCHAR2--
+  
+TYPE RECORD IS REF CURSOR;
+  Cur_Parameter RECORD;
+
+BEGIN  
+  BEGIN --BODY
+      v_ResultStr:='ReadingParameters';
+      FOR Cur_Parameter IN
+        (SELECT i.Record_ID,
+          i.AD_User_ID,
+          p.ParameterName,
+          p.P_String,
+          p.P_Number,
+          p.P_Date
+        FROM AD_PINSTANCE i
+        LEFT JOIN AD_PINSTANCE_PARA p
+          ON i.AD_PInstance_ID=p.AD_PInstance_ID
+        WHERE i.AD_PInstance_ID=PInstance_ID
+        ORDER BY p.SeqNo
+        )
+      LOOP
+        v_Record_ID:=Cur_Parameter.Record_ID;
+        v_AD_User_ID:=Cur_Parameter.AD_User_ID;
+      END LOOP; -- Get Parameter
+  
+      FOR Cur_Parameter IN
+      (
+        SELECT COALESCE(SUM(GRANDTOTAL),0) AS GRANDTOTAL FROM C_INVOICE CI WHERE
+        EXISTS (SELECT 1 FROM GNV_INVESTASI_LINE gvl where gvl.GNV_INVESTASI_HEADER_ID = v_Record_ID 
+                and gvl.c_bpartner_id = ci.c_bpartner_id)
+        AND CI.DATEINVOICED <= now()
+        AND CI.DOCSTATUS='CO'
+      ) 
+      LOOP
+        UPDATE GNV_INVESTASI_HEADER SET EM_GPV_AMOUNTPOSITION=Cur_Parameter.GRANDTOTAL, EM_GPV_TGLPOSITIONING=now(),
+        EM_GPV_POSITIONING='Y'
+        WHERE GNV_INVESTASI_HEADER_ID=v_Record_ID;
+      END LOOP;
+      
+      AD_UPDATE_PINSTANCE(PInstance_ID, NULL, 'N', 1, v_Message);
+  
+    END; --BODY
+  --RETURN;
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  RAISE;
+  RETURN;
+END GPV_POSITIONING
+]]></body>
+    </function>
+  </database>

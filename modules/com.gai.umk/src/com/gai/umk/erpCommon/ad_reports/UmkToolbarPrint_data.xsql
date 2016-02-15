@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+ * The contents of this file are subject to the Openbravo  Public  License
+ * Version  1.1  (the  "License"),  being   the  Mozilla   Public  License
+ * Version 1.1  with a permitted attribution clause; you may not  use this
+ * file except in compliance with the License. You  may  obtain  a copy of
+ * the License at http://www.openbravo.com/legal/license.html 
+ * Software distributed under the License  is  distributed  on  an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific  language  governing  rights  and  limitations
+ * under the License. 
+ * The Original Code is Openbravo ERP. 
+ * The Initial Developer of the Original Code is Openbravo SLU 
+ * All portions are Copyright (C) 2001-2011 Openbravo SLU 
+ * All Rights Reserved. 
+ * Contributor(s):  ______________________________________.
+ ************************************************************************
+-->
+
+<SqlClass name="UmkToolbarPrintData" package="com.gai.umk.erpCommon.ad_reports">
+  <SqlClassComment></SqlClassComment>
+  <SqlMethod name="select" type="preparedStatement" return="multiple">
+    <SqlMethodComment></SqlMethodComment>
+    <Sql>    
+	<![CDATA[
+		select now() as hari_ini,gu.nominal_penjaguann_umk, gu.tanggal_penerimaan_umk as tanggal_penerimaan_umk , gu.description as description,gu.tot_amount_realisasi as tot_amount_realisasi, gu.selisih as selisih, gu.complete as complete, gu.realisasi as realisasi, gu.status as status, gu.documentno as documentno, gu.memointernaldari as memointernaldari, gu.tanggalmemointernal as tanggalmemointernal, gu.nomemointernal as nomemointernal, ad_org.name as kantor_cabang,ad_user.name as nama_user,
+		gai_say_amount(gu.nominal_penjaguann_umk,'IDR') as umk_terbilang,
+		CBUD.EM_GBG_BUDGETAMT AS ANGGARAN, CBUD.EM_GBG_ACTUALAMT AS SISAANGGARAN,
+		cbud.name as namabudget, cbud.c_year_id as c_year_id,cy.year as year,
+		gu.perihal as PERIHAL, gmdd.jabatan as KEPADA, gmd.department as DARI
+		from gumk_umk gu
+		LEFT JOIN C_BUDGET CBUD ON CBUD.C_BUDGET_ID = gu.EM_GBG_BUDGET_ID
+		left join c_year cy on cy.c_year_id = cbud.c_year_id
+		left join ad_org on (gu.ad_org_id=ad_org.ad_org_id)
+		left join ad_user on (ad_user.ad_user_id=gu.ad_user_id)
+		left join gmm_master_department gmd ON gmd.gmm_master_department_id = gu.em_gmm_master_department_id
+		left join gnv_master_datadireksi gmdd on gmdd.gnv_master_datadireksi_id = gu.Em_Gnv_Master_Datadireksi_Id
+
+		where GU.GUMK_UMK_ID IN ('1')
+			
+	]]></Sql>
+	<Parameter name="recordId" type="replace" optional="true" after="GU.GUMK_UMK_ID IN (" text="'1'"/>
+  </SqlMethod>  
+
+</SqlClass>
